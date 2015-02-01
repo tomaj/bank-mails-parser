@@ -1,0 +1,27 @@
+{
+  "name": "tomaj/bank-mails-parser",
+  "description": "Slovak banks mail parse",
+  "type": "library",
+  "license": "LGPL",
+  "authors": [
+    {
+      "name": "Tomas Majer",
+      "homepage": "http://tomaj.sk"
+    }
+  ],
+  "require": {
+    "php": ">= 5.3.7",
+    "tomaj/imap-mail-downloader": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.3",
+    "squizlabs/php_codesniffer": "~1.5",
+    "satooshi/php-coveralls": "dev-master"
+  },
+  "minimum-stability": "stable",
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
+}
