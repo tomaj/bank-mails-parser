@@ -20,7 +20,21 @@ Usage
 Basic usage in php:
 
 ```
-TODO
+use Tomaj\BankMailsParser\Parser\TatraBankaMailParser;
+
+$tatraBankaMailParser = new TatraBankaMailParser();
+$mailContent = $tatraBankaMailParser->parse('mail content');
+
+echo $mailContent->getKs() . "\n";
+echo $mailContent->getSs() . "\n";
+echo $mailContent->getVs() . "\n";
+echo $mailContent->getReceiverMessage() . "\n";
+echo $mailContent->getCurrency() . "\n";
+echo $mailContent->getTransactionDate() . "\n";
+echo $mailContent->getAccountNumber() . "\n";
+echo $mailContent->getAmount() . "\n";
+echo $mailContent->getAccountNumber() . "\n";
+
 ```
 
 Usage with imap mail downlaoder
