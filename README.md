@@ -5,6 +5,14 @@ Library for processing bank confirmation emails.
 Right now only support of *Tatrabanka* two emails formats.
 
 
+[![Build Status](https://secure.travis-ci.org/tomaj/bank-mails-parser.png)](http://travis-ci.org/tomaj/bank-mails-parser)
+[![Coverage Status](https://coveralls.io/repos/tomaj/bank-mails-parser/badge.png?branch=master)](https://coveralls.io/r/tomaj/bank-mails-parser?branch=master)
+[![Dependency Status](https://www.versioneye.com/user/projects/54cf3fe4de7924b7ed000621/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54cf3fe4de7924b7ed000621)
+
+[![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![Latest Unstable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/unstable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![License](https://poser.pugx.org/tomaj/bank-mails-parser/license.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+
 Instalation
 -----------
 
@@ -40,7 +48,7 @@ echo $mailContent->getAccountNumber() . "\n";
 Usage with imap mail downlaoder
 -------------------------------
 
-Example how to use with [imap mail downloader](https://github.com/tomaj/imap-mail-downloader):
+Example how to use with [imap mail downloader](https://github.com/tomaj/bank-mails-parser):
 
 ```
 use Tomaj\ImapMailDownloader\Downloader;
@@ -63,7 +71,7 @@ $downloader->fetch($criteria, function(Email $email) {
 });
 ```
 
-*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/imap-mail-downloader```
+*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/bank-mails-parser```
 
 
 TODO
