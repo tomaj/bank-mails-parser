@@ -5,6 +5,8 @@ Library for processing bank confirmation emails.
 Right now only support of *Tatrabanka* two emails formats.
 
 
+
+
 Instalation
 -----------
 
@@ -40,10 +42,27 @@ echo $mailContent->getAccountNumber() . "\n";
 Usage with imap mail downlaoder
 -------------------------------
 
-Example how to use with email 
+Example how to use with [imap email download](https://github.com/tomaj/imap-mail-downloader):
 
 ```
-TODO
+use Tomaj\ImapMailDownloader\Downloader;
+use Tomaj\ImapMailDownloader\MailCriteria;
+use Tomaj\ImapMailDownloader\Email;
+use Tomaj\BankMailsParser\Parser\TatraBankaMailParser;
+
+$downloader = new Downloader('*imap host*', *port*, '*username*', '*password*');
+
+$criteria = new MailCriteria();
+$criteria->setFrom('some@email.com');
+$downloader->fetch($criteria, function(Email $email) {
+    
+    $tatraBankaMailParser = new TatraBankaMailParser();
+	$mailContent = $tatraBankaMailParser->parse($email->getBody());
+	
+	// process $mailContent data...
+	
+	return true;
+});
 ```
 
 
