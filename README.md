@@ -5,8 +5,6 @@ Library for processing bank confirmation emails.
 Right now only support of *Tatrabanka* two emails formats.
 
 
-
-
 Instalation
 -----------
 
@@ -42,7 +40,7 @@ echo $mailContent->getAccountNumber() . "\n";
 Usage with imap mail downlaoder
 -------------------------------
 
-Example how to use with [imap email download](https://github.com/tomaj/imap-mail-downloader):
+Example how to use with [imap mail downloader](https://github.com/tomaj/imap-mail-downloader):
 
 ```
 use Tomaj\ImapMailDownloader\Downloader;
@@ -64,6 +62,8 @@ $downloader->fetch($criteria, function(Email $email) {
 	return true;
 });
 ```
+
+*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/imap-mail-downloader```
 
 
 TODO
