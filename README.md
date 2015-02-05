@@ -18,7 +18,7 @@ Instalation
 
 Install package via composer:
 
-```
+``` bash
 $ composer require tomaj/bank-mails-parser
 ```
 
@@ -27,7 +27,7 @@ Usage
 
 Basic usage in php:
 
-```
+``` php
 use Tomaj\BankMailsParser\Parser\TatraBankaMailParser;
 
 $tatraBankaMailParser = new TatraBankaMailParser();
@@ -50,7 +50,7 @@ Usage with imap mail downlaoder
 
 Example how to use with [imap mail downloader](https://github.com/tomaj/bank-mails-parser):
 
-```
+``` php
 use Tomaj\ImapMailDownloader\Downloader;
 use Tomaj\ImapMailDownloader\MailCriteria;
 use Tomaj\ImapMailDownloader\Email;
