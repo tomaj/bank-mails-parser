@@ -20,4 +20,4 @@ script:
     - make sniff test
 
 after_script:
-    - php vendor/bin/coveralls -v
+    - CODECLIMATE_REPO_TOKEN=15414484551ad327593cb7feb55d0e08bdd3409054111068b40215a8504232da ./vendor/bin/test-reporter
