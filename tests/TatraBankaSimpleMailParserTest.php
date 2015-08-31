@@ -46,5 +46,6 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('XCCBF1235D945841C', $mailContent->getSign());
 		$this->assertEquals('123445', $mailContent->getCid());
 		$this->assertEquals('OK', $mailContent->getRes());
+		$this->assertEquals(time(), $mailContent->getTransactionDate());
 	}
 }

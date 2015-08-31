@@ -3,6 +3,7 @@
 namespace Tomaj\BankMailsParser\Parser;
 
 use Tomaj\BankMailsParser\MailContent;
+use DateTime;
 
 class TatraBankaSimpleMailParser implements ParserInterface
 {
@@ -33,6 +34,8 @@ class TatraBankaSimpleMailParser implements ParserInterface
             if (!$cardpayVersion) {
                 $mailContent->setCid($result[3]);
             }
+
+            $mailContent->setTransactionDate(time());
         }
 
         return $mailContent;
