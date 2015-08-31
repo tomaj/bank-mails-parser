@@ -16,7 +16,6 @@ class TatraBankaSimpleMailParser implements ParserInterface
         $pattern1 = '/VS=(.*) RES=(.*) AC=(.*) SIGN=(.*)/m';
         $res = preg_match($pattern1, $content, $result);
         if (!$res) {
-
             // comfortpay version
             $pattern2 = '/VS=(.*) TRES=(.*) CID=(.*) SIGN=(.*)/m';
             $res = preg_match($pattern2, $content, $result);
