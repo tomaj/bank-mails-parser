@@ -30,7 +30,9 @@ class TatraBankaSimpleMailParser implements ParserInterface
             $mailContent->setVs($result[1]);
             $mailContent->setSign($result[4]);
             $mailContent->setRes($result[2]);
-            if (!$cardpayVersion) {
+            if ($cardpayVersion) {
+                $mailContent->setAc($result[3]);
+            } else {
                 $mailContent->setCid($result[3]);
             }
 

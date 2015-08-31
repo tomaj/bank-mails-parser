@@ -26,6 +26,8 @@ class MailContent
 
     private $res;
 
+    private $ac;
+
     public function getKs()
     {
         return $this->ks;
@@ -143,5 +145,15 @@ class MailContent
     public function getRes()
     {
         return $this->res;
+    }
+
+    public function setAc($ac)
+    {
+        $this->ac = $ac;
+    }
+
+    public function getAc()
+    {
+        return $this->ac;
     }
 }

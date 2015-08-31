@@ -14,6 +14,7 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('1152201233', $mailContent->getVs());
 		$this->assertEquals('C0CBF27F5D97841E', $mailContent->getSign());
 		$this->assertEquals('OK', $mailContent->getRes());
+		$this->assertEquals('558058', $mailContent->getAc());
 	}
 
 	public function testErrorResult()
