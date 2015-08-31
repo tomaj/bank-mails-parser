@@ -20,6 +20,12 @@ class MailContent
 
     private $receiverMessage;
 
+    private $sign;
+
+    private $cid;
+
+    private $res;
+
     public function getKs()
     {
         return $this->ks;
@@ -107,5 +113,35 @@ class MailContent
     public function setAmount($amount)
     {
         $this->amount = $amount;
+    }
+
+    public function setCid($cid)
+    {
+        $this->cid = $cid;
+    }
+
+    public function getCid()
+    {
+        return $this->cid;
+    }
+
+    public function setSign($sign)
+    {
+        $this->sign = $sign;
+    }
+
+    public function getSign()
+    {
+        return $this->sign;
+    }
+
+    public function setRes($res)
+    {
+        $this->res = $res;
+    }
+
+    public function getRes()
+    {
+        return $this->res;
     }
 }

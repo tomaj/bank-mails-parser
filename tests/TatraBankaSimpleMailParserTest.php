@@ -12,6 +12,8 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
 		$mailContent = $tatrabankaSimpleMailParser->parse($email);
 		$this->assertEquals('1152201233', $mailContent->getVs());
+		$this->assertEquals('C0CBF27F5D97841E', $mailContent->getSign());
+		$this->assertEquals('OK', $mailContent->getRes());
 	}
 
 	public function testErrorResult()
@@ -33,5 +35,16 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
 		$mailContent = $tatrabankaSimpleMailParser->parse($email);
 		$this->assertFalse($mailContent);
+	}
+
+	public function testCidAndTres()
+	{
+		$email = 'VS=1151151156 TRES=OK CID=123445 SIGN=XCCBF1235D945841C';;
+		$tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
+		$mailContent = $tatrabankaSimpleMailParser->parse($email);
+		$this->assertEquals('1151151156', $mailContent->getVs());
+		$this->assertEquals('XCCBF1235D945841C', $mailContent->getSign());
+		$this->assertEquals('123445', $mailContent->getCid());
+		$this->assertEquals('OK', $mailContent->getRes());
 	}
 }
