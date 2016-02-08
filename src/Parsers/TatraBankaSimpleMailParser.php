@@ -3,7 +3,6 @@
 namespace Tomaj\BankMailsParser\Parser;
 
 use Tomaj\BankMailsParser\MailContent;
-use DateTime;
 
 class TatraBankaSimpleMailParser implements ParserInterface
 {
