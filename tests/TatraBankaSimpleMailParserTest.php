@@ -77,6 +77,8 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
 		$this->assertEquals('OK', $mailContent->getRes());
 		$this->assertEquals('824452', $mailContent->getCid());
+		$this->assertEquals('=************1111', $mailContent->getCC());
+		$this->assertEquals('11224444', $mailContent->getTid());
 		$this->assertEquals('978', $mailContent->getCurrency());
 		$this->assertEquals('26112016121631', $mailContent->getTransactionDate());
 	}
@@ -90,6 +92,8 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('978', $mailContent->getCurrency());
 		$this->assertEquals('5555534283', $mailContent->getVs());
 		$this->assertEquals('FAIL', $mailContent->getRes());
+		$this->assertEquals('=************1111', $mailContent->getCC());
+		$this->assertEquals('11224444', $mailContent->getTid());
 		$this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
 		$this->assertEquals('24112016170555', $mailContent->getTransactionDate());
 	}

@@ -46,6 +46,8 @@ class TatraBankaSimpleMailParser implements ParserInterface
                 $mailContent->setVs($result[3]);
                 $mailContent->setRes($result[4]);
                 $mailContent->setCid($result[7]);
+                $mailContent->setCc($result[8]);
+                $mailContent->setTid($result[9]);
                 $mailContent->setTransactionDate($result[10]);
                 $mailContent->setSign($result[11]);
                 return $mailContent;
@@ -58,6 +60,8 @@ class TatraBankaSimpleMailParser implements ParserInterface
                 $mailContent->setCurrency($result[2]);
                 $mailContent->setVs($result[3]);
                 $mailContent->setRes($result[4]);
+                $mailContent->setCc($result[5]);
+                $mailContent->setTid($result[6]);
                 $mailContent->setTransactionDate($result[8]);
                 $mailContent->setSign($result[9]);
                 return $mailContent;
@@ -74,6 +78,7 @@ class TatraBankaSimpleMailParser implements ParserInterface
                 $mailContent->setSign($result[8]);
                 $mailContent->setRes($result[4]);
                 $mailContent->setAc($result[5]);
+                $mailContent->setTid($result[6]);
                 $mailContent->setTransactionDate($result[7]);
                 return $mailContent;
             }

@@ -28,6 +28,10 @@ class MailContent
 
     private $ac;
 
+    private $cc;
+
+    private $tid;
+
     public function getKs()
     {
         return $this->ks;
@@ -65,6 +69,32 @@ class MailContent
             $vs = null;
         }
         $this->vs = $vs;
+    }
+
+    public function getCc()
+    {
+        return $this->cc;
+    }
+
+    public function setCc($cc)
+    {
+        if ($cc == '') {
+            $cc = null;
+        }
+        $this->cc = $cc;
+    }
+
+    public function getTid()
+    {
+        return $this->tid;
+    }
+
+    public function setTid($tid)
+    {
+        if ($tid == '') {
+            $tid = null;
+        }
+        $this->tid = $tid;
     }
 
     public function getReceiverMessage()
