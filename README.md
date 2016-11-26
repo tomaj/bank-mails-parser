@@ -53,6 +53,11 @@ echo $mailContent->getSign() . "\n";
 echo $mailContent->getRes() . "\n";
 ```
 
+Upgrade from 1.* to 2.*
+-----------------------
+
+There is one breaking change in version 2.0 - parser returns MailContent always when email is parsed. In version 1.0 - parser returns MailContent only when response from bank was OK. In version 2 you can read also FAIL emails.
+
 
 Usage with imap mail downlaoder
 -------------------------------
