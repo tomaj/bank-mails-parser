@@ -60,8 +60,8 @@ class TatraBankaSimpleMailParser implements ParserInterface
                 $mailContent->setCurrency($result[2]);
                 $mailContent->setVs($result[3]);
                 $mailContent->setRes($result[4]);
-                $mailContent->setCc($result[5]);
-                $mailContent->setTid($result[6]);
+                $mailContent->setCc($result[6]);
+                $mailContent->setTid($result[7]);
                 $mailContent->setTransactionDate($result[8]);
                 $mailContent->setSign($result[9]);
                 return $mailContent;
