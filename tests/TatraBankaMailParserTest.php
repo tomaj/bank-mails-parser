@@ -183,7 +183,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 		$this->assertEquals('1234056789', $mailContent->getVs());
 		$this->assertNull($mailContent->getSs());
 		$this->assertNull($mailContent->getKs());
-		$this->assertNull($mailContent->getReceiverMessage());
+		$this->assertEquals('/VS1234056789', $mailContent->getReceiverMessage());
 		$this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
 	}
 

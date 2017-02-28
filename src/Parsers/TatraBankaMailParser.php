@@ -35,12 +35,6 @@ class TatraBankaMailParser implements ParserInterface
         $res = preg_match($pattern2, $content, $result);
         if ($res) {
             $mailContent->setReceiverMessage($result[1]);
-
-            $pattern2 = '/vs([0-9]{1,10})/';
-            $res = preg_match($pattern2, $result[1], $result);
-            if ($res) {
-                $mailContent->setVs($result[1]);
-            }
         }
 
         $pattern3 = '/Referencia platitela: \/VS(.*)\/SS(.*)\/KS(.*)/m';
@@ -49,6 +43,14 @@ class TatraBankaMailParser implements ParserInterface
             $mailContent->setVs($result[1]);
             $mailContent->setSs($result[2]);
             $mailContent->setKs($result[3]);
+        }
+
+        if ($mailContent->getVs() === null) {
+            $pattern3 = '/vs(\d{1,10})/i';
+            $res = preg_match($pattern3, $mailContent->getReceiverMessage(), $result);
+            if ($res) {
+                $mailContent->setVs($result[1]);
+            }
         }
 
         return $mailContent;
