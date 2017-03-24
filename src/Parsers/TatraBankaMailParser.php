@@ -45,6 +45,14 @@ class TatraBankaMailParser implements ParserInterface
             $mailContent->setKs($result[3]);
         }
 
+        if ($mailContent->getVs() === null) {
+            $pattern3 = '/vs([0-9]{1,10})/i';
+            $res = preg_match($pattern3, $content, $result);
+            if ($res) {
+                $mailContent->setVs($result[1]);
+            }
+        }
+
         return $mailContent;
     }
 }
