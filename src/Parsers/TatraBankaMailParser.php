@@ -46,8 +46,8 @@ class TatraBankaMailParser implements ParserInterface
         }
 
         if ($mailContent->getVs() === null) {
-            $pattern3 = '/vs(\d{1,10})/i';
-            $res = preg_match($pattern3, $mailContent->getReceiverMessage(), $result);
+            $pattern3 = '/vs([0-9]{1,10})/i';
+            $res = preg_match($pattern3, $content, $result);
             if ($res) {
                 $mailContent->setVs($result[1]);
             }
