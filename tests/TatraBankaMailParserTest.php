@@ -37,6 +37,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 		$this->assertEquals(12.31, $mailContent->getAmount());
 		$this->assertEquals('1234056789', $mailContent->getVs());
 		$this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
 		$this->assertNull($mailContent->getKs());
 		$this->assertNull($mailContent->getSs());
 		$this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
@@ -75,6 +76,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 		$this->assertEquals('9087654321', $mailContent->getSs());
 		$this->assertEquals('5428175648', $mailContent->getKs());
 		$this->assertEquals('test-sprava-druha', $mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
 		$this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
 	}
 
@@ -111,8 +113,46 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 		$this->assertEquals('9087654321', $mailContent->getSs());
 		$this->assertEquals('5428175648', $mailContent->getKs());
 		$this->assertNull($mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
 		$this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
 	}
+
+    public function testEmailWithouDescription()
+    {
+        $email = 'Vazeny klient,
+
+16.1.2015 12:11 bol zostatok Vasho uctu SK9812353347235 znizeny o 1 243,29 USD.
+uctovny zostatok:                            100,00 EUR
+aktualny zostatok:                           100,00 EUR
+disponibilny zostatok:                       100,00 EUR
+
+Referencia platitela: /VS1234056789/SS9087654321/KS5428175648
+Informacia pre prijemcu: test-sprava
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk
+
+Poznamka: Vase pripomienky alebo otazky tykajuce sa tejto spravy alebo inej nasej sluzby nam poslite, prosim, pouzitim kontaktneho formulara na nasej Web stranke.
+
+Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu uctu najdete v ucelenom tvare v pohyboch cez internet banking a nemusite ju pracne skladat zo starych bmailov.
+';
+
+        $tatrabankaMailParser = new TatraBankaMailParser();
+        $mailContent = $tatrabankaMailParser->parse($email);
+
+        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        $this->assertEquals('USD', $mailContent->getCurrency());
+        $this->assertEquals(-1243.29, $mailContent->getAmount());
+        $this->assertEquals('1234056789', $mailContent->getVs());
+        $this->assertEquals('9087654321', $mailContent->getSs());
+        $this->assertEquals('5428175648', $mailContent->getKs());
+        $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        $this->assertNull($mailContent->getDescription());
+        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
+    }
 
 	public function testEmailWithoutVariableSymbol()
 	{
@@ -147,6 +187,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 		$this->assertEquals('9087654322', $mailContent->getSs());
 		$this->assertEquals('5428175649', $mailContent->getKs());
 		$this->assertNull($mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
 		$this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
 	}
 
@@ -184,6 +225,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 		$this->assertNull($mailContent->getSs());
 		$this->assertNull($mailContent->getKs());
 		$this->assertEquals('Message', $mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
 		$this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
 	}
 

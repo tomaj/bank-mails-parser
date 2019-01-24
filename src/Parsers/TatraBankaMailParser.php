@@ -53,6 +53,12 @@ class TatraBankaMailParser implements ParserInterface
             }
         }
 
+        $pattern4 = '/Popis transakcie: (.*)/m';
+        $res = preg_match($pattern4, $content, $result);
+        if ($res) {
+            $mailContent->setDescription($result[1]);
+        }
+
         return $mailContent;
     }
 }

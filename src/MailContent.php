@@ -20,6 +20,8 @@ class MailContent
 
     private $receiverMessage;
 
+    private $description;
+
     private $sign;
 
     private $cid;
@@ -105,6 +107,16 @@ class MailContent
     public function setReceiverMessage($receiverMessage)
     {
         $this->receiverMessage = $receiverMessage;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 
     public function getCurrency()
