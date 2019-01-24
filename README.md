@@ -38,6 +38,7 @@ echo $mailContent->getKs() . "\n";
 echo $mailContent->getSs() . "\n";
 echo $mailContent->getVs() . "\n";
 echo $mailContent->getReceiverMessage() . "\n";
+echo $mailContent->getDescription() . "\n";
 echo $mailContent->getCurrency() . "\n";
 echo $mailContent->getTransactionDate() . "\n";
 echo $mailContent->getAccountNumber() . "\n";
