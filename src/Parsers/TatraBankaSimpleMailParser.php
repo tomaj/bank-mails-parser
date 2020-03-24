@@ -54,7 +54,7 @@ class TatraBankaSimpleMailParser implements ParserInterface
                 return $mailContent;
             }
 
-            $comfortpayHmacErrorPattern = '/AMT=(.*) CURR=(.*) VS=(.*) RES=(.*) TRES=(.*) CC=(.*) TID=([0-9]*) TIMESTAMP=([0-9]*) HMAC=(.*) ECDSA_KEY=(.) ECDSA=(.*)/m';
+            $comfortpayHmacErrorPattern = '/AMT=(.*?) CURR=(.*?) VS=(.*?) RES=(.*?) TRES=(.*?) (?:CC=(.*?) )?(?:TID=([0-9]*?) )?TIMESTAMP=([0-9]*?) HMAC=(.*?) ECDSA_KEY=(.) ECDSA=(.*)/m';
             $res = preg_match($comfortpayHmacErrorPattern, $content, $result);
             if ($res) {
                 $mailContent->setAmount($result[1]);
