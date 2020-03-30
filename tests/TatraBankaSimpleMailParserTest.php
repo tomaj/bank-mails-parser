@@ -113,7 +113,7 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('24112016170555', $mailContent->getTransactionDate());
 	}
 
-	public function testFailHmacComfortpayEmailNoCcTid()
+	public function testFailHmacComfortpayEmailNoCcTidTres()
 	{
 		$email = 'AMT=8.98 CURR=978 VS=5555534283 RES=FAIL TRES=FAIL TIMESTAMP=24032020144457 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
 		$parser = new TatraBankaSimpleMailParser();
@@ -126,5 +126,17 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEmpty($mailContent->getTid());
 		$this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
 		$this->assertEquals('24032020144457', $mailContent->getTransactionDate());
+
+		$email = 'AMT=4.99 CURR=978 VS=5555534283 RES=FAIL TIMESTAMP=27032020121740 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
+		$parser = new TatraBankaSimpleMailParser();
+		$mailContent = $parser->parse($email);
+		$this->assertEquals('4.99', $mailContent->getAmount());
+		$this->assertEquals('978', $mailContent->getCurrency());
+		$this->assertEquals('5555534283', $mailContent->getVs());
+		$this->assertEquals('FAIL', $mailContent->getRes());
+		$this->assertEmpty($mailContent->getCC());
+		$this->assertEmpty($mailContent->getTid());
+		$this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
+		$this->assertEquals('27032020121740', $mailContent->getTransactionDate());
 	}
 }
