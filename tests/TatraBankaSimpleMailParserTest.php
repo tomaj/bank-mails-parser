@@ -98,6 +98,38 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
     }
 
+    public function testHmacComfortpayEmailWithoutTxn()
+    {
+        $email = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 TRES=OK CID=824452 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
+        $parser = new TatraBankaSimpleMailParser();
+        $mailContent = $parser->parse($email);
+        $this->assertEquals('44.88', $mailContent->getAmount());
+        $this->assertEquals('4444255333', $mailContent->getVs());
+        $this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
+        $this->assertEquals('OK', $mailContent->getRes());
+        $this->assertEquals('824452', $mailContent->getCid());
+        $this->assertEquals('11224444', $mailContent->getTid());
+        $this->assertEquals('978', $mailContent->getCurrency());
+        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $this->assertNull($mailContent->getTxn());
+    }
+
+    public function testHmacComfortpayEmailWithTxn()
+    {
+        $email = 'AMT=44.88 CURR=978 VS=4444255333 TXN=PA RES=OK AC=644311 TRES=OK CID=824452 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
+        $parser = new TatraBankaSimpleMailParser();
+        $mailContent = $parser->parse($email);
+        $this->assertEquals('44.88', $mailContent->getAmount());
+        $this->assertEquals('4444255333', $mailContent->getVs());
+        $this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
+        $this->assertEquals('OK', $mailContent->getRes());
+        $this->assertEquals('824452', $mailContent->getCid());
+        $this->assertEquals('11224444', $mailContent->getTid());
+        $this->assertEquals('978', $mailContent->getCurrency());
+        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $this->assertEquals('PA', $mailContent->getTxn());
+    }
+
 	public function testFailHmacComfortpayEmail()
 	{
 		$email = 'AMT=140.92 CURR=978 VS=5555534283 RES=FAIL TRES=FAIL CC=************1111 TID=11224444 TIMESTAMP=24112016170555 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';

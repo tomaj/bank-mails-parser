@@ -34,6 +34,8 @@ class MailContent
 
     private $tid;
 
+    private $txn;
+
     public function getKs()
     {
         return $this->ks;
@@ -197,5 +199,15 @@ class MailContent
     public function getAc()
     {
         return $this->ac;
+    }
+
+    public function setTxn($txn)
+    {
+        $this->txn = $txn;
+    }
+
+    public function getTxn()
+    {
+        return $this->txn;
     }
 }

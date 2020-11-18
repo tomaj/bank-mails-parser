@@ -38,19 +38,22 @@ class TatraBankaSimpleMailParser implements ParserInterface
         }
 
         if (!$res) {
-            $comfortpayHmacPattern = '/AMT=(.*) CURR=(.*) VS=(.*) RES=(.*) AC=(.*) TRES=(.*) CID=([0-9]*) (?:CC=(.*) )?TID=([0-9]*) TIMESTAMP=([0-9]*) HMAC=(.*) ECDSA_KEY=(.) ECDSA=(.*)/m';
+            $comfortpayHmacPattern = '/AMT=(.*) CURR=(.*) VS=(.*?)( TXN=(.*))? RES=(.*) AC=(.*) TRES=(.*) CID=([0-9]*) (?:CC=(.*) )?TID=([0-9]*) TIMESTAMP=([0-9]*) HMAC=(.*) ECDSA_KEY=(.) ECDSA=(.*)/m';
             $res = preg_match($comfortpayHmacPattern, $content, $result);
             if ($res) {
                 $mailContent->setAmount($result[1]);
                 $mailContent->setCurrency($result[2]);
                 $mailContent->setVs($result[3]);
-                $mailContent->setRes($result[4]);
-                $mailContent->setAc($result[5]);
-                $mailContent->setCid($result[7]);
-                $mailContent->setCc($result[8]);
-                $mailContent->setTid($result[9]);
-                $mailContent->setTransactionDate($result[10]);
-                $mailContent->setSign($result[11]);
+                $mailContent->setRes($result[6]);
+                $mailContent->setAc($result[7]);
+                $mailContent->setCid($result[9]);
+                $mailContent->setCc($result[10]);
+                $mailContent->setTid($result[11]);
+                $mailContent->setTransactionDate($result[12]);
+                $mailContent->setSign($result[13]);
+                if (!empty($result[5])) {
+                    $mailContent->setTxn($result[5]);
+                }
                 return $mailContent;
             }
 
