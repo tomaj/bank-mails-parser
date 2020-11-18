@@ -8,7 +8,6 @@ Right now only support of *Tatrabanka* two emails formats.
 [![Build Status](https://secure.travis-ci.org/tomaj/bank-mails-parser.png)](http://travis-ci.org/tomaj/bank-mails-parser)
 [![Test Coverage](https://codeclimate.com/github/tomaj/bank-mails-parser/badges/coverage.svg)](https://codeclimate.com/github/tomaj/bank-mails-parser/coverage)
 [![Code Climate](https://codeclimate.com/github/tomaj/bank-mails-parser/badges/gpa.svg)](https://codeclimate.com/github/tomaj/bank-mails-parser)
-[![Dependency Status](https://www.versioneye.com/user/projects/54cf3fe4de7924b7ed000621/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54cf3fe4de7924b7ed000621)
 
 [![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![Latest Unstable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/unstable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
