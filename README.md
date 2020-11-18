@@ -44,6 +44,7 @@ echo $mailContent->getTransactionDate() . "\n";
 echo $mailContent->getAccountNumber() . "\n";
 echo $mailContent->getAmount() . "\n";
 echo $mailContent->getAccountNumber() . "\n";
+echo $mailContent->getTxn() . "\n";
 ```
 
 With *TatraBankaSimpleMailParser* you can parse comforpay emails. There are other getters like CID for reccurent payments.
