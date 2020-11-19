@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser;
 
@@ -38,12 +39,12 @@ class MailContent
 
     private $rc;
 
-    public function getKs()
+    public function getKs(): ?string
     {
         return $this->ks;
     }
 
-    public function setKs($ks)
+    public function setKs(string $ks)
     {
         if ($ks == '') {
             $ks = null;
@@ -51,12 +52,12 @@ class MailContent
         $this->ks = $ks;
     }
 
-    public function getSs()
+    public function getSs(): ?string
     {
         return $this->ss;
     }
 
-    public function setSs($ss)
+    public function setSs(string $ss)
     {
         if ($ss == '') {
             $ss = null;
@@ -64,12 +65,12 @@ class MailContent
         $this->ss = $ss;
     }
 
-    public function getVs()
+    public function getVs(): ?string
     {
         return $this->vs;
     }
 
-    public function setVs($vs)
+    public function setVs(string $vs)
     {
         if ($vs == '') {
             $vs = null;
@@ -77,12 +78,12 @@ class MailContent
         $this->vs = $vs;
     }
 
-    public function getCc()
+    public function getCc(): ?string
     {
         return $this->cc;
     }
 
-    public function setCc($cc)
+    public function setCc(string $cc)
     {
         if ($cc == '') {
             $cc = null;
@@ -90,12 +91,12 @@ class MailContent
         $this->cc = $cc;
     }
 
-    public function getTid()
+    public function getTid(): ?string
     {
         return $this->tid;
     }
 
-    public function setTid($tid)
+    public function setTid(string $tid)
     {
         if ($tid == '') {
             $tid = null;
@@ -103,37 +104,37 @@ class MailContent
         $this->tid = $tid;
     }
 
-    public function getReceiverMessage()
+    public function getReceiverMessage(): ?string
     {
         return $this->receiverMessage;
     }
 
-    public function setReceiverMessage($receiverMessage)
+    public function setReceiverMessage(string $receiverMessage)
     {
         $this->receiverMessage = $receiverMessage;
     }
 
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         $this->description = $description;
     }
 
-    public function getCurrency()
+    public function getCurrency(): ?string
     {
         return $this->currency;
     }
 
-    public function setCurrency($currency)
+    public function setCurrency(string $currency)
     {
         $this->currency = $currency;
     }
 
-    public function getTransactionDate()
+    public function getTransactionDate() // TODO
     {
         return $this->transactionDate;
     }
@@ -143,82 +144,82 @@ class MailContent
         $this->transactionDate = $transactionDate;
     }
 
-    public function getAccountNumber()
+    public function getAccountNumber(): ?string
     {
         return $this->accountNumber;
     }
 
-    public function setAccountNumber($accountNumber)
+    public function setAccountNumber(string $accountNumber)
     {
         $this->accountNumber = $accountNumber;
     }
 
-    public function getAmount()
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function setAmount($amount)
+    public function setAmount(float $amount)
     {
         $this->amount = $amount;
     }
 
-    public function setCid($cid)
+    public function setCid(string $cid)
     {
         $this->cid = $cid;
     }
 
-    public function getCid()
+    public function getCid(): ?string
     {
         return $this->cid;
     }
 
-    public function setSign($sign)
+    public function setSign(string $sign)
     {
         $this->sign = $sign;
     }
 
-    public function getSign()
+    public function getSign(): ?string
     {
         return $this->sign;
     }
 
-    public function setRes($res)
+    public function setRes(string $res)
     {
         $this->res = $res;
     }
 
-    public function getRes()
+    public function getRes(): ?string
     {
         return $this->res;
     }
 
-    public function setAc($ac)
+    public function setAc(string $ac)
     {
         $this->ac = $ac;
     }
 
-    public function getAc()
+    public function getAc(): ?string
     {
         return $this->ac;
     }
 
-    public function setTxn($txn)
+    public function setTxn(string $txn)
     {
         $this->txn = $txn;
     }
 
-    public function getTxn()
+    public function getTxn(): ?string
     {
         return $this->txn;
     }
 
-    public function setRc($rc)
+    public function setRc(string $rc)
     {
         $this->rc = $rc;
     }
 
-    public function getRc()
+    public function getRc(): ?string
     {
         return $this->rc;
     }

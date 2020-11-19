@@ -1,23 +1,25 @@
 <?php
+declare(strict_types=1);
 
-namespace Tomaj\BankMailsParser\Parser;
+namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
 use Tomaj\BankMailsParser\MailContent;
+use Tomaj\BankMailsParser\Parser\ParserInterface;
 
 class TatraBankaMailParser implements ParserInterface
 {
     /**
      * @param $content
-     * @return bool|MailContent
+     * @return ?MailContent
      */
-    public function parse($content)
+    public function parse(string $content): ?MailContent
     {
         $mailContent = new MailContent();
 
         $pattern1 = '/(.*) bol zostatok Vasho uctu ([a-zA-Z0-9]+) (zvyseny|znizeny) o ([0-9 ]+,[0-9]+) ([a-zA-Z]+)/m';
         $res = preg_match($pattern1, $content, $result);
         if (!$res) {
-            return false;
+            return null;
         }
 
         $mailContent->setTransactionDate(strtotime($result[1]));

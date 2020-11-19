@@ -2,7 +2,9 @@ BANK MAILs Parser
 ====================
 
 Library for processing bank confirmation emails.
-Right now only support of *Tatrabanka* two emails formats.
+Right now only support of *Tatrabanka* two emails formats. 
+
+If we will add more emails from other banks there will be need to do some refactoring (for example MailContent is strongly connected to TatraBanka)
 
 
 [![Build Status](https://secure.travis-ci.org/tomaj/bank-mails-parser.png)](http://travis-ci.org/tomaj/bank-mails-parser)
@@ -13,8 +15,8 @@ Right now only support of *Tatrabanka* two emails formats.
 [![Latest Unstable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/unstable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![License](https://poser.pugx.org/tomaj/bank-mails-parser/license.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 
-Instalation
------------
+Installation
+------------
 
 Install package via composer:
 
@@ -54,6 +56,18 @@ echo $mailContent->getSign() . "\n";
 echo $mailContent->getRes() . "\n";
 ```
 
+Upgrade from 2.* to 3.*
+-----------------------
+
+For using version 3 you will need at least php 7.2.
+There was introduced multiple breaking changes:
+1. `Tomaj\BankMailsParser\Parser\ParserInterface` will no return false anymore, only `?MailContent`
+2. Introduced strict types for whole project `declare(strict_types=1);`
+3. All Tatrabanka related code was moved under `TatraBanka` folder with proper namespace
+4. Added strict types to all methods and params
+5. Upgrade phpunit to version 9   
+
+
 Upgrade from 1.* to 2.*
 -----------------------
 
@@ -76,7 +90,6 @@ $downloader = new Downloader('*imap host*', *port*, '*username*', '*password*');
 $criteria = new MailCriteria();
 $criteria->setFrom('some@email.com');
 $downloader->fetch($criteria, function(Email $email) {
-    
     $tatraBankaMailParser = new TatraBankaMailParser();
 	$mailContent = $tatraBankaMailParser->parse($email->getBody());
 	

@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
-namespace Tomaj\BankMailsParser\Parser;
+namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
+use ReflectionParameter;
 use Tomaj\BankMailsParser\MailContent;
+use Tomaj\BankMailsParser\Parser\ParserInterface;
 
 class TatraBankaSimpleMailParser implements ParserInterface
 {
@@ -25,31 +28,46 @@ class TatraBankaSimpleMailParser implements ParserInterface
 
     /**
      * @param $content
-     * @return bool|MailContent
+     * @return ?MailContent
      */
-    public function parse($content)
+    public function parse(string $content): ?MailContent
     {
         $mailContent = new MailContent();
 
         if (empty($content)) {
-            return false;
+            return null;
         }
 
         $parsed = [];
         foreach (explode(' ', $content) as $part) {
             list($key, $value) = explode('=', $part);
             $parsed[$key] = $value;
-        }
 
-        foreach ($this->map as $key => $fn) {
-            if (empty($parsed[$key])) {
+            if (!isset($this->map[$key])) {
                 continue;
             }
-            $mailContent->$fn($parsed[$key]);
+
+            $method = $this->map[$key];
+
+            $param = new ReflectionParameter([MailContent::class, $method], 0);
+            if ($param->getType()) {
+                $type = $param->getType()->getName();
+                if ($type == 'string') {
+                    $mailContent->$method($value);
+                } elseif ($type == 'int') {
+                    $mailContent->$method(intval($value));
+                } elseif ($type == 'float') {
+                    $mailContent->$method(floatval($value));
+                } else {
+                    $mailContent->$method($value);
+                }
+            } else {
+                $mailContent->$method($value);
+            }
         }
 
         if ($mailContent->getRes() === null) {
-            return false;
+            return null;
         }
 
         if ($mailContent->getTransactionDate() === null) {

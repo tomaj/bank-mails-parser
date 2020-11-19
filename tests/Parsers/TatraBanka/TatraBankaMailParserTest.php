@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 
-require dirname(__FILE__) . '/../vendor/autoload.php';
+namespace Tests\Parses\TatraBanka;
 
-use Tomaj\BankMailsParser\Parser\TatraBankaMailParser;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
+use PHPUnit\Framework\TestCase;
 
-class TatraBankaMailParserTest extends PHPUnit_Framework_TestCase
+class TatraBankaMailParserTest extends TestCase
 {
     public function testSimpleEmail()
     {
@@ -247,6 +249,6 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertFalse($mailContent);
+        $this->assertNull($mailContent);
     }
 }
