@@ -36,6 +36,8 @@ class MailContent
 
     private $txn;
 
+    private $rc;
+
     public function getKs()
     {
         return $this->ks;
@@ -209,5 +211,15 @@ class MailContent
     public function getTxn()
     {
         return $this->txn;
+    }
+
+    public function setRc($rc)
+    {
+        $this->rc = $rc;
+    }
+
+    public function getRc()
+    {
+        return $this->rc;
     }
 }
