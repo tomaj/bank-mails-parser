@@ -59,7 +59,7 @@ echo $mailContent->getRes() . "\n";
 Upgrade from 2.* to 3.*
 -----------------------
 
-For using version 3 you will need at least php 7.2.
+For using version 3 you will need at least php 7.1.
 There were introduced multiple breaking changes:
 1. `Tomaj\BankMailsParser\Parser\ParserInterface` will no return false anymore, only `?MailContent`
 2. Introduced strict types for whole project `declare(strict_types=1);`
