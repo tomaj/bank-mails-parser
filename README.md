@@ -30,7 +30,7 @@ Usage
 Basic usage in php:
 
 ``` php
-use Tomaj\BankMailsParser\Parser\TatraBankaMailParser;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
 $tatraBankaMailParser = new TatraBankaMailParser();
 $mailContent = $tatraBankaMailParser->parse('mail content');
@@ -60,7 +60,7 @@ Upgrade from 2.* to 3.*
 -----------------------
 
 For using version 3 you will need at least php 7.2.
-There was introduced multiple breaking changes:
+There were introduced multiple breaking changes:
 1. `Tomaj\BankMailsParser\Parser\ParserInterface` will no return false anymore, only `?MailContent`
 2. Introduced strict types for whole project `declare(strict_types=1);`
 3. All Tatrabanka related code was moved under `TatraBanka` folder with proper namespace
@@ -83,7 +83,7 @@ Example how to use with [imap mail downloader](https://github.com/tomaj/bank-mai
 use Tomaj\ImapMailDownloader\Downloader;
 use Tomaj\ImapMailDownloader\MailCriteria;
 use Tomaj\ImapMailDownloader\Email;
-use Tomaj\BankMailsParser\Parser\TatraBankaMailParser;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
 $downloader = new Downloader('*imap host*', *port*, '*username*', '*password*');
 
@@ -99,7 +99,7 @@ $downloader->fetch($criteria, function(Email $email) {
 });
 ```
 
-*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/bank-mails-parser```
+*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/imap-email-downloader```
 
 
 TODO
