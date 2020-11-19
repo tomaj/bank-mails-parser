@@ -81,7 +81,25 @@ class TatraBankaSimpleMailParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('11224444', $mailContent->getTid());
 		$this->assertEquals('978', $mailContent->getCurrency());
 		$this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+		$this->assertNull($mailContent->getRc());
 	}
+
+    public function testHmacComfortpayEmailWithRc()
+    {
+        $email = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 TRES=OK CID=824452 CC=************1111 RC=00 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
+        $parser = new TatraBankaSimpleMailParser();
+        $mailContent = $parser->parse($email);
+        $this->assertEquals('44.88', $mailContent->getAmount());
+        $this->assertEquals('4444255333', $mailContent->getVs());
+        $this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
+        $this->assertEquals('OK', $mailContent->getRes());
+        $this->assertEquals('824452', $mailContent->getCid());
+        $this->assertEquals('************1111', $mailContent->getCC());
+        $this->assertEquals('11224444', $mailContent->getTid());
+        $this->assertEquals('978', $mailContent->getCurrency());
+        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $this->assertEquals('00', $mailContent->getRc());
+    }
 
     public function testHmacComfortpayEmailNoCC()
     {
