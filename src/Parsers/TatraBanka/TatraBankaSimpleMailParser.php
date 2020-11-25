@@ -39,7 +39,7 @@ class TatraBankaSimpleMailParser implements ParserInterface
         }
 
         foreach (explode(' ', $content) as $part) {
-            list($key, $value) = explode('=', $part);
+            [$key, $value] = array_map('trim', explode('=', $part));
 
             if (!isset($this->map[$key])) {
                 continue;
