@@ -38,10 +38,8 @@ class TatraBankaSimpleMailParser implements ParserInterface
             return null;
         }
 
-        $parsed = [];
         foreach (explode(' ', $content) as $part) {
             list($key, $value) = explode('=', $part);
-            $parsed[$key] = $value;
 
             if (!isset($this->map[$key])) {
                 continue;
