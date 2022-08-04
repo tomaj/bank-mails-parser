@@ -82,7 +82,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithouReceiverMessage()
+    public function testEmailWithoutReceiverMessage()
     {
         $email = 'Vazeny klient,
 
@@ -119,7 +119,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithouDescription()
+    public function testEmailWithoutDescription()
     {
         $email = 'Vazeny klient,
 
@@ -193,7 +193,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithVariableSymbolInMessage()
+    public function testEmailWithVariableSymbolInReceiverMessage()
     {
         $email = 'Vazeny klient,
 

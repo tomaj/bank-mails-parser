@@ -27,20 +27,20 @@ class TatraBankaMailParser implements ParserInterface
 
         $amount = floatval(str_replace(',', '.', str_replace(' ', '', $result[4])));
         $currency = $result[5];
-        if ($result[3] == 'znizeny') {
+        if ($result[3] === 'znizeny') {
             $amount = -$amount;
         }
         $mailContent->setAmount($amount);
         $mailContent->setCurrency($currency);
 
-        $pattern2 = '/Informacia pre prijemcu: (.*)/m';
-        $res = preg_match($pattern2, $content, $result);
+        $pattern = '/Informacia pre prijemcu: (.*)/m';
+        $res = preg_match($pattern, $content, $result);
         if ($res) {
             $mailContent->setReceiverMessage($result[1]);
         }
 
-        $pattern3 = '/Referencia platitela: \/VS(.*)\/SS(.*)\/KS(.*)/m';
-        $res = preg_match($pattern3, $content, $result);
+        $pattern = '/Referencia platitela: \/VS(.*)\/SS(.*)\/KS(.*)/m';
+        $res = preg_match($pattern, $content, $result);
         if ($res) {
             $mailContent->setVs($result[1]);
             $mailContent->setSs($result[2]);
@@ -48,8 +48,8 @@ class TatraBankaMailParser implements ParserInterface
         }
 
         if ($mailContent->getVs() === null) {
-            $pattern3 = '/vs([0-9]{1,10})/i';
-            $res = preg_match($pattern3, $content, $result);
+            $pattern = '/vs([0-9]{1,10})/i';
+            $res = preg_match($pattern, $content, $result);
             if ($res) {
                 $mailContent->setVs($result[1]);
             }
