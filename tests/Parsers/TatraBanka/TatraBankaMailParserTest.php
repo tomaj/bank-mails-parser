@@ -231,6 +231,123 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
+    // Referencia platitela: 1234056789
+    public function testEmailWithVariableSymbolInUniqueMandateReferenceWithoutPrefix()
+    {
+        $email = 'Vazeny klient,
+
+12.1.2015 12:11 bol zostatok Vasho uctu SK9812369347235 znizeny o 2,20 EUR.
+uctovny zostatok:                            32,52 EUR
+aktualny zostatok:                           32,52 EUR
+disponibilny zostatok:                       32,52 EUR
+
+Popis transakcie: CCINT 1100/000000-261426464
+Referencia platitela: 1234056789
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk
+
+Poznamka: Vase pripomienky alebo otazky tykajuce sa tejto spravy alebo inej nasej sluzby nam poslite, prosim, pouzitim kontaktneho formulara na nasej Web stranke.
+
+Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu uctu najdete v ucelenom tvare v pohyboch cez internet banking a nemusite ju pracne skladat zo starych bmailov.
+';
+
+        $tatrabankaMailParser = new TatraBankaMailParser();
+        $mailContent = $tatrabankaMailParser->parse($email);
+
+        $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('EUR', $mailContent->getCurrency());
+        $this->assertEquals(-2.20, $mailContent->getAmount());
+        $this->assertEquals('1234056789', $mailContent->getVs());
+        $this->assertNull($mailContent->getSs());
+        $this->assertNull($mailContent->getKs());
+        $this->assertNull($mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+    }
+
+    // Informacia pre prijemcu: 1234056789
+    public function testEmailWithVariableSymbolInReceiverMessageWithoutVSPrefix()
+    {
+        $email = 'Vazeny klient,
+
+12.1.2015 12:11 bol zostatok Vasho uctu SK9812369347235 znizeny o 2,20 EUR.
+uctovny zostatok:                            32,52 EUR
+aktualny zostatok:                           32,52 EUR
+disponibilny zostatok:                       32,52 EUR
+
+Popis transakcie: CCINT 1100/000000-261426464
+Referencia platitela: /VS/SS/KS
+Informacia pre prijemcu: 1234056789
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk
+
+Poznamka: Vase pripomienky alebo otazky tykajuce sa tejto spravy alebo inej nasej sluzby nam poslite, prosim, pouzitim kontaktneho formulara na nasej Web stranke.
+
+Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu uctu najdete v ucelenom tvare v pohyboch cez internet banking a nemusite ju pracne skladat zo starych bmailov.
+';
+
+        $tatrabankaMailParser = new TatraBankaMailParser();
+        $mailContent = $tatrabankaMailParser->parse($email);
+
+        $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('EUR', $mailContent->getCurrency());
+        $this->assertEquals(-2.20, $mailContent->getAmount());
+        $this->assertEquals('1234056789', $mailContent->getVs());
+        $this->assertNull($mailContent->getSs());
+        $this->assertNull($mailContent->getKs());
+        $this->assertEquals('1234056789', $mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+    }
+
+    // Creditor Reference Information - SEPA XML format
+    // Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
+    public function testEmailWithVariableSymbolInReceiverMessageCreditorReferenceInformation()
+    {
+        $email = 'Vazeny klient,
+
+12.1.2015 12:11 bol zostatok Vasho uctu SK9812369347235 znizeny o 2,20 EUR.
+uctovny zostatok:                            32,52 EUR
+aktualny zostatok:                           32,52 EUR
+disponibilny zostatok:                       32,52 EUR
+
+Popis transakcie: CCINT 1100/000000-261426464
+Referencia platitela: Firstname Surname
+Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk
+
+Poznamka: Vase pripomienky alebo otazky tykajuce sa tejto spravy alebo inej nasej sluzby nam poslite, prosim, pouzitim kontaktneho formulara na nasej Web stranke.
+
+Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu uctu najdete v ucelenom tvare v pohyboch cez internet banking a nemusite ju pracne skladat zo starych bmailov.
+';
+
+        $tatrabankaMailParser = new TatraBankaMailParser();
+        $mailContent = $tatrabankaMailParser->parse($email);
+
+        $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('EUR', $mailContent->getCurrency());
+        $this->assertEquals(-2.20, $mailContent->getAmount());
+        $this->assertEquals('1234056789', $mailContent->getVs());
+        $this->assertNull($mailContent->getSs());
+        $this->assertNull($mailContent->getKs());
+        $this->assertEquals('(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)', $mailContent->getReceiverMessage());
+        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+    }
+
     public function testErrorEmail()
     {
         $email = '4321/KS5428175648
