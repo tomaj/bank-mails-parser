@@ -35,11 +35,50 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('EUR', $mailContent->getCurrency());
         $this->assertEquals(12.31, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
         $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        $this->assertNull($mailContent->getKs());
+        $this->assertNull($mailContent->getSs());
+        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
+    }
+
+    public function testSimpleEmailWithoutSourceAccountNumberPrefix()
+    {
+        $email = 'Vazeny klient,
+
+16.1.2015 12:51 bol zostatok Vasho uctu SK9812353347235 zvyseny o 12,31 EUR.
+uctovny zostatok:                            142,11 EUR
+aktualny zostatok:                           142,11 EUR
+disponibilny zostatok:                       142,11 EUR
+
+Popis transakcie: 1100/000000-261426464
+Referencia platitela: /VS1234056789/SS/KS
+Informacia pre prijemcu: test-sprava
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk
+
+Poznamka: Vase pripomienky alebo otazky tykajuce sa tejto spravy alebo inej nasej sluzby nam poslite, prosim, pouzitim kontaktneho formulara na nasej Web stranke.
+
+Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu uctu najdete v ucelenom tvare v pohyboch cez internet banking a nemusite ju pracne skladat zo starych bmailov.
+';
+        $tatrabankaMailParser = new TatraBankaMailParser();
+        $mailContent = $tatrabankaMailParser->parse($email);
+
+        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        $this->assertEquals('EUR', $mailContent->getCurrency());
+        $this->assertEquals(12.31, $mailContent->getAmount());
+        $this->assertEquals('1234056789', $mailContent->getVs());
+        $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getDescription());
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getSs());
         $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
@@ -72,6 +111,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('USD', $mailContent->getCurrency());
         $this->assertEquals(-43.29, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
@@ -109,6 +149,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('USD', $mailContent->getCurrency());
         $this->assertEquals(-1243.29, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
@@ -146,6 +187,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        $this->assertNull($mailContent->getSourceAccountNumber());
         $this->assertEquals('USD', $mailContent->getCurrency());
         $this->assertEquals(-1243.29, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
@@ -183,6 +225,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('EUR', $mailContent->getCurrency());
         $this->assertEquals(-2.20, $mailContent->getAmount());
         $this->assertNull($mailContent->getVs());
@@ -221,6 +264,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('EUR', $mailContent->getCurrency());
         $this->assertEquals(-2.20, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
@@ -259,6 +303,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('EUR', $mailContent->getCurrency());
         $this->assertEquals(-2.20, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
@@ -298,6 +343,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('EUR', $mailContent->getCurrency());
         $this->assertEquals(-2.20, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());
@@ -338,6 +384,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $mailContent = $tatrabankaMailParser->parse($email);
 
         $this->assertEquals('SK9812369347235', $mailContent->getAccountNumber());
+        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
         $this->assertEquals('EUR', $mailContent->getCurrency());
         $this->assertEquals(-2.20, $mailContent->getAmount());
         $this->assertEquals('1234056789', $mailContent->getVs());

@@ -88,6 +88,10 @@ class TatraBankaMailParser implements ParserInterface
         $res = preg_match($pattern4, $content, $result);
         if ($res) {
             $mailContent->setDescription($result[1]);
+
+            $descriptionParts = explode(' ', $result[1], 2);
+            $hasPrefix = count($descriptionParts) === 2;
+            $mailContent->setSourceAccountNumber($descriptionParts[$hasPrefix ? 1 : 0]);
         }
 
         return $mailContent;

@@ -9,6 +9,8 @@ class MailContent
 
     private $accountNumber;
 
+    private $sourceAccountNumber;
+
     private $vs;
 
     private $ss;
@@ -152,6 +154,16 @@ class MailContent
     public function setAccountNumber(string $accountNumber)
     {
         $this->accountNumber = $accountNumber;
+    }
+
+    public function getSourceAccountNumber(): ?string
+    {
+        return $this->sourceAccountNumber;
+    }
+
+    public function setSourceAccountNumber(string $sourceAccountNumber): void
+    {
+        $this->sourceAccountNumber = $sourceAccountNumber;
     }
 
     public function getAmount(): ?float
