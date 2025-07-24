@@ -44,7 +44,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getSs());
-        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate()?->getTimestamp()?->getTimestamp());
+        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testSimpleEmailWithoutSourceAccountNumberPrefix()
@@ -82,7 +82,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('1100/000000-261426464', $mailContent->getDescription());
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getSs());
-        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate()?->getTimestamp()?->getTimestamp());
+        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testAllInputsWithDecreaseEmail()
