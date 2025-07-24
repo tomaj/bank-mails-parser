@@ -1,17 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
+use DateTime;
+use DateTimeInterface;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
 class TatraBankaMailParser implements ParserInterface
 {
-    /**
-     * @param $content
-     * @return ?MailContent
-     */
     public function parse(string $content): ?MailContent
     {
         $mailContent = new MailContent();
@@ -22,10 +21,14 @@ class TatraBankaMailParser implements ParserInterface
             return null;
         }
 
-        $mailContent->setTransactionDate(strtotime($result[1]));
+        $transactionDate = $this->parseTransactionDate($result[1]);
+        if ($transactionDate !== null) {
+            $mailContent->setTransactionDate($transactionDate);
+        }
+        
         $mailContent->setAccountNumber($result[2]);
 
-        $amount = floatval(str_replace(',', '.', str_replace(' ', '', $result[4])));
+        $amount = $this->parseAmount($result[4]);
         $currency = $result[5];
         if ($result[3] === 'znizeny') {
             $amount = -$amount;
@@ -95,5 +98,20 @@ class TatraBankaMailParser implements ParserInterface
         }
 
         return $mailContent;
+    }
+
+    private function parseTransactionDate(string $dateString): ?DateTimeInterface
+    {
+        $timestamp = strtotime($dateString);
+        if ($timestamp === false) {
+            return null;
+        }
+        
+        return new DateTime('@' . $timestamp);
+    }
+
+    private function parseAmount(string $amountString): float
+    {
+        return (float) str_replace(',', '.', str_replace(' ', '', $amountString));
     }
 }

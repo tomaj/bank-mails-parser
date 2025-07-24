@@ -1,57 +1,44 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser;
 
+use DateTimeInterface;
+
 class MailContent
 {
-    private $amount;
-
-    private $accountNumber;
-
-    private $sourceAccountNumber;
-
-    private $vs;
-
-    private $ss;
-
-    private $ks;
-
-    private $transactionDate;
-
-    private $currency;
-
-    private $receiverMessage;
-
-    private $description;
-
-    private $sign;
-
-    private $cid;
-
-    private $res;
-
-    private $ac;
-
-    private $cc;
-
-    private $tid;
-
-    private $txn;
-
-    private $rc;
+    public function __construct(
+        private ?float $amount = null,
+        private ?string $accountNumber = null,
+        private ?string $sourceAccountNumber = null,
+        private ?string $vs = null,
+        private ?string $ss = null,
+        private ?string $ks = null,
+        private ?DateTimeInterface $transactionDate = null,
+        private ?string $currency = null,
+        private ?string $receiverMessage = null,
+        private ?string $description = null,
+        private ?string $sign = null,
+        private ?string $cid = null,
+        private ?string $res = null,
+        private ?string $ac = null,
+        private ?string $cc = null,
+        private ?string $tid = null,
+        private ?string $txn = null,
+        private ?string $rc = null,
+    ) {
+    }
 
     public function getKs(): ?string
     {
         return $this->ks;
     }
 
-    public function setKs(string $ks)
+    public function setKs(?string $ks): self
     {
-        if ($ks == '') {
-            $ks = null;
-        }
-        $this->ks = $ks;
+        $this->ks = $ks === '' ? null : $ks;
+        return $this;
     }
 
     public function getSs(): ?string
@@ -59,12 +46,10 @@ class MailContent
         return $this->ss;
     }
 
-    public function setSs(string $ss)
+    public function setSs(?string $ss): self
     {
-        if ($ss == '') {
-            $ss = null;
-        }
-        $this->ss = $ss;
+        $this->ss = $ss === '' ? null : $ss;
+        return $this;
     }
 
     public function getVs(): ?string
@@ -72,12 +57,10 @@ class MailContent
         return $this->vs;
     }
 
-    public function setVs(string $vs)
+    public function setVs(?string $vs): self
     {
-        if ($vs == '') {
-            $vs = null;
-        }
-        $this->vs = $vs;
+        $this->vs = $vs === '' ? null : $vs;
+        return $this;
     }
 
     public function getCc(): ?string
@@ -85,12 +68,10 @@ class MailContent
         return $this->cc;
     }
 
-    public function setCc(string $cc)
+    public function setCc(?string $cc): self
     {
-        if ($cc == '') {
-            $cc = null;
-        }
-        $this->cc = $cc;
+        $this->cc = $cc === '' ? null : $cc;
+        return $this;
     }
 
     public function getTid(): ?string
@@ -98,12 +79,10 @@ class MailContent
         return $this->tid;
     }
 
-    public function setTid(string $tid)
+    public function setTid(?string $tid): self
     {
-        if ($tid == '') {
-            $tid = null;
-        }
-        $this->tid = $tid;
+        $this->tid = $tid === '' ? null : $tid;
+        return $this;
     }
 
     public function getReceiverMessage(): ?string
@@ -111,9 +90,10 @@ class MailContent
         return $this->receiverMessage;
     }
 
-    public function setReceiverMessage(string $receiverMessage)
+    public function setReceiverMessage(?string $receiverMessage): self
     {
         $this->receiverMessage = $receiverMessage;
+        return $this;
     }
 
     public function getDescription(): ?string
@@ -121,9 +101,10 @@ class MailContent
         return $this->description;
     }
 
-    public function setDescription(string $description)
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
     }
 
     public function getCurrency(): ?string
@@ -131,19 +112,21 @@ class MailContent
         return $this->currency;
     }
 
-    public function setCurrency(string $currency)
+    public function setCurrency(?string $currency): self
     {
         $this->currency = $currency;
+        return $this;
     }
 
-    public function getTransactionDate() // TODO
+    public function getTransactionDate(): ?DateTimeInterface
     {
         return $this->transactionDate;
     }
 
-    public function setTransactionDate($transactionDate)
+    public function setTransactionDate(?DateTimeInterface $transactionDate): self
     {
         $this->transactionDate = $transactionDate;
+        return $this;
     }
 
     public function getAccountNumber(): ?string
@@ -151,9 +134,10 @@ class MailContent
         return $this->accountNumber;
     }
 
-    public function setAccountNumber(string $accountNumber)
+    public function setAccountNumber(?string $accountNumber): self
     {
         $this->accountNumber = $accountNumber;
+        return $this;
     }
 
     public function getSourceAccountNumber(): ?string
@@ -161,9 +145,10 @@ class MailContent
         return $this->sourceAccountNumber;
     }
 
-    public function setSourceAccountNumber(string $sourceAccountNumber): void
+    public function setSourceAccountNumber(?string $sourceAccountNumber): self
     {
         $this->sourceAccountNumber = $sourceAccountNumber;
+        return $this;
     }
 
     public function getAmount(): ?float
@@ -171,14 +156,16 @@ class MailContent
         return $this->amount;
     }
 
-    public function setAmount(float $amount)
+    public function setAmount(?float $amount): self
     {
         $this->amount = $amount;
+        return $this;
     }
 
-    public function setCid(string $cid)
+    public function setCid(?string $cid): self
     {
         $this->cid = $cid;
+        return $this;
     }
 
     public function getCid(): ?string
@@ -186,9 +173,10 @@ class MailContent
         return $this->cid;
     }
 
-    public function setSign(string $sign)
+    public function setSign(?string $sign): self
     {
         $this->sign = $sign;
+        return $this;
     }
 
     public function getSign(): ?string
@@ -196,9 +184,10 @@ class MailContent
         return $this->sign;
     }
 
-    public function setRes(string $res)
+    public function setRes(?string $res): self
     {
         $this->res = $res;
+        return $this;
     }
 
     public function getRes(): ?string
@@ -206,9 +195,10 @@ class MailContent
         return $this->res;
     }
 
-    public function setAc(string $ac)
+    public function setAc(?string $ac): self
     {
         $this->ac = $ac;
+        return $this;
     }
 
     public function getAc(): ?string
@@ -216,9 +206,10 @@ class MailContent
         return $this->ac;
     }
 
-    public function setTxn(string $txn)
+    public function setTxn(?string $txn): self
     {
         $this->txn = $txn;
+        return $this;
     }
 
     public function getTxn(): ?string
@@ -226,9 +217,10 @@ class MailContent
         return $this->txn;
     }
 
-    public function setRc(string $rc)
+    public function setRc(?string $rc): self
     {
         $this->rc = $rc;
+        return $this;
     }
 
     public function getRc(): ?string

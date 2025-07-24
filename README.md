@@ -6,14 +6,17 @@ Right now only support of *Tatrabanka* two emails formats.
 
 If we will add more emails from other banks there will be need to do some refactoring (for example MailContent is strongly connected to TatraBanka)
 
-
-[![Build Status](https://secure.travis-ci.org/tomaj/bank-mails-parser.png)](http://travis-ci.org/tomaj/bank-mails-parser)
-[![Test Coverage](https://codeclimate.com/github/tomaj/bank-mails-parser/badges/coverage.svg)](https://codeclimate.com/github/tomaj/bank-mails-parser/coverage)
-[![Code Climate](https://codeclimate.com/github/tomaj/bank-mails-parser/badges/gpa.svg)](https://codeclimate.com/github/tomaj/bank-mails-parser)
-
+[![CI](https://github.com/tomaj/bank-mails-parser/workflows/CI/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions)
 [![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![Latest Unstable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/unstable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![License](https://poser.pugx.org/tomaj/bank-mails-parser/license.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+
+Requirements
+------------
+
+- PHP 8.0 or higher
+- Strong typing support
+- DateTimeInterface support for dates
 
 Installation
 ------------
@@ -41,7 +44,7 @@ echo $mailContent->getVs() . "\n";
 echo $mailContent->getReceiverMessage() . "\n";
 echo $mailContent->getDescription() . "\n";
 echo $mailContent->getCurrency() . "\n";
-echo $mailContent->getTransactionDate() . "\n";
+echo $mailContent->getTransactionDate()?->format('Y-m-d H:i:s') . "\n";
 echo $mailContent->getAccountNumber() . "\n";
 echo $mailContent->getAmount() . "\n";
 echo $mailContent->getAccountNumber() . "\n";
@@ -56,6 +59,58 @@ echo $mailContent->getSign() . "\n";
 echo $mailContent->getRes() . "\n";
 ```
 
+Development
+-----------
+
+This package uses modern PHP development tools:
+
+- **PHP 8.0+** with strict types
+- **PHPStan** for static analysis (level max)
+- **PHP CodeSniffer** for PSR-2 code style
+- **PHPUnit 10** for testing
+- **GitHub Actions** for CI/CD
+
+### Development Commands
+
+``` bash
+# Install dependencies
+composer install
+
+# Run code style check
+make sniff
+
+# Fix code style issues
+make fix
+
+# Run static analysis
+make phpstan
+
+# Run tests
+make test
+
+# Run tests with coverage
+make test-coverage
+
+# Run all checks (CI pipeline)
+make ci
+```
+
+### Code Coverage
+
+Code coverage reports are automatically generated and published to GitHub Pages for each commit to the main branch. You can view the coverage report at: `https://tomaj.github.io/bank-mails-parser/coverage/`
+
+Upgrade from 3.* to 4.*
+-----------------------
+
+For using version 4 you will need at least PHP 8.0.
+Breaking changes:
+1. Minimum PHP version is now 8.0
+2. `getTransactionDate()` now returns `?DateTimeInterface` instead of timestamp
+3. `setTransactionDate()` now accepts `?DateTimeInterface` instead of timestamp
+4. All setter methods now return `self` for method chaining
+5. Constructor property promotion is used in `MailContent` class
+6. Removed reflection usage for better performance and type safety
+
 Upgrade from 2.* to 3.*
 -----------------------
 
@@ -67,12 +122,10 @@ There were introduced multiple breaking changes:
 4. Added strict types to all methods and params
 5. Upgrade phpunit to version 9   
 
-
 Upgrade from 1.* to 2.*
 -----------------------
 
 There is one breaking change in version 2.0 - parser returns MailContent always when email is parsed. In version 1.0 - parser returns MailContent only when response from bank was OK. In version 2 you can read also FAIL emails.
-
 
 Usage with imap mail downlaoder
 -------------------------------
@@ -100,7 +153,6 @@ $downloader->fetch($criteria, function(Email $email) {
 ```
 
 *Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/imap-email-downloader```
-
 
 TODO
 ----

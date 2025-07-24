@@ -1,0 +1,19 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    
+    strictRules:
+        allRules: true
+        
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+    reportUnmatchedIgnoredErrors: true
+    
+    ignoreErrors:
+        # Allow DateTime usage with string constructor
+        - '#Call to deprecated method.*DateTime.*#'

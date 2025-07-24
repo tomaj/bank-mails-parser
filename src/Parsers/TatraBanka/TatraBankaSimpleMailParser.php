@@ -1,15 +1,21 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
-use ReflectionParameter;
+use DateTime;
+use DateTimeInterface;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
 class TatraBankaSimpleMailParser implements ParserInterface
 {
-    private $map = [
+    private array $stringFields = ['VS', 'AC', 'SIGN', 'TRES', 'CID', 'CURR', 'CC', 'TID', 'TXN', 'RC', 'HMAC'];
+    private array $floatFields = ['AMT'];
+    private array $intFields = ['RES', 'TIMESTAMP'];
+
+    private array $methodMap = [
         'VS' => 'setVs',
         'RES' => 'setRes',
         'AC' => 'setAc',
@@ -26,10 +32,6 @@ class TatraBankaSimpleMailParser implements ParserInterface
         'HMAC' => 'setSign',
     ];
 
-    /**
-     * @param $content
-     * @return ?MailContent
-     */
     public function parse(string $content): ?MailContent
     {
         $mailContent = new MailContent();
@@ -39,29 +41,19 @@ class TatraBankaSimpleMailParser implements ParserInterface
         }
 
         foreach (explode(' ', $content) as $part) {
-            [$key, $value] = array_map('trim', explode('=', $part));
+            $keyValue = array_map('trim', explode('=', $part, 2));
+            if (count($keyValue) !== 2) {
+                continue;
+            }
+            
+            [$key, $value] = $keyValue;
 
-            if (!isset($this->map[$key])) {
+            if (!isset($this->methodMap[$key])) {
                 continue;
             }
 
-            $method = $this->map[$key];
-
-            $param = new ReflectionParameter([MailContent::class, $method], 0);
-            if ($param->getType()) {
-                $type = $param->getType()->getName();
-                if ($type == 'string') {
-                    $mailContent->$method($value);
-                } elseif ($type == 'int') {
-                    $mailContent->$method(intval($value));
-                } elseif ($type == 'float') {
-                    $mailContent->$method(floatval($value));
-                } else {
-                    $mailContent->$method($value);
-                }
-            } else {
-                $mailContent->$method($value);
-            }
+            $method = $this->methodMap[$key];
+            $this->setValueByType($mailContent, $method, $key, $value);
         }
 
         if ($mailContent->getRes() === null) {
@@ -69,8 +61,28 @@ class TatraBankaSimpleMailParser implements ParserInterface
         }
 
         if ($mailContent->getTransactionDate() === null) {
-            $mailContent->setTransactionDate(time());
+            $mailContent->setTransactionDate(new DateTime());
         }
+        
         return $mailContent;
+    }
+
+    private function setValueByType(MailContent $mailContent, string $method, string $key, string $value): void
+    {
+        if (in_array($key, $this->stringFields, true)) {
+            $mailContent->$method($value);
+        } elseif (in_array($key, $this->floatFields, true)) {
+            $mailContent->$method((float) $value);
+        } elseif (in_array($key, $this->intFields, true)) {
+            if ($key === 'TIMESTAMP') {
+                $timestamp = (int) $value;
+                $dateTime = new DateTime('@' . $timestamp);
+                $mailContent->$method($dateTime);
+            } else {
+                $mailContent->$method((int) $value);
+            }
+        } else {
+            $mailContent->$method($value);
+        }
     }
 }

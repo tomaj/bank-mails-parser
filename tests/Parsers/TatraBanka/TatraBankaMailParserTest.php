@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Parses\TatraBanka;
+namespace Tomaj\BankMailsParser\Tests\Parsers\TatraBanka;
 
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 use PHPUnit\Framework\TestCase;
