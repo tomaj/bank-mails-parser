@@ -44,7 +44,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getSs());
-        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate()?->getTimestamp()?->getTimestamp());
     }
 
     public function testSimpleEmailWithoutSourceAccountNumberPrefix()
@@ -82,7 +82,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('1100/000000-261426464', $mailContent->getDescription());
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getSs());
-        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate()?->getTimestamp()?->getTimestamp());
     }
 
     public function testAllInputsWithDecreaseEmail()
@@ -120,7 +120,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('5428175648', $mailContent->getKs());
         $this->assertEquals('test-sprava-druha', $mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testEmailWithoutReceiverMessage()
@@ -158,7 +158,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('5428175648', $mailContent->getKs());
         $this->assertNull($mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testEmailWithoutDescription()
@@ -196,7 +196,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('5428175648', $mailContent->getKs());
         $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
         $this->assertNull($mailContent->getDescription());
-        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testEmailWithoutVariableSymbol()
@@ -234,7 +234,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals('5428175649', $mailContent->getKs());
         $this->assertNull($mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testEmailWithVariableSymbolInReceiverMessage()
@@ -273,7 +273,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertNull($mailContent->getKs());
         $this->assertEquals('VS1234056789', $mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     // Referencia platitela: 1234056789
@@ -312,7 +312,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     // Informacia pre prijemcu: 1234056789
@@ -352,7 +352,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertNull($mailContent->getKs());
         $this->assertEquals('1234056789', $mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     // Creditor Reference Information - SEPA XML format
@@ -393,7 +393,7 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertNull($mailContent->getKs());
         $this->assertEquals('(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)', $mailContent->getReceiverMessage());
         $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
+        $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testErrorEmail()

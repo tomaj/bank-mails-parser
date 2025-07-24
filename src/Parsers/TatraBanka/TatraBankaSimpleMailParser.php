@@ -76,11 +76,21 @@ class TatraBankaSimpleMailParser implements ParserInterface
             $mailContent->$method((float) $value);
         } elseif (in_array($key, $this->intFields, true)) {
             if ($key === 'TIMESTAMP') {
-                $timestamp = (int) $value;
+                $timestamp = $value;
                 try {
-                    $dateTime = DateTime::createFromFormat('U', (string) $timestamp);
-                    if ($dateTime !== false) {
-                        $mailContent->$method($dateTime);
+                    // Check if it's ddMMyyyyHHmmss format (14 digits)
+                    if (strlen($timestamp) === 14 && ctype_digit($timestamp)) {
+                        $dateTime = DateTime::createFromFormat('dmYHis', $timestamp);
+                        if ($dateTime !== false) {
+                            $mailContent->$method($dateTime);
+                        }
+                    } else {
+                        // Try as unix timestamp
+                        $unixTimestamp = (int) $timestamp;
+                        $dateTime = DateTime::createFromFormat('U', (string) $unixTimestamp);
+                        if ($dateTime !== false) {
+                            $mailContent->$method($dateTime);
+                        }
                     }
                 } catch (Exception) {
                     // Ignore invalid timestamp

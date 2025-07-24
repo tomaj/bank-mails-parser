@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Tests\Parsers\TatraBanka;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
 
@@ -53,7 +54,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('XCCBF1235D945841C', $mailContent->getSign());
         $this->assertEquals('123445', $mailContent->getCid());
         $this->assertEquals('OK', $mailContent->getRes());
-        $this->assertEquals(time(), $mailContent->getTransactionDate());
+        // Check that transaction date is set to current time (within 1 second tolerance)
+        $this->assertLessThanOrEqual(1, abs(time() - $mailContent->getTransactionDate()?->getTimestamp()));
     }
     
     public function testHmacCardpayEmail()
@@ -67,12 +69,13 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('OK', $mailContent->getRes());
         $this->assertEquals('740017', $mailContent->getAc());
         $this->assertEquals('978', $mailContent->getCurrency());
-        $this->assertEquals('25112016223023', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '25112016223023');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testHmacComfortpayEmail()
     {
-        $email = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 TRES=OK CID=824452 CC=************1111 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
+        $email = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 TRES=OK CID=824452 CC=************1111 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
         $parser = new TatraBankaSimpleMailParser();
         $mailContent = $parser->parse($email);
         $this->assertEquals('44.88', $mailContent->getAmount());
@@ -83,13 +86,14 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('************1111', $mailContent->getCC());
         $this->assertEquals('11224444', $mailContent->getTid());
         $this->assertEquals('978', $mailContent->getCurrency());
-        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
         $this->assertNull($mailContent->getRc());
     }
 
     public function testHmacComfortpayEmailWithRc()
     {
-        $email = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 TRES=OK CID=824452 CC=************1111 RC=00 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
+        $email = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 TRES=OK CID=824452 CC=************1111 RC=00 TID=11224444 TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
         $parser = new TatraBankaSimpleMailParser();
         $mailContent = $parser->parse($email);
         $this->assertEquals('44.88', $mailContent->getAmount());
@@ -100,7 +104,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('************1111', $mailContent->getCC());
         $this->assertEquals('11224444', $mailContent->getTid());
         $this->assertEquals('978', $mailContent->getCurrency());
-        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
         $this->assertEquals('00', $mailContent->getRc());
     }
 
@@ -116,7 +121,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('824452', $mailContent->getCid());
         $this->assertEquals('11224444', $mailContent->getTid());
         $this->assertEquals('978', $mailContent->getCurrency());
-        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testHmacComfortpayEmailWithoutTxn()
@@ -131,7 +137,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('824452', $mailContent->getCid());
         $this->assertEquals('11224444', $mailContent->getTid());
         $this->assertEquals('978', $mailContent->getCurrency());
-        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
         $this->assertNull($mailContent->getTxn());
     }
 
@@ -147,7 +154,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('824452', $mailContent->getCid());
         $this->assertEquals('11224444', $mailContent->getTid());
         $this->assertEquals('978', $mailContent->getCurrency());
-        $this->assertEquals('26112016121631', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
         $this->assertEquals('PA', $mailContent->getTxn());
     }
 
@@ -163,7 +171,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEquals('************1111', $mailContent->getCC());
         $this->assertEquals('11224444', $mailContent->getTid());
         $this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
-        $this->assertEquals('24112016170555', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
     }
 
     public function testFailHmacComfortpayEmailNoCcTidTres()
@@ -178,7 +187,8 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEmpty($mailContent->getCC());
         $this->assertEmpty($mailContent->getTid());
         $this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
-        $this->assertEquals('24032020144457', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
 
         $email = 'AMT=4.99 CURR=978 VS=5555534283 RES=FAIL TIMESTAMP=27032020121740 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1 ECDSA_KEY=1 ECDSA=a5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21081c076caa4a8732e43aa5e75a2e2c21';
         $parser = new TatraBankaSimpleMailParser();
@@ -190,6 +200,7 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $this->assertEmpty($mailContent->getCC());
         $this->assertEmpty($mailContent->getTid());
         $this->assertEquals('b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1', $mailContent->getSign());
-        $this->assertEquals('27032020121740', $mailContent->getTransactionDate());
+        $expectedDate = DateTime::createFromFormat('dmYHis', '26112016121631');
+        $this->assertEquals($expectedDate->getTimestamp(), $mailContent->getTransactionDate()?->getTimestamp());
     }
 }
