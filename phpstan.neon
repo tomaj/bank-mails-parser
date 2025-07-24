@@ -13,7 +13,3 @@ parameters:
     checkMissingIterableValueType: true
     checkGenericClassInNonGenericObjectType: true
     reportUnmatchedIgnoredErrors: true
-    
-    ignoreErrors:
-        # Allow DateTime usage with string constructor
-        - '#Call to deprecated method.*DateTime.*#'

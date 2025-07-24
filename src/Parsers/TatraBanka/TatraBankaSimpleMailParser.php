@@ -6,6 +6,7 @@ namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
 use DateTime;
 use DateTimeInterface;
+use Exception;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
@@ -76,8 +77,14 @@ class TatraBankaSimpleMailParser implements ParserInterface
         } elseif (in_array($key, $this->intFields, true)) {
             if ($key === 'TIMESTAMP') {
                 $timestamp = (int) $value;
-                $dateTime = new DateTime('@' . $timestamp);
-                $mailContent->$method($dateTime);
+                try {
+                    $dateTime = DateTime::createFromFormat('U', (string) $timestamp);
+                    if ($dateTime !== false) {
+                        $mailContent->$method($dateTime);
+                    }
+                } catch (Exception) {
+                    // Ignore invalid timestamp
+                }
             } else {
                 $mailContent->$method((int) $value);
             }

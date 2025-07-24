@@ -1,85 +1,153 @@
-BANK MAILs Parser
-====================
+# Bank Mails Parser
 
-Library for processing bank confirmation emails.
-Right now only support of *Tatrabanka* two emails formats. 
+A modern PHP library for parsing Slovak bank confirmation emails with strong typing and comprehensive testing.
 
-If we will add more emails from other banks there will be need to do some refactoring (for example MailContent is strongly connected to TatraBanka)
+Currently supports **Tatrabanka** email formats including standard transaction confirmations and ComfortPay notifications.
 
-[![CI](https://github.com/tomaj/bank-mails-parser/workflows/CI/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions)
-[![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
-[![Latest Unstable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/unstable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
-[![License](https://poser.pugx.org/tomaj/bank-mails-parser/license.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+## Features
 
-Requirements
-------------
+- 🏦 **Tatrabanka Support**: Parse standard and ComfortPay confirmation emails
+- 🔒 **Type Safe**: Built with PHP 8.0+ strict typing throughout
+- 📅 **Modern DateTime**: Uses `DateTimeInterface` for proper date handling  
+- 🧪 **Well Tested**: Comprehensive test suite with code coverage
+- 📊 **Quality Assured**: Static analysis with PHPStan at maximum level
+- 🔄 **Method Chaining**: Fluent interface for all setter methods
+
+## Installation
+
+Install via Composer:
+
+```bash
+composer require tomaj/bank-mails-parser
+```
+
+## Requirements
 
 - PHP 8.0 or higher
-- Strong typing support
-- DateTimeInterface support for dates
 
-Installation
-------------
+## Quick Start
 
-Install package via composer:
+### Standard Tatrabanka Emails
 
-``` bash
-$ composer require tomaj/bank-mails-parser
-```
-
-Usage
------
-
-Basic usage in php:
-
-``` php
+```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
-$tatraBankaMailParser = new TatraBankaMailParser();
-$mailContent = $tatraBankaMailParser->parse('mail content');
+$parser = new TatraBankaMailParser();
+$mailContent = $parser->parse($emailBody);
 
-echo $mailContent->getKs() . "\n";
-echo $mailContent->getSs() . "\n";
-echo $mailContent->getVs() . "\n";
-echo $mailContent->getReceiverMessage() . "\n";
-echo $mailContent->getDescription() . "\n";
-echo $mailContent->getCurrency() . "\n";
-echo $mailContent->getTransactionDate()?->format('Y-m-d H:i:s') . "\n";
-echo $mailContent->getAccountNumber() . "\n";
-echo $mailContent->getAmount() . "\n";
-echo $mailContent->getAccountNumber() . "\n";
-echo $mailContent->getTxn() . "\n";
+if ($mailContent !== null) {
+    echo "Amount: " . $mailContent->getAmount() . " " . $mailContent->getCurrency() . "\n";
+    echo "Variable Symbol: " . $mailContent->getVs() . "\n";
+    echo "Account: " . $mailContent->getAccountNumber() . "\n";
+    echo "Date: " . $mailContent->getTransactionDate()?->format('Y-m-d H:i:s') . "\n";
+    echo "Message: " . $mailContent->getReceiverMessage() . "\n";
+}
 ```
 
-With *TatraBankaSimpleMailParser* you can parse comforpay emails. There are other getters like CID for reccurent payments.
+### ComfortPay Emails
 
-``` php
-echo $mailContent->getCid() . "\n";
-echo $mailContent->getSign() . "\n";
-echo $mailContent->getRes() . "\n";
+```php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
+
+$parser = new TatraBankaSimpleMailParser();
+$mailContent = $parser->parse($emailBody);
+
+if ($mailContent !== null) {
+    echo "VS: " . $mailContent->getVs() . "\n";
+    echo "Result: " . $mailContent->getRes() . "\n";
+    echo "CID: " . $mailContent->getCid() . "\n";
+    echo "Sign: " . $mailContent->getSign() . "\n";
+}
 ```
 
-Development
------------
+### Method Chaining
 
-This package uses modern PHP development tools:
+All setter methods support fluent interface:
 
-- **PHP 8.0+** with strict types
-- **PHPStan** for static analysis (level max)
-- **PHP CodeSniffer** for PSR-2 code style
-- **PHPUnit 10** for testing
-- **GitHub Actions** for CI/CD
+```php
+$mailContent = new MailContent();
+$mailContent
+    ->setAmount(100.50)
+    ->setCurrency('EUR')
+    ->setVs('1234567890')
+    ->setTransactionDate(new DateTime());
+```
 
-### Development Commands
+## Available Data Fields
 
-``` bash
+The `MailContent` object provides access to all parsed transaction data:
+
+| Method | Description |
+|--------|-------------|
+| `getAmount()` | Transaction amount |
+| `getCurrency()` | Currency code (EUR, etc.) |
+| `getVs()` | Variable symbol |
+| `getSs()` | Specific symbol |  
+| `getKs()` | Constant symbol |
+| `getTransactionDate()` | Transaction date as DateTimeInterface |
+| `getAccountNumber()` | Destination account number |
+| `getSourceAccountNumber()` | Source account number |
+| `getReceiverMessage()` | Message for recipient |
+| `getDescription()` | Transaction description |
+
+**ComfortPay specific fields:**
+| Method | Description |
+|--------|-------------|
+| `getCid()` | ComfortPay ID |
+| `getSign()` | Security signature |
+| `getRes()` | Result code |
+| `getTxn()` | Transaction ID |
+| `getRc()` | Return code |
+
+## Integration Example
+
+Example integration with [IMAP Email Downloader](https://github.com/tomaj/imap-email-downloader):
+
+```php
+use Tomaj\ImapMailDownloader\Downloader;
+use Tomaj\ImapMailDownloader\MailCriteria;
+use Tomaj\ImapMailDownloader\Email;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
+
+$downloader = new Downloader('imap.server.com', 993, 'username', 'password');
+$parser = new TatraBankaMailParser();
+
+$criteria = new MailCriteria();
+$criteria->setFrom('notification@tatrabanka.sk');
+
+$downloader->fetch($criteria, function(Email $email) use ($parser) {
+    $mailContent = $parser->parse($email->getBody());
+    
+    if ($mailContent !== null) {
+        // Process the transaction data
+        processTransaction($mailContent);
+    }
+    
+    return true;
+});
+```
+
+## Development
+
+### Development Tools
+
+This package uses modern PHP development practices:
+
+- **PHPStan**: Static analysis at maximum level
+- **PHP CodeSniffer**: PSR-2 code style enforcement  
+- **PHPUnit 10**: Comprehensive testing framework
+- **GitHub Actions**: Automated CI/CD pipeline
+
+### Commands
+
+```bash
 # Install dependencies
 composer install
 
 # Run code style check
 make sniff
 
-# Fix code style issues
+# Fix code style issues  
 make fix
 
 # Run static analysis
@@ -88,74 +156,47 @@ make phpstan
 # Run tests
 make test
 
-# Run tests with coverage
+# Generate coverage report
 make test-coverage
 
-# Run all checks (CI pipeline)
+# Run all quality checks
 make ci
 ```
 
 ### Code Coverage
 
-Code coverage reports are automatically generated and published to GitHub Pages for each commit to the main branch. You can view the coverage report at: `https://tomaj.github.io/bank-mails-parser/coverage/`
+Detailed code coverage reports are automatically generated and published for every commit:
 
-Upgrade from 3.* to 4.*
------------------------
+**📊 [View Code Coverage Report](https://tomaj.github.io/bank-mails-parser/coverage/)**
 
-For using version 4 you will need at least PHP 8.0.
-Breaking changes:
-1. Minimum PHP version is now 8.0
-2. `getTransactionDate()` now returns `?DateTimeInterface` instead of timestamp
-3. `setTransactionDate()` now accepts `?DateTimeInterface` instead of timestamp
-4. All setter methods now return `self` for method chaining
-5. Constructor property promotion is used in `MailContent` class
-6. Removed reflection usage for better performance and type safety
+## Changelog
 
-Upgrade from 2.* to 3.*
------------------------
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and migration guides.
 
-For using version 3 you will need at least php 7.1.
-There were introduced multiple breaking changes:
-1. `Tomaj\BankMailsParser\Parser\ParserInterface` will no return false anymore, only `?MailContent`
-2. Introduced strict types for whole project `declare(strict_types=1);`
-3. All Tatrabanka related code was moved under `TatraBanka` folder with proper namespace
-4. Added strict types to all methods and params
-5. Upgrade phpunit to version 9   
+## Upgrading
 
-Upgrade from 1.* to 2.*
------------------------
+### From 3.x to 4.x
 
-There is one breaking change in version 2.0 - parser returns MailContent always when email is parsed. In version 1.0 - parser returns MailContent only when response from bank was OK. In version 2 you can read also FAIL emails.
+**Breaking Changes:**
+- Minimum PHP version: 8.0+
+- `getTransactionDate()` returns `?DateTimeInterface` (was timestamp)
+- `setTransactionDate()` accepts `?DateTimeInterface` (was timestamp)  
+- All setters now return `self` for method chaining
 
-Usage with imap mail downlaoder
--------------------------------
+**Migration:**
+```php
+// Before (3.x)
+$timestamp = $mailContent->getTransactionDate();
+$date = new DateTime('@' . $timestamp);
 
-Example how to use with [imap mail downloader](https://github.com/tomaj/bank-mails-parser):
-
-``` php
-use Tomaj\ImapMailDownloader\Downloader;
-use Tomaj\ImapMailDownloader\MailCriteria;
-use Tomaj\ImapMailDownloader\Email;
-use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
-
-$downloader = new Downloader('*imap host*', *port*, '*username*', '*password*');
-
-$criteria = new MailCriteria();
-$criteria->setFrom('some@email.com');
-$downloader->fetch($criteria, function(Email $email) {
-    $tatraBankaMailParser = new TatraBankaMailParser();
-	$mailContent = $tatraBankaMailParser->parse($email->getBody());
-	
-	// process $mailContent data...
-	
-	return true;
-});
+// After (4.x)  
+$date = $mailContent->getTransactionDate();
 ```
 
-*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/imap-email-downloader```
+## Contributing
 
-TODO
-----
+We welcome contributions! Please feel free to submit pull requests for additional bank parsers or improvements.
 
-Add parses for other banks confirmation emails.
-Feel free to fork and create pull requests with other banks parsers.
+## License
+
+This project is licensed under the LGPL-2.0-or-later license.

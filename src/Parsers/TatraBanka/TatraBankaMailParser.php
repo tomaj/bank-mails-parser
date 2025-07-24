@@ -6,6 +6,7 @@ namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
 use DateTime;
 use DateTimeInterface;
+use Exception;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
@@ -107,7 +108,11 @@ class TatraBankaMailParser implements ParserInterface
             return null;
         }
         
-        return new DateTime('@' . $timestamp);
+        try {
+            return DateTime::createFromFormat('U', (string) $timestamp);
+        } catch (Exception) {
+            return null;
+        }
     }
 
     private function parseAmount(string $amountString): float
