@@ -67,7 +67,8 @@ class TatraBankaMailParser implements ParserInterface
         // - some banks send here variable symbol in Creditor Reference Information - SEPA XML format
         // loads VS provided in formats:
         // - Informacia pre prijemcu: 1234056789
-        // - Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
+        // - Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789
+        //   (/Ref)(/CdtrRefInf)
         if ($mailContent->getVs() === null) {
             $pattern = '/Informacia pre prijemcu:.*\b([0-9]{1,10})\b.*/i';
             $res = preg_match($pattern, $content, $result);
