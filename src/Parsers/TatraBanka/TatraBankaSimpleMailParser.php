@@ -14,20 +14,19 @@ class TatraBankaSimpleMailParser implements ParserInterface
 {
     private array $stringFields = ['VS', 'AC', 'SIGN', 'TRES', 'CID', 'CURR', 'CC', 'TID', 'TXN', 'RC', 'HMAC'];
     private array $floatFields = ['AMT'];
-    private array $intFields = ['RES', 'TIMESTAMP'];
+    private array $intFields = ['RES'];
 
     private array $methodMap = [
         'VS' => 'setVs',
         'RES' => 'setRes',
         'AC' => 'setAc',
         'SIGN' => 'setSign',
-        'TRES' => 'setRes',
+        'TRES' => 'setTres',
         'CID' => 'setCid',
         'AMT' => 'setAmount',
         'CURR' => 'setCurrency',
         'CC' => 'setCc',
         'TID' => 'setTid',
-        'TIMESTAMP' => 'setTransactionDate',
         'TXN' => 'setTxn',
         'RC' => 'setRc',
         'HMAC' => 'setSign',
@@ -37,24 +36,37 @@ class TatraBankaSimpleMailParser implements ParserInterface
     {
         $mailContent = new MailContent();
 
-        if (empty($content)) {
-            return null;
-        }
-
-        foreach (explode(' ', $content) as $part) {
-            $keyValue = array_map('trim', explode('=', $part, 2));
-            if (count($keyValue) !== 2) {
-                continue;
-            }
-            
-            [$key, $value] = $keyValue;
-
-            if (!isset($this->methodMap[$key])) {
+        $lines = explode("\n", $content);
+        foreach ($lines as $line) {
+            if (strpos($line, '=') === false) {
                 continue;
             }
 
-            $method = $this->methodMap[$key];
-            $this->setValueByType($mailContent, $method, $key, $value);
+            $parts = explode(' ', $line);
+            if (empty($parts)) {
+                continue;
+            }
+
+            foreach ($parts as $part) {
+                $keyValue = array_map('trim', explode('=', $part, 2));
+                if (count($keyValue) !== 2) {
+                    continue;
+                }
+
+                [$key, $value] = $keyValue;
+
+                if ($key === 'TIMESTAMP') {
+                    $this->setTimestamp($mailContent, $value);
+                    continue;
+                }
+
+                if (!isset($this->methodMap[$key])) {
+                    continue;
+                }
+
+                $method = $this->methodMap[$key];
+                $this->setValueByType($mailContent, $method, $key, $value);
+            }
         }
 
         if ($mailContent->getRes() === null) {
@@ -64,8 +76,30 @@ class TatraBankaSimpleMailParser implements ParserInterface
         if ($mailContent->getTransactionDate() === null) {
             $mailContent->setTransactionDate(new DateTime());
         }
-        
+
         return $mailContent;
+    }
+
+    private function setTimestamp(MailContent $mailContent, string $timestamp): void
+    {
+        try {
+            // Check if it's ddMMyyyyHHmmss format (14 digits)
+            if (strlen($timestamp) === 14 && ctype_digit($timestamp)) {
+                $dateTime = DateTime::createFromFormat('dmYHis', $timestamp);
+                if ($dateTime !== false) {
+                    $mailContent->setTransactionDate($dateTime);
+                }
+            } else {
+                // Try as unix timestamp
+                $unixTimestamp = (int) $timestamp;
+                $dateTime = DateTime::createFromFormat('U', (string) $unixTimestamp);
+                if ($dateTime !== false) {
+                    $mailContent->setTransactionDate($dateTime);
+                }
+            }
+        } catch (Exception) {
+            // Ignore invalid timestamp
+        }
     }
 
     private function setValueByType(MailContent $mailContent, string $method, string $key, string $value): void
@@ -75,30 +109,9 @@ class TatraBankaSimpleMailParser implements ParserInterface
         } elseif (in_array($key, $this->floatFields, true)) {
             $mailContent->$method((float) $value);
         } elseif (in_array($key, $this->intFields, true)) {
-            if ($key === 'TIMESTAMP') {
-                $timestamp = $value;
-                try {
-                    // Check if it's ddMMyyyyHHmmss format (14 digits)
-                    if (strlen($timestamp) === 14 && ctype_digit($timestamp)) {
-                        $dateTime = DateTime::createFromFormat('dmYHis', $timestamp);
-                        if ($dateTime !== false) {
-                            $mailContent->$method($dateTime);
-                        }
-                    } else {
-                        // Try as unix timestamp
-                        $unixTimestamp = (int) $timestamp;
-                        $dateTime = DateTime::createFromFormat('U', (string) $unixTimestamp);
-                        if ($dateTime !== false) {
-                            $mailContent->$method($dateTime);
-                        }
-                    }
-                } catch (Exception) {
-                    // Ignore invalid timestamp
-                }
-            } else {
-                $mailContent->$method((int) $value);
-            }
+            $mailContent->$method((int) $value);
         } else {
+            // Fallback for other types, though ideally all fields should be explicitly handled
             $mailContent->$method($value);
         }
     }

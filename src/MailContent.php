@@ -27,6 +27,7 @@ class MailContent
         private ?string $tid = null,
         private ?string $txn = null,
         private ?string $rc = null,
+        private ?string $tres = null,
     ) {
     }
 
@@ -226,5 +227,16 @@ class MailContent
     public function getRc(): ?string
     {
         return $this->rc;
+    }
+
+    public function setTres(?string $tres): self
+    {
+        $this->tres = $tres;
+        return $this;
+    }
+
+    public function getTres(): ?string
+    {
+        return $this->tres;
     }
 }

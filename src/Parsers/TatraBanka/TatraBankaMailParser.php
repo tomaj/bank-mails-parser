@@ -16,8 +16,9 @@ class TatraBankaMailParser implements ParserInterface
     {
         $mailContent = new MailContent();
 
-        $pattern1 = '/(.*) bol zostatok Vasho uctu ([a-zA-Z0-9]+) (zvyseny|znizeny) o ([0-9 ]+,[0-9]+) ([a-zA-Z]+)/m';
-        $res = preg_match($pattern1, $content, $result);
+        $pattern = '/(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{1,2}) bol zostatok Vasho uctu (.*) (zvyseny|znizeny) o (.*) (.*)./';
+        $result = [];
+        $res = preg_match($pattern, $content, $result);
         if (!$res) {
             return null;
         }
@@ -26,7 +27,7 @@ class TatraBankaMailParser implements ParserInterface
         if ($transactionDate !== null) {
             $mailContent->setTransactionDate($transactionDate);
         }
-        
+
         $mailContent->setAccountNumber($result[2]);
 
         $amount = $this->parseAmount($result[4]);
@@ -34,29 +35,40 @@ class TatraBankaMailParser implements ParserInterface
         if ($result[3] === 'znizeny') {
             $amount = -$amount;
         }
+
         $mailContent->setAmount($amount);
         $mailContent->setCurrency($currency);
 
-        $pattern = '/Informacia pre prijemcu: (.*)/m';
-        $res = preg_match($pattern, $content, $result);
+        $pattern2 = '/Referencia platitela: (.*)$/m';
+        $res = preg_match($pattern2, $content, $result);
         if ($res) {
-            $mailContent->setReceiverMessage($result[1]);
+            $reference = trim($result[1]);
+            $pattern3 = '/\/VS([0-9]+)\/SS([0-9]*)\/KS([0-9]*)/';
+            $res = preg_match($pattern3, $reference, $result);
+            if ($res) {
+                $mailContent->setVs($result[1]);
+                if (!empty($result[2])) {
+                    $mailContent->setSs($result[2]);
+                }
+                if (!empty($result[3])) {
+                    $mailContent->setKs($result[3]);
+                }
+            }
         }
 
-        // loads VS provided in format:
-        // - Referencia platitela: /VS1234056789/SS/KS
-        $pattern = '/Referencia platitela: \/VS(.*)\/SS(.*)\/KS(.*)/m';
-        $res = preg_match($pattern, $content, $result);
+        $pattern5 = '/Informacia pre prijemcu: (.*)/m';
+        $res = preg_match($pattern5, $content, $result);
         if ($res) {
-            $mailContent->setVs($result[1]);
-            $mailContent->setSs($result[2]);
-            $mailContent->setKs($result[3]);
+            $mailContent->setReceiverMessage(trim($result[1]));
         }
 
-        // search whole email for number with `vs` prefix
-        if ($mailContent->getVs() === null) {
-            $pattern = '/vs([0-9]{1,10})/i';
-            $res = preg_match($pattern, $content, $result);
+        // if no VS found in main reference line and receiver message doesn't contain VS as prefix
+        // - some email templates have separate field for "Informacia pre prijemcu"
+        // - other email templates move VS to this field when reference field is empty
+        if ($mailContent->getVs() === null && $mailContent->getReceiverMessage() !== null) {
+            $receiverMessage = $mailContent->getReceiverMessage();
+            $pattern = '/VS:([0-9]{1,10})/i';
+            $res = preg_match($pattern, $receiverMessage, $result);
             if ($res) {
                 $mailContent->setVs($result[1]);
             }
@@ -95,8 +107,11 @@ class TatraBankaMailParser implements ParserInterface
             $mailContent->setDescription($result[1]);
 
             $descriptionParts = explode(' ', $result[1], 2);
-            $hasPrefix = count($descriptionParts) === 2;
-            $mailContent->setSourceAccountNumber($descriptionParts[$hasPrefix ? 1 : 0]);
+            if (count($descriptionParts) > 1) {
+                $mailContent->setSourceAccountNumber($descriptionParts[1]);
+            } else {
+                $mailContent->setSourceAccountNumber($descriptionParts[0]);
+            }
         }
 
         return $mailContent;
@@ -108,9 +123,10 @@ class TatraBankaMailParser implements ParserInterface
         if ($timestamp === false) {
             return null;
         }
-        
+
         try {
-            return DateTime::createFromFormat('U', (string) $timestamp);
+            $dateTime = DateTime::createFromFormat('U', (string) $timestamp);
+            return $dateTime !== false ? $dateTime : null;
         } catch (Exception) {
             return null;
         }
