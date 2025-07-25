@@ -8,7 +8,6 @@ Currently supports **Tatrabanka** email formats including standard transaction c
 
 - 🏦 **Tatrabanka Support**: Parse standard and ComfortPay confirmation emails
 - 🔒 **Type Safe**: Built with PHP 8.0+ strict typing throughout
-- 📅 **Modern DateTime**: Uses `DateTimeInterface` for proper date handling  
 - 🧪 **Well Tested**: Comprehensive test suite with code coverage
 - 📊 **Quality Assured**: Static analysis with PHPStan at maximum level
 - 🔄 **Method Chaining**: Fluent interface for all setter methods
