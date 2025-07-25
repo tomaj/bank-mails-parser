@@ -1,0 +1,46 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ master, main ]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    name: Code Coverage
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.1
+        extensions: mbstring, xml, ctype, iconv, intl
+        coverage: xdebug
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-8.1-${{ hashFiles('**/composer.json') }}
+        restore-keys: |
+          ${{ runner.os }}-php-8.1-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Create build directory
+      run: mkdir -p build/logs
+
+    - name: Generate test coverage report
+      run: vendor/bin/phpunit --coverage-html=coverage-report --coverage-text
+
+    - name: Deploy coverage report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./coverage-report
+        destination_dir: coverage
