@@ -10,20 +10,21 @@ use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
 
 class TatraBankaSimpleMailParserTest extends TestCase
 {
-    public function testTatra()
+    public function testTatra(): void
     {
         $email = 'bla VS=1234056789 bla SIGN=1234567 bla RES=OK bla CID=123445 bla';
 
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('1234567', $mailContent->getSign());
-        $this->assertEquals('123445', $mailContent->getCid());
-        $this->assertEquals('OK', $mailContent->getRes());
+        self::assertNotNull($mailContent);
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('1234567', $mailContent->getSign());
+        self::assertEquals('123445', $mailContent->getCid());
+        self::assertEquals('OK', $mailContent->getRes());
     }
 
-    public function testTatra2()
+    public function testTatra2(): void
     {
         $email = 'This is Tatra Bank confirmation email. Please find the details of the transaction below.' . "\n\n" .
             'VS=1234056789 TRES=0 RES=OK AC=123456 SIGN=XCCBF1235D945841C CID=123445';
@@ -31,21 +32,21 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('0', $mailContent->getTres());
-        $this->assertEquals('OK', $mailContent->getRes());
-        $this->assertEquals('123456', $mailContent->getAc());
-        $this->assertEquals('XCCBF1235D945841C', $mailContent->getSign());
-        $this->assertEquals('123445', $mailContent->getCid());
-        $this->assertEquals('OK', $mailContent->getRes());
+        self::assertNotNull($mailContent);
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('0', $mailContent->getTres());
+        self::assertEquals('OK', $mailContent->getRes());
+        self::assertEquals('123456', $mailContent->getAc());
+        self::assertEquals('XCCBF1235D945841C', $mailContent->getSign());
+        self::assertEquals('123445', $mailContent->getCid());
+        self::assertEquals('OK', $mailContent->getRes());
         // Check that transaction date is set to current time (within 1 second tolerance)
-        $this->assertLessThanOrEqual(
-            1,
-            abs(time() - $mailContent->getTransactionDate()?->getTimestamp())
-        );
+        $transactionDate = $mailContent->getTransactionDate();
+        self::assertNotNull($transactionDate);
+        self::assertLessThanOrEqual(1, abs(time() - $transactionDate->getTimestamp()));
     }
 
-    public function testHmacCardpayEmail()
+    public function testHmacCardpayEmail(): void
     {
         $email = 'This is TatraBanka notification.' . "\n\n" .
                 'Please do not reply to this message, it has been sent from automated notification mailbox.' . "\n\n" .
@@ -55,19 +56,20 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertEquals('1234567890', $mailContent->getVs());
-        $this->assertEquals(12.50, $mailContent->getAmount());
-        $this->assertEquals('740017', $mailContent->getAc());
-        $this->assertEquals('978', $mailContent->getCurrency());
+        self::assertNotNull($mailContent);
+        self::assertEquals('1234567890', $mailContent->getVs());
+        self::assertEquals(12.50, $mailContent->getAmount());
+        self::assertEquals('740017', $mailContent->getAc());
+        self::assertEquals('978', $mailContent->getCurrency());
 
         $expectedDate = DateTime::createFromFormat('dmYHis', '25112016223023');
-        $this->assertEquals(
-            $expectedDate->getTimestamp(),
-            $mailContent->getTransactionDate()?->getTimestamp()
-        );
+        self::assertNotFalse($expectedDate);
+        $transactionDate = $mailContent->getTransactionDate();
+        self::assertNotNull($transactionDate);
+        self::assertEquals($expectedDate->getTimestamp(), $transactionDate->getTimestamp());
     }
 
-    public function testHmacComfortpayEmail()
+    public function testHmacComfortpayEmail(): void
     {
         $email = 'This is TatraBanka ComfortPay notification.' . "\n\n" .
                 'Please do not reply to this message, it has been sent from automated notification mailbox.' . "\n\n" .
@@ -77,19 +79,20 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertEquals('1234567890', $mailContent->getVs());
-        $this->assertEquals(10.00, $mailContent->getAmount());
-        $this->assertEquals('740017', $mailContent->getAc());
-        $this->assertEquals('978', $mailContent->getCurrency());
+        self::assertNotNull($mailContent);
+        self::assertEquals('1234567890', $mailContent->getVs());
+        self::assertEquals(10.00, $mailContent->getAmount());
+        self::assertEquals('740017', $mailContent->getAc());
+        self::assertEquals('978', $mailContent->getCurrency());
 
         $expectedDate = DateTime::createFromFormat('dmYHis', '25112016223023');
-        $this->assertEquals(
-            $expectedDate->getTimestamp(),
-            $mailContent->getTransactionDate()?->getTimestamp()
-        );
+        self::assertNotFalse($expectedDate);
+        $transactionDate = $mailContent->getTransactionDate();
+        self::assertNotNull($transactionDate);
+        self::assertEquals($expectedDate->getTimestamp(), $transactionDate->getTimestamp());
     }
 
-    public function testResultNull()
+    public function testResultNull(): void
     {
         $email = 'This is TatraBanka notification.' . "\n\n" .
                 'Please do not reply to this message, it has been sent from automated notification mailbox.' . "\n\n" .
@@ -99,10 +102,10 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertNull($mailContent);
+        self::assertNull($mailContent);
     }
 
-    public function testNotRecognised()
+    public function testNotRecognised(): void
     {
         $email = 'This is TatraBanka notification. Please do not reply to this message, ' .
                 'it has been sent from automated notification mailbox. HMAC bla bla bla';
@@ -110,10 +113,10 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertNull($mailContent);
+        self::assertNull($mailContent);
     }
 
-    public function testNotRecognised2()
+    public function testNotRecognised2(): void
     {
         $email = 'This is TatraBanka notification.' . "\n\n" .
                 'Please do not reply to this message, it has been sent from automated notification mailbox.' . "\n\n" .
@@ -122,12 +125,12 @@ class TatraBankaSimpleMailParserTest extends TestCase
         $tatrabankaSimpleMailParser = new TatraBankaSimpleMailParser();
         $mailContent = $tatrabankaSimpleMailParser->parse($email);
 
-        $this->assertEquals('OK', $mailContent->getRes());
-        $this->assertEquals('A4CC0E2EB5A6A6B006FA31E4BF50D7E5436BDD15', $mailContent->getSign());
+        self::assertNotNull($mailContent);
+        self::assertEquals('OK', $mailContent->getRes());
+        self::assertEquals('A4CC0E2EB5A6A6B006FA31E4BF50D7E5436BDD15', $mailContent->getSign());
         // Check that transaction date is set to current time (within 1 second tolerance)
-        $this->assertLessThanOrEqual(
-            1,
-            abs(time() - $mailContent->getTransactionDate()?->getTimestamp())
-        );
+        $transactionDate = $mailContent->getTransactionDate();
+        self::assertNotNull($transactionDate);
+        self::assertLessThanOrEqual(1, abs(time() - $transactionDate->getTimestamp()));
     }
 }

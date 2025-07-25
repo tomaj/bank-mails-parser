@@ -12,10 +12,16 @@ use Tomaj\BankMailsParser\Parser\ParserInterface;
 
 class TatraBankaSimpleMailParser implements ParserInterface
 {
+    /** @var array<string> */
     private array $stringFields = ['VS', 'AC', 'SIGN', 'TRES', 'CID', 'CURR', 'CC', 'TID', 'TXN', 'RC', 'HMAC'];
+    
+    /** @var array<string> */
     private array $floatFields = ['AMT'];
+    
+    /** @var array<string> */
     private array $intFields = ['RES'];
 
+    /** @var array<string, string> */
     private array $methodMap = [
         'VS' => 'setVs',
         'RES' => 'setRes',
@@ -43,7 +49,7 @@ class TatraBankaSimpleMailParser implements ParserInterface
             }
 
             $parts = explode(' ', $line);
-            if (empty($parts)) {
+            if (count($parts) === 0) {
                 continue;
             }
 
@@ -105,14 +111,27 @@ class TatraBankaSimpleMailParser implements ParserInterface
     private function setValueByType(MailContent $mailContent, string $method, string $key, string $value): void
     {
         if (in_array($key, $this->stringFields, true)) {
-            $mailContent->$method($value);
+            match ($method) {
+                'setVs' => $mailContent->setVs($value),
+                'setAc' => $mailContent->setAc($value),
+                'setSign' => $mailContent->setSign($value),
+                'setTres' => $mailContent->setTres($value),
+                'setCid' => $mailContent->setCid($value),
+                'setCurrency' => $mailContent->setCurrency($value),
+                'setCc' => $mailContent->setCc($value),
+                'setTid' => $mailContent->setTid($value),
+                'setTxn' => $mailContent->setTxn($value),
+                'setRc' => $mailContent->setRc($value),
+                default => null,
+            };
         } elseif (in_array($key, $this->floatFields, true)) {
-            $mailContent->$method((float) $value);
+            if ($method === 'setAmount') {
+                $mailContent->setAmount((float) $value);
+            }
         } elseif (in_array($key, $this->intFields, true)) {
-            $mailContent->$method((int) $value);
-        } else {
-            // Fallback for other types, though ideally all fields should be explicitly handled
-            $mailContent->$method($value);
+            if ($method === 'setRes') {
+                $mailContent->setRes($value);
+            }
         }
     }
 }

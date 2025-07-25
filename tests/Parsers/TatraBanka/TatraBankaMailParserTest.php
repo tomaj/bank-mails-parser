@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class TatraBankaMailParserTest extends TestCase
 {
-    public function testSimpleEmail()
+    public function testSimpleEmail(): void
     {
         $email = 'Vazeny klient,
 
@@ -37,22 +37,23 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        self::assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testSimpleEmailWithoutSourceAccountNumberPrefix()
+    public function testSimpleEmailWithoutSourceAccountNumberPrefix(): void
     {
         $email = 'Vazeny klient,
 
@@ -80,22 +81,23 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
-        $this->assertEquals('CCINT 000000-261426464', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        self::assertEquals('CCINT 000000-261426464', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testEmailWithVsInReceiverMessage()
+    public function testEmailWithVsInReceiverMessage(): void
     {
         $email = 'Vazeny klient,
 
@@ -123,22 +125,23 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('1234056789', $mailContent->getReceiverMessage());
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('1234056789', $mailContent->getReceiverMessage());
+        self::assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testEmailWithVsInReceiversMessage()
+    public function testEmailWithVsInReceiversMessage(): void
     {
         $email = 'Vazeny klient,
 
@@ -166,22 +169,23 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('VS:1234056789', $mailContent->getReceiverMessage());
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('VS:1234056789', $mailContent->getReceiverMessage());
+        self::assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testEmailWithVsInReceiversMessageSepaFormat()
+    public function testEmailWithVsInReceiversMessageSepaFormat(): void
     {
         $email = 'Vazeny klient,
 
@@ -209,25 +213,26 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals(
             '(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)',
             $mailContent->getReceiverMessage()
         );
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testSimpleEmailWithSs()
+    public function testSimpleEmailWithSs(): void
     {
         $email = 'Vazeny klient,
 
@@ -255,31 +260,32 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('1234', $mailContent->getSs());
-        $this->assertEquals('308', $mailContent->getKs());
-        $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('1234', $mailContent->getSs());
+        self::assertEquals('308', $mailContent->getKs());
+        self::assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        self::assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testNotRecognised()
+    public function testNotRecognised(): void
     {
         $email = 'Not TB email';
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertNull($mailContent);
+        self::assertNull($mailContent);
     }
 
-    public function testSimpleEmailDecrease()
+    public function testSimpleEmailDecrease(): void
     {
         $email = 'Vazeny klient,
 
@@ -307,22 +313,23 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(-12.31, $mailContent->getAmount());
-        $this->assertEquals('1234056789', $mailContent->getVs());
-        $this->assertEquals('test-sprava', $mailContent->getReceiverMessage());
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertEquals('1100/000000-261426464', $mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(-12.31, $mailContent->getAmount());
+        self::assertEquals('1234056789', $mailContent->getVs());
+        self::assertEquals('test-sprava', $mailContent->getReceiverMessage());
+        self::assertEquals('CCINT 1100/000000-261426464', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );
     }
 
-    public function testSimpleEmailDecreaseFromDifferentSourceAccount()
+    public function testSimpleEmailDecreaseFromDifferentSourceAccount(): void
     {
         $email = 'Vazeny klient,
 
@@ -349,16 +356,17 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->getAccountNumber());
-        $this->assertNull($mailContent->getSourceAccountNumber());
-        $this->assertEquals('EUR', $mailContent->getCurrency());
-        $this->assertEquals(-12.31, $mailContent->getAmount());
-        $this->assertNull($mailContent->getVs());
-        $this->assertEquals('Informacia pre prijemcu', $mailContent->getReceiverMessage());
-        $this->assertEquals('UCUBER', $mailContent->getDescription());
-        $this->assertNull($mailContent->getKs());
-        $this->assertNull($mailContent->getSs());
-        $this->assertEquals(
+        self::assertNotNull($mailContent);
+        self::assertEquals('SK9812353347235', $mailContent->getAccountNumber());
+        self::assertNull($mailContent->getSourceAccountNumber());
+        self::assertEquals('EUR', $mailContent->getCurrency());
+        self::assertEquals(-12.31, $mailContent->getAmount());
+        self::assertNull($mailContent->getVs());
+        self::assertEquals('Informacia pre prijemcu', $mailContent->getReceiverMessage());
+        self::assertEquals('UCUBER', $mailContent->getDescription());
+        self::assertNull($mailContent->getKs());
+        self::assertNull($mailContent->getSs());
+        self::assertEquals(
             strtotime('16.1.2015 12:51'),
             $mailContent->getTransactionDate()?->getTimestamp()
         );

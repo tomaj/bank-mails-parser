@@ -19,7 +19,7 @@ class TatraBankaMailParser implements ParserInterface
         $pattern = '/(\d{1,2}\.\d{1,2}\.\d{4} \d{1,2}:\d{1,2}) bol zostatok Vasho uctu (.*) (zvyseny|znizeny) o (.*) (.*)./';
         $result = [];
         $res = preg_match($pattern, $content, $result);
-        if (!$res) {
+        if ($res !== 1) {
             return null;
         }
 
@@ -41,16 +41,16 @@ class TatraBankaMailParser implements ParserInterface
 
         $pattern2 = '/Referencia platitela: (.*)$/m';
         $res = preg_match($pattern2, $content, $result);
-        if ($res) {
+        if ($res === 1) {
             $reference = trim($result[1]);
             $pattern3 = '/\/VS([0-9]+)\/SS([0-9]*)\/KS([0-9]*)/';
             $res = preg_match($pattern3, $reference, $result);
-            if ($res) {
+            if ($res === 1) {
                 $mailContent->setVs($result[1]);
-                if (!empty($result[2])) {
+                if ($result[2] !== '') {
                     $mailContent->setSs($result[2]);
                 }
-                if (!empty($result[3])) {
+                if ($result[3] !== '') {
                     $mailContent->setKs($result[3]);
                 }
             }
@@ -58,7 +58,7 @@ class TatraBankaMailParser implements ParserInterface
 
         $pattern5 = '/Informacia pre prijemcu: (.*)/m';
         $res = preg_match($pattern5, $content, $result);
-        if ($res) {
+        if ($res === 1) {
             $mailContent->setReceiverMessage(trim($result[1]));
         }
 
@@ -69,7 +69,7 @@ class TatraBankaMailParser implements ParserInterface
             $receiverMessage = $mailContent->getReceiverMessage();
             $pattern = '/VS:([0-9]{1,10})/i';
             $res = preg_match($pattern, $receiverMessage, $result);
-            if ($res) {
+            if ($res === 1) {
                 $mailContent->setVs($result[1]);
             }
         }
@@ -84,7 +84,7 @@ class TatraBankaMailParser implements ParserInterface
         if ($mailContent->getVs() === null) {
             $pattern = '/Informacia pre prijemcu:.*\b([0-9]{1,10})\b.*/i';
             $res = preg_match($pattern, $content, $result);
-            if ($res) {
+            if ($res === 1) {
                 $mailContent->setVs($result[1]);
             }
         }
@@ -96,14 +96,14 @@ class TatraBankaMailParser implements ParserInterface
         if ($mailContent->getVs() === null) {
             $pattern = '/Referencia platitela:.*\b([0-9]{1,10})\b.*/i';
             $res = preg_match($pattern, $content, $result);
-            if ($res) {
+            if ($res === 1) {
                 $mailContent->setVs($result[1]);
             }
         }
 
         $pattern4 = '/Popis transakcie: (.*)/m';
         $res = preg_match($pattern4, $content, $result);
-        if ($res) {
+        if ($res === 1) {
             $mailContent->setDescription($result[1]);
 
             $descriptionParts = explode(' ', $result[1], 2);
