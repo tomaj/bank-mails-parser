@@ -7,7 +7,7 @@ Currently supports **Tatrabanka** email formats including standard transaction c
 ## Features
 
 - 🏦 **Tatrabanka Support**: Parse standard and ComfortPay confirmation emails
-- 🔒 **Type Safe**: Built with PHP 8.0+ strict typing throughout
+- 🔒 **Type Safe**: Built with PHP 8.1+ strict typing throughout
 - 🧪 **Well Tested**: Comprehensive test suite with code coverage
 - 📊 **Quality Assured**: Static analysis with PHPStan at maximum level
 - 🔄 **Method Chaining**: Fluent interface for all setter methods
@@ -22,7 +22,7 @@ composer require tomaj/bank-mails-parser
 
 ## Requirements
 
-- PHP 8.0 or higher
+- PHP 8.1 or higher
 
 ## Quick Start
 
@@ -177,7 +177,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history and migration guid
 ### From 3.x to 4.x
 
 **Breaking Changes:**
-- Minimum PHP version: 8.0+
+- Minimum PHP version: 8.1+
 - `getTransactionDate()` returns `?DateTimeInterface` (was timestamp)
 - `setTransactionDate()` accepts `?DateTimeInterface` (was timestamp)  
 - All setters now return `self` for method chaining

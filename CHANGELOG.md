@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- PHP 8.0+ support with modern features
+- PHP 8.1+ support with modern features
 - Constructor property promotion in `MailContent` class
 - Strong typing throughout the entire codebase
 - `DateTimeInterface` support for transaction dates
@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PSR-4 autoloading standard
 
 ### Changed
-- **BREAKING**: Minimum PHP version requirement increased to 8.0
+- **BREAKING**: Minimum PHP version requirement increased to 8.1
 - **BREAKING**: `getTransactionDate()` now returns `?DateTimeInterface` instead of timestamp
 - **BREAKING**: `setTransactionDate()` now accepts `?DateTimeInterface` instead of timestamp
 - **BREAKING**: All setter methods now return `self` for method chaining
