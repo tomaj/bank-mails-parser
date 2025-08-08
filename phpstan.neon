@@ -1,0 +1,9 @@
+parameters:
+    level: 5
+    paths:
+        - src
+    ignoreErrors:
+        # OpenPGP library has dynamic types
+        - '#Instanceof between mixed and OpenPGP_SecretSubkeyPacket will always evaluate to false#'
+        # PHP 7.2 compatibility - ReflectionType::getName() was added in PHP 7.1
+        - '#Call to an undefined method ReflectionType::getName\(\)#'

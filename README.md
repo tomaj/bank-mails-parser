@@ -2,9 +2,10 @@ BANK MAILs Parser
 ====================
 
 Library for processing bank confirmation emails.
-Right now only support of *Tatrabanka* two emails formats. 
-
-If we will add more emails from other banks there will be need to do some refactoring (for example MailContent is strongly connected to TatraBanka)
+Currently supports:
+- **TatraBanka** - Two email formats (TatraBankaMailParser, TatraBankaSimpleMailParser, TatraBankaStatementMailParser)
+- **ČSOB CZ** - Czech ČSOB emails (CsobMailParser)  
+- **ČSOB SK** - Slovak ČSOB emails (SkCsobMailParser)
 
 
 [![Build Status](https://secure.travis-ci.org/tomaj/bank-mails-parser.png)](http://travis-ci.org/tomaj/bank-mails-parser)
@@ -27,7 +28,9 @@ $ composer require tomaj/bank-mails-parser
 Usage
 -----
 
-Basic usage in php:
+### TatraBanka parsers
+
+Basic usage with TatraBanka parser:
 
 ``` php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
@@ -54,6 +57,60 @@ With *TatraBankaSimpleMailParser* you can parse comforpay emails. There are othe
 echo $mailContent->getCid() . "\n";
 echo $mailContent->getSign() . "\n";
 echo $mailContent->getRes() . "\n";
+```
+
+With *TatraBankaStatementMailParser* you can parse encrypted PGP emails containing payment statements:
+
+``` php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
+
+$decryptor = new TatraBankaMailDecryptor('/path/to/private-key.asc', 'passphrase');
+$parser = new TatraBankaStatementMailParser($decryptor);
+$mailContents = $parser->parseMulti('encrypted mail content');
+
+foreach ($mailContents as $mailContent) {
+    echo $mailContent->getVs() . "\n";
+    echo $mailContent->getAmount() . "\n";
+    echo $mailContent->getCurrency() . "\n";
+}
+```
+
+### ČSOB parsers
+
+For Czech ČSOB emails:
+
+``` php
+use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
+
+$csobMailParser = new CsobMailParser();
+$mailContents = $csobMailParser->parseMulti('mail content');
+
+foreach ($mailContents as $mailContent) {
+    echo $mailContent->getVs() . "\n";
+    echo $mailContent->getKs() . "\n";
+    echo $mailContent->getAmount() . "\n";
+    echo $mailContent->getCurrency() . "\n";
+    echo $mailContent->getAccountNumber() . "\n";
+    echo $mailContent->getSourceAccountNumber() . "\n";
+}
+```
+
+For Slovak ČSOB emails:
+
+``` php
+use Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser;
+
+$skCsobMailParser = new SkCsobMailParser();
+$mailContents = $skCsobMailParser->parseMulti('mail content');
+
+foreach ($mailContents as $mailContent) {
+    echo $mailContent->getVs() . "\n";
+    echo $mailContent->getKs() . "\n";
+    echo $mailContent->getAmount() . "\n";
+    echo $mailContent->getCurrency() . "\n";
+    echo $mailContent->getAccountNumber() . "\n";
+}
 ```
 
 Upgrade from 2.* to 3.*
@@ -105,5 +162,10 @@ $downloader->fetch($criteria, function(Email $email) {
 TODO
 ----
 
-Add parses for other banks confirmation emails.
+Add parsers for other banks confirmation emails.
 Feel free to fork and create pull requests with other banks parsers.
+
+Available parsers:
+- ✅ TatraBanka (Slovakia) - TatraBankaMailParser, TatraBankaSimpleMailParser, TatraBankaStatementMailParser
+- ✅ ČSOB CZ (Czech Republic) - CsobMailParser
+- ✅ ČSOB SK (Slovakia) - SkCsobMailParser
