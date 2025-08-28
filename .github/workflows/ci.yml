@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, feature/coverage-reporting ]
   pull_request:
     branches: [ master, main ]
 
@@ -46,4 +46,85 @@ jobs:
       run: vendor/bin/phpstan analyse
     
     - name: Run tests
-      run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+      run: vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-html build/coverage
+      
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      if: matrix.php-versions == '8.3'
+      with:
+        name: coverage-report
+        path: build/coverage
+        
+  deploy-coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/feature/coverage-reporting'
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref }}
+    
+    - name: Download coverage report
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage
+        
+    - name: Extract coverage percentage
+      id: coverage
+      run: |
+        # Try to extract percentage from HTML report
+        if [ -f coverage/index.html ]; then
+          # Look for the Total row and extract percentage
+          COVERAGE=$(grep -A3 '<td class="success">Total</td>' coverage/index.html | grep -oP '\d+\.\d+(?=%)' | head -1 || true)
+          if [ -z "$COVERAGE" ]; then
+            # Fallback: look for any percentage in success class
+            COVERAGE=$(grep '<td class="success small"><div align="right">' coverage/index.html | grep -oP '\d+\.\d+' | head -1 || true)
+          fi
+          echo "Coverage found: ${COVERAGE}%"
+          echo "percentage=${COVERAGE:-0}" >> $GITHUB_OUTPUT
+        else
+          echo "percentage=0" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Update coverage badge
+      if: success()
+      run: |
+        COVERAGE=${{ steps.coverage.outputs.percentage }}
+        COLOR="red"
+        if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+          COLOR="brightgreen"
+        elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
+          COLOR="yellow"
+        elif (( $(echo "$COVERAGE >= 40" | bc -l) )); then
+          COLOR="orange"
+        fi
+        
+        # Update the badge in README.md
+        sed -i "s/coverage-[0-9.]*%25-[a-z]*/coverage-${COVERAGE}%25-${COLOR}/g" README.md
+        
+        # Check if there are changes and commit them
+        if ! git diff --quiet README.md; then
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add README.md
+          git commit -m "Update coverage badge to ${COVERAGE}%"
+          git push origin ${{ github.ref }}
+        fi
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload to Pages
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: coverage
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

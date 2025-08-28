@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- GitHub Pages coverage reporting with HTML reports
+- Automatic coverage badge updates in README
+- GitHub Actions CI badge
+
+### Changed
+- Updated all GitHub Actions to v4 to fix deprecation warnings
+- Improved PHPUnit configuration with proper coverage filters
+
+### Removed
+- Code Climate badges (service discontinued)
+
 ## [3.0.0] - 2025-08-28
 
 ### Added

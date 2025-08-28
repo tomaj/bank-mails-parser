@@ -8,10 +8,8 @@ Currently supports:
 - **ČSOB SK** - Slovak ČSOB emails (SkCsobMailParser)
 
 
-[![Build Status](https://secure.travis-ci.org/tomaj/bank-mails-parser.png)](http://travis-ci.org/tomaj/bank-mails-parser)
-[![Test Coverage](https://codeclimate.com/github/tomaj/bank-mails-parser/badges/coverage.svg)](https://codeclimate.com/github/tomaj/bank-mails-parser/coverage)
-[![Code Climate](https://codeclimate.com/github/tomaj/bank-mails-parser/badges/gpa.svg)](https://codeclimate.com/github/tomaj/bank-mails-parser)
-
+[![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-95.13%25-brightgreen.svg)](https://tomaj.github.io/bank-mails-parser/)
 [![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![Latest Unstable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/unstable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![License](https://poser.pugx.org/tomaj/bank-mails-parser/license.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
