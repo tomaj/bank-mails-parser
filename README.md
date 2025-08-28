@@ -348,23 +348,6 @@ $downloader->fetch($criteria, function(Email $email) {
 
 ## 🔒 Security Considerations
 
-### PGP Key Management
-```php
-// ✅ Good - Use secure key storage
-$keyPath = '/secure/path/to/private-key.asc';
-$decryptor = new TatraBankaMailDecryptor($keyPath, $passphrase);
-
-// ❌ Avoid - Don't hardcode keys in source code
-$decryptor = new TatraBankaMailDecryptor('/tmp/key.asc', 'password123');
-```
-
-### Email Content Sanitization
-```php
-// ✅ Always validate and sanitize extracted data
-$amount = filter_var($mailContent->getAmount(), FILTER_VALIDATE_FLOAT);
-$vs = preg_replace('/[^0-9]/', '', $mailContent->getVs());
-```
-
 ### Production Recommendations
 - Store PGP keys outside web root
 - Use environment variables for sensitive configuration

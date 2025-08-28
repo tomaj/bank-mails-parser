@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Complete MailContent API documentation with all getters
 - Security considerations and contributing guidelines
 
+### Changed
+- **Directory structure consistency** - Moved `src/Parsers/` to `src/Parser/` to match namespace
+- **Tests directory structure** - Moved `tests/Parsers/` to `tests/Parser/` for consistency
+- **Removed unused Makefile** - GitHub Actions uses direct vendor/bin commands
+
 ## [4.0.0] - TBD
 
 ### Added
