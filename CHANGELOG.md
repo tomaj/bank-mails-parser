@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **VubMailParser** for VUB bank emails
+- VUB parser test coverage and documentation
+- Comprehensive README documentation improvements
+- Professional bank support matrix with country flags
+- Quick Start guide and error handling documentation
+- Complete MailContent API documentation with all getters
+- Security considerations and contributing guidelines
+
 ## [4.0.0] - TBD
 
 ### Added
