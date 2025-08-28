@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated all GitHub Actions to v4 to fix deprecation warnings
 - Improved PHPUnit configuration with proper coverage filters
+- Updated PHPUnit from 9.6.25 to 10.5.53
 
 ### Removed
 - Code Climate badges (service discontinued)
