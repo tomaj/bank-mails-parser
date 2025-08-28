@@ -7,17 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - TBD
+
 ### Added
 - GitHub Pages coverage reporting with HTML reports
 - Automatic coverage badge updates in README
 - GitHub Actions CI badge
 
 ### Changed
+- **BREAKING**: Minimum PHP version increased from 7.4 to 8.2
 - Updated all GitHub Actions to v4 to fix deprecation warnings
 - Improved PHPUnit configuration with proper coverage filters
+- Updated PHPUnit from 9.6.25 to 11.5.35 (latest version)
+- CI now tests only PHP 8.2, 8.3, and 8.4
 
 ### Removed
 - Code Climate badges (service discontinued)
+- **BREAKING**: Dropped support for PHP 7.4, 8.0, and 8.1
 
 ## [3.0.0] - 2025-08-28
 
