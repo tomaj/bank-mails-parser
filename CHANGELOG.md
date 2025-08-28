@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2025-08-28
+
 ### Added
 - **CsobMailParser** for Czech ČSOB bank emails with multi-transaction support
 - **SkCsobMailParser** for Slovak ČSOB bank emails  
@@ -151,7 +153,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Account number parsing
 - Receiver message parsing
 
-[Unreleased]: https://github.com/tomaj/bank-mails-parser/compare/2.8.0...HEAD
+[Unreleased]: https://github.com/tomaj/bank-mails-parser/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/tomaj/bank-mails-parser/compare/2.8.0...3.0.0
 [2.8.0]: https://github.com/tomaj/bank-mails-parser/compare/2.7.0...2.8.0
 [2.7.0]: https://github.com/tomaj/bank-mails-parser/compare/2.6.0...2.7.0
 [2.6.0]: https://github.com/tomaj/bank-mails-parser/compare/2.5.0...2.6.0
