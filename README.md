@@ -41,6 +41,8 @@ A professional PHP library for processing bank confirmation emails from Slovak a
 composer require tomaj/bank-mails-parser
 ```
 
+> **Upgrading from 3.x?** See the [4.0 Upgrade Guide](UPGRADE-4.0.md) for breaking changes and migration steps.
+
 ### Basic Usage
 
 ```php

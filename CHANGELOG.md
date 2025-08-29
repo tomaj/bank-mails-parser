@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2025-08-29
+
 ### Added
 - **VubMailParser** for VUB bank emails
 - VUB parser test coverage and documentation
@@ -18,29 +20,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enhanced test coverage** - Added 15+ new edge case and error handling tests
 - **MailContentTest** - Dedicated test class for MailContent edge cases
 - **Parser robustness tests** - Invalid input, empty content, malformed data handling
-
-### Changed
-- **Directory structure consistency** - Moved `src/Parsers/` to `src/Parser/` to match namespace
-- **Tests directory structure** - Moved `tests/Parsers/` to `tests/Parser/` for consistency
-- **Removed unused Makefile** - GitHub Actions uses direct vendor/bin commands
-
-## [4.0.0] - TBD
-
-### Added
+- **PHP 8 attributes support** - Modern #[Test] and #[CoversClass] attributes
 - GitHub Pages coverage reporting with HTML reports
 - Automatic coverage badge updates in README
 - GitHub Actions CI badge
 
 ### Changed
 - **BREAKING**: Minimum PHP version increased from 7.4 to 8.2
+- **BREAKING**: Test method naming - Removed "test" prefixes, use #[Test] attributes instead
+- **Directory structure consistency** - Moved `src/Parsers/` to `src/Parser/` to match namespace
+- **Tests directory structure** - Moved `tests/Parsers/` to `tests/Parser/` for consistency
+- **Test modernization** - Replaced @test annotations with PHP 8 #[Test] attributes
 - Updated all GitHub Actions to v4 to fix deprecation warnings
 - Improved PHPUnit configuration with proper coverage filters
 - Updated PHPUnit from 9.6.25 to 11.5.35 (latest version)
 - CI now tests only PHP 8.2, 8.3, and 8.4
+- **Removed unused Makefile** - GitHub Actions uses direct vendor/bin commands
 
 ### Removed
 - Code Climate badges (service discontinued)
 - **BREAKING**: Dropped support for PHP 7.4, 8.0, and 8.1
+- **BREAKING**: @test docblock annotations (replaced with #[Test] attributes)
 
 ## [3.0.0] - 2025-08-28
 
