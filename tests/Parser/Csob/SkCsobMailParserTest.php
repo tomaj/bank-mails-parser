@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Tests\Parser\Csob;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser;
 
+#[CoversClass(SkCsobMailParser::class)]
 class SkCsobMailParserTest extends TestCase
 {
-    public function testSingleTransferPayment()
+    #[Test]
+    public function singleTransferPayment()
     {
         $email = 'Vážená klientka, vážený klient,
 
