@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quick Start guide and error handling documentation
 - Complete MailContent API documentation with all getters
 - Security considerations and contributing guidelines
+- **Enhanced test coverage** - Added 15+ new edge case and error handling tests
+- **MailContentTest** - Dedicated test class for MailContent edge cases
+- **Parser robustness tests** - Invalid input, empty content, malformed data handling
 
 ### Changed
 - **Directory structure consistency** - Moved `src/Parsers/` to `src/Parser/` to match namespace

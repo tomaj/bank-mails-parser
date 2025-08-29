@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace Tests\Parses\TatraBanka;
 
-use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
+#[CoversClass(TatraBankaMailParser::class)]
 class TatraBankaMailParserTest extends TestCase
 {
-    public function testSimpleEmail()
+    #[Test]
+    public function simpleEmail()
     {
         $email = 'Vazeny klient,
 
@@ -46,7 +50,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
     }
 
-    public function testSimpleEmailWithoutSourceAccountNumberPrefix()
+    #[Test]
+    public function simpleEmailWithoutSourceAccountNumberPrefix()
     {
         $email = 'Vazeny klient,
 
@@ -84,7 +89,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:51'), $mailContent->getTransactionDate());
     }
 
-    public function testAllInputsWithDecreaseEmail()
+    #[Test]
+    public function allInputsWithDecreaseEmail()
     {
         $email = 'Vazeny klient,
 
@@ -122,7 +128,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithoutReceiverMessage()
+    #[Test]
+    public function emailWithoutReceiverMessage()
     {
         $email = 'Vazeny klient,
 
@@ -160,7 +167,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithoutDescription()
+    #[Test]
+    public function emailWithoutDescription()
     {
         $email = 'Vazeny klient,
 
@@ -198,7 +206,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('16.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithoutVariableSymbol()
+    #[Test]
+    public function emailWithoutVariableSymbol()
     {
         $email = 'Vazeny klient,
 
@@ -236,7 +245,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testEmailWithVariableSymbolInReceiverMessage()
+    #[Test]
+    public function emailWithVariableSymbolInReceiverMessage()
     {
         $email = 'Vazeny klient,
 
@@ -276,7 +286,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
     }
 
     // Referencia platitela: 1234056789
-    public function testEmailWithVariableSymbolInUniqueMandateReferenceWithoutPrefix()
+    #[Test]
+    public function emailWithVariableSymbolInUniqueMandateReferenceWithoutPrefix()
     {
         $email = 'Vazeny klient,
 
@@ -356,7 +367,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 
     // Creditor Reference Information - SEPA XML format
     // Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
-    public function testEmailWithVariableSymbolInReceiverMessageCreditorReferenceInformation()
+    #[Test]
+    public function emailWithVariableSymbolInReceiverMessageCreditorReferenceInformation()
     {
         $email = 'Vazeny klient,
 
@@ -395,7 +407,8 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
         $this->assertEquals(strtotime('12.1.2015 12:11'), $mailContent->getTransactionDate());
     }
 
-    public function testErrorEmail()
+    #[Test]
+    public function errorEmail()
     {
         $email = '4321/KS5428175648
 Informacia pre prijemcu: test-sprava-druha

@@ -3,13 +3,17 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Tests\Parser\TatraBanka;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
 
+#[CoversClass(TatraBankaStatementMailParser::class)]
 class TatraBankaStatementMailParserTest extends TestCase
 {
-    public function testTransferPayments()
+    #[Test]
+    public function transferPayments()
     {
         $email = file_get_contents(__DIR__ . '/data/tb_encrypted_mail_body.txt');
 

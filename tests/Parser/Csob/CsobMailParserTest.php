@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Tests\Parser\Csob;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
 
+#[CoversClass(CsobMailParser::class)]
 class CsobMailParserTest extends TestCase
 {
-    public function testSingleTransferPayment()
+    #[Test]
+    public function singleTransferPayment()
     {
         $email = 'Vážený kliente,
         
@@ -48,7 +52,8 @@ Vaše ČSOB
     }
 
     // zaúčtovaná changed to zaúčtována
-    public function testSingleTransferPaymentFixedTypoZauctovana()
+    #[Test]
+    public function singleTransferPaymentFixedTypoZauctovana()
     {
         $email = 'Vážený kliente,
 
@@ -87,7 +92,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('25.9.2018'), $mailContent->getTransactionDate());
     }
 
-    public function testMultiTransferPayment()
+    #[Test]
+    public function multiTransferPayment()
     {
         $email = 'Vážený kliente,
 
@@ -150,7 +156,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('25.9.2018'), $mailContent->getTransactionDate());
     }
 
-    public function testImmediateTransferPayment()
+    #[Test]
+    public function immediateTransferPayment()
     {
         $email = 'Vážený kliente,
 
@@ -189,7 +196,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('18.8.2022'), $mailContent->getTransactionDate());
     }
 
-    public function testForeignTransferPaymentAlternativeSepa()
+    #[Test]
+    public function foreignTransferPaymentAlternativeSepa()
     {
         $email = 'Vážený kliente,
 
@@ -233,7 +241,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('18.8.2022'), $mailContent->getTransactionDate());
     }
 
-    public function testForeignTransferPaymentAlternativeZahranicni()
+    #[Test]
+    public function foreignTransferPaymentAlternativeZahranicni()
     {
         $email = 'Vážený kliente,
 
@@ -279,7 +288,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('5.12.2023'), $mailContent->getTransactionDate());
     }
 
-    public function testForeignTransferPaymentAlternativeZahranicniWithMultilinePurpose()
+    #[Test]
+    public function foreignTransferPaymentAlternativeZahranicniWithMultilinePurpose()
     {
         $email = 'Vážený kliente,
 
@@ -326,7 +336,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('5.12.2023'), $mailContent->getTransactionDate());
     }
 
-    public function testForeignTransferPaymentWithVariableSymbolSetToNull()
+    #[Test]
+    public function foreignTransferPaymentWithVariableSymbolSetToNull()
     {
         $email = 'Vážený kliente,
 
@@ -367,7 +378,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('1.3.2024'), $mailContent->getTransactionDate());
     }
 
-    public function testTransferPaymentWithPrefixedVariableSymbolInReceiverMessage()
+    #[Test]
+    public function transferPaymentWithPrefixedVariableSymbolInReceiverMessage()
     {
         $email = 'Vážený kliente,
 
@@ -405,7 +417,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('21.2.2024'), $mailContent->getTransactionDate());
     }
 
-    public function testTransferPaymentWithPrefixedWithDotsVariableSymbolInReceiverMessage()
+    #[Test]
+    public function transferPaymentWithPrefixedWithDotsVariableSymbolInReceiverMessage()
     {
         $email = 'Vážený kliente,
 
@@ -481,7 +494,8 @@ Vaše ČSOB
         $this->assertEquals(strtotime('31.1.2024'), $mailContent->getTransactionDate());
     }
 
-    public function testSingleCardpaySettlement()
+    #[Test]
+    public function singleCardpaySettlement()
     {
         $email = 'Vážený kliente,
 
@@ -510,7 +524,8 @@ Vaše ČSOB
         $this->assertCount(1, $mailContents);
     }
 
-    public function testErrorEmail()
+    #[Test]
+    public function errorEmail()
     {
         $email = 'Specifický symbol: 4545454545
 
@@ -525,7 +540,8 @@ Vaše ČSOB
         $this->assertCount(0, $mailContents);
     }
 
-    public function testCashTransferPayment()
+    #[Test]
+    public function cashTransferPayment()
     {
         $email = 'Vážený kliente,
 
@@ -561,5 +577,56 @@ Vaše ČSOB
         $this->assertNull($mailContent->getKs());
         $this->assertNull($mailContent->getSs());
         $this->assertEquals(strtotime('18.12.2023'), $mailContent->getTransactionDate());
+    }
+
+    #[Test]
+    public function csobParserWithNoTransactionMarker()
+    {
+        // Test parseMulti when there's no "Dne " to split on
+        $email = 'Email without transaction date marker
+Částka: +100,00 CZK
+Variabilní symbol: 123456789';
+        
+        $parser = new CsobMailParser();
+        $result = $parser->parseMulti($email);
+        $this->assertEmpty($result);
+    }
+
+    #[Test]
+    public function csobParserWithInvalidDateFormat()
+    {
+        $email = 'Dne invalid_date byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
+Částka: +100,00 CZK
+Variabilní symbol: 123456789';
+        
+        $parser = new CsobMailParser();
+        $result = $parser->parseMulti($email);
+        
+        // Should still parse other fields even with invalid date
+        $this->assertCount(1, $result);
+        $this->assertEquals(100.0, $result[0]->getAmount());
+        $this->assertEquals('123456789', $result[0]->getVs());
+    }
+
+    #[Test]
+    public function csobParserWithMissingRequiredFields()
+    {
+        // Test content that doesn't match the main regex pattern
+        $email = 'Some other banking email content that does not match ČSOB format.';
+        
+        $parser = new CsobMailParser();
+        $result = $parser->parseMulti($email);
+        
+        // Should return empty array when pattern doesn't match
+        $this->assertEmpty($result);
+    }
+
+    #[Test]
+    public function csobParserWithEmptyContent()
+    {
+        $parser = new CsobMailParser();
+        
+        $result = $parser->parseMulti('');
+        $this->assertEmpty($result);
     }
 }
