@@ -1,0 +1,162 @@
+Delivered-To: platbysys@example.com
+Received: by 2002:a9d:4792:0:0:0:0:0 with SMTP id b18csp503546otf;
+        Wed, 11 Dec 2019 00:21:57 -0800 (PST)
+X-Received: by 2002:a5d:62d1:: with SMTP id o17mr2434283wrv.9.1576052517062;
+        Wed, 11 Dec 2019 00:21:57 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1576052517; cv=pass;
+        d=google.com; s=arc-20160816;
+        b=j8jEAOyqDlZSoTkmDubEZwmQyoS054ns9lj/Pg1m4c/WF4apYrZROhstjS4NlAHrjz
+         YbwpsIXXjTFXqPL70VWFX3QgI8oOT0c6/CW1S5gDdpv2CTVTC6suXjqtTJXfXDRVHTX3
+         C82XhgVJTXn6GLerJUO442M2aFnuW6EflCthbj18eownemgEoePYfCcI4Aj3PhddcQtX
+         g3dM/cEqaKiPQpNA9lIVbNc2tuKM190gaHeD+/foh0SP2drPnLZn6NdWnddi9bCHcuxN
+         pJOzE2CFvDdmI+UmVUD75tO1C7LWySl2g8UqwIvWz/K2yDTj0+UvDaRy/Rd+3izt7JbI
+         yZjw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:subject:date:to:from:mime-version:dkim-signature
+         :delivered-to;
+        bh=EseJE17WPsKTq/OJUHUQDqazk6DpAAo6wP/o8WIqDKU=;
+        b=ajoDvSY8wh+EWy5i1hPrM54Lkl4PAh6jMkjF7sBbSgxRK3t8m7gNDm5n67zItG5aCX
+         i3WkyPrLXz/ooT/jT48iOmj7vU9s9viMEhwtO+bxEWixwGld9V50OPH0mbomG/kIL2jY
+         y6rcTlTrnZHh1gGeXm85gnLS/wixZGIi4ksQtlUj7+ObfcNF5N6yoREvt9cXWAKenw9o
+         k/iiLvYlYvgm+iAredseGQUtKcQMCHRvWRyERZqwD2SOIj/6nFD4AiN4V0/uEg6zdban
+         GUFqnqpMjZNV4r/6foM6h3JjoRk936q4SPuvtVoMo/uE7ZjUFn70QMPmmtI/vqAfU1S4
+         RkWA==
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@example.com header.s=smail1 header.b=Lb93xOUl;
+       arc=pass (i=1 spf=pass spfdomain=example.com dkim=pass dkdomain=example.com dmarc=pass fromdomain=example.com);
+       spf=pass (google.com: domain of platby+caf_=platbysys=example.com@example.com designates 127.0.0.1 as permitted sender) smtp.mailfrom="platby+caf_=platbysys=example.com@example.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=example.com
+Return-Path: <platby+caf_=platbysys=example.com@example.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [127.0.0.1])
+        by mx.google.com with SMTPS id q16sor673245wro.55.2019.12.11.00.21.56
+        for <platbysys@example.com>
+        (Google Transport Security);
+        Wed, 11 Dec 2019 00:21:57 -0800 (PST)
+Received-SPF: pass (google.com: domain of platby+caf_=platbysys=example.com@example.com designates 127.0.0.1 as permitted sender) client-ip=127.0.0.1;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@example.com header.s=smail1 header.b=Lb93xOUl;
+       arc=pass (i=1 spf=pass spfdomain=example.com dkim=pass dkdomain=example.com dmarc=pass fromdomain=example.com);
+       spf=pass (google.com: domain of platby+caf_=platbysys=example.com@example.com designates 127.0.0.1 as permitted sender) smtp.mailfrom="platby+caf_=platbysys=example.com@example.com";
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=example.com
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:delivered-to:dkim-signature:mime-version:from:to
+         :date:subject:message-id;
+        bh=EseJE17WPsKTq/OJUHUQDqazk6DpAAo6wP/o8WIqDKU=;
+        b=g/ApwQVsiPWO6ds/z6f+RCe9fJGIxJXuk1+c6TpgAi/0c3WbHalpmJHmUWcohu3J5d
+         zPX0Rt6C/dmYsGTHYD3i76/w1Q2/iqCXsS9s3UkKtsovHjlnIKfNDvoXkioxS8wbjxcX
+         QvJenxZfFQLaRXOzaWKb+IczuTIovnL9eEWG6HzOxBedNWXVV3RKJAA4MBoZ/jKXGtmL
+         9Lokx3tATUGkkmfTAhMU4npLo4pQEDdkCNPSFKQzNiws/COqlZkwdC2Sv/K88La/DLn4
+         /7Y4ROX9rH8DANpioj0+IigDIAPzLRSYW0jy1KOZhBLrhkzpAUx+OetyV7ZzS0wp067h
+         CYyA==
+X-Gm-Message-State: APjAAAXNZ4SY1YZoTVkYIiazvvCpfVkjWiUTvwcSU9IJN9ilbS/+ACGq
+	bWimpB2jr+NU/Che77v9V3OkjVWhG2oXF6KEnTV09FpLkk/z9kZLIw==
+X-Received: by 2002:a5d:62c8:: with SMTP id o8mr2234162wrv.316.1576052516658;
+        Wed, 11 Dec 2019 00:21:56 -0800 (PST)
+X-Forwarded-To: platbysys@example.com
+X-Forwarded-For: platby@example.com platbysys@example.com
+Delivered-To: platby@example.com
+Received: by 2002:adf:ed0f:0:0:0:0:0 with SMTP id a15csp452246wro;
+        Wed, 11 Dec 2019 00:21:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwim17hpHHzMWoNyBthTMDjRJfxS9Iu0+pFSAymkicoSs7tPJ8oqbklX9iRwaWnsFWruv9R
+X-Received: by 2002:a5d:50cf:: with SMTP id f15mr2243774wrt.381.1576052514603;
+        Wed, 11 Dec 2019 00:21:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1576052514; cv=none;
+        d=google.com; s=arc-20160816;
+        b=osX06jacPPp52QpMUxcbVB9Xc+QbG/0rldhaXw5jYoVY8SK0IEZCRwZhsdQaoTs2vL
+         uGhtK2E2WRtQhflo8paFfQcS+uNHq4Of4GSbazPvYo7CgUMDect6e3za1m80E5LkiAUB
+         7fUjPQPhQX54wiUswSH1CZDLvdb4zrfBWDjc1MpIi4K8nkMmDZrHb4PmUxUmX+RGzNOr
+         CD5+qWoztGNdpDFw+9PQ6zqq0LbJwdIb66x9z8UdbC0Cvkfdybi3JYNlpjj8dST0YX/1
+         6lWW9ZwC4aY0EuKLwMkYKmScXAowXeF1r5LSPqO8PPHINt9m0SFp2TGjCVTQvHRZeXXx
+         NHjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=message-id:subject:date:to:from:mime-version:dkim-signature;
+        bh=EseJE17WPsKTq/OJUHUQDqazk6DpAAo6wP/o8WIqDKU=;
+        b=GiAVHxaBJol/m4eyBIPY2kw/RJCRBsPVAgP+dOLTWQwrPuDWE1E+uXwCxbDGD2rJzz
+         6mn1MzrDmRmdVgDIeb/ffbdjWZR2KoXVsmCIiReGo58Eh3P9kCN0mDWrKaHAOr6zzXJn
+         ltH+Isc1cCbz/JdKKcMGR9wUy1Wf/a5s/7ZEqPhTmV2l5wDQLzFucjRe1mCom8vXn0JU
+         puEjX53OzBAyowO6Ofdpz2Y4ukN/V1+CtmE9C3SiXCX+SamxH8s72apl/nNiP6CT+uUi
+         JtD0ip52flJPUOTtXckJ2d1BrUjGufrwn8f6i4U2vCJUEQCIIgA5czY4XReNiZrTY9zK
+         b0JA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@example.com header.s=smail1 header.b=Lb93xOUl;
+       spf=pass (google.com: domain of nonstopbanking@example.com designates 127.0.0.1 as permitted sender) smtp.mailfrom=nonstopbanking@example.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=example.com
+Return-Path: <nonstopbanking@example.com>
+Received: from smail1.example.com (smail11.example.com. [127.0.0.1])
+        by mx.google.com with ESMTPS id f5si1447615wrm.46.2019.12.11.00.21.54
+        for <platby@example.com>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 00:21:54 -0800 (PST)
+Received-SPF: pass (google.com: domain of nonstopbanking@example.com designates 127.0.0.1 as permitted sender) client-ip=127.0.0.1;
+DKIM-Signature: v=1; a=rsa-sha256; d=example.com; s=smail1; c=relaxed/simple;
+	q=dns/txt; i=@example.com; t=1576052514; x=1578644514;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EseJE17WPsKTq/OJUHUQDqazk6DpAAo6wP/o8WIqDKU=;
+	b=Lb93xOUl8EFpNt/tElQuYwZ2hrVIKZn8yNxgocxNCx1gJ5RlgXV7xqosYU9bgyql
+	NVPq3/n2d3NJqWxxG8gN8ZZwC8O6FlKODSRoawUCox+w9oChDSRr8cALGqxB4iwq
+	wh/0cYrW+Hj17QD1TUeysAPrPRicqocOsL3GaEWFZq3t/z+S9KaVwlSEfp3hEWjZ
+	DodGCfNrsE4peycejSoStCSa7Ipyo7sZNmsyYgrvAz/E7FzCSpjmrYypkIVyUWJL
+	ajabaYeY+twYuPV1xUEwmick3K1BLrv2EOY4PHK0OJPR32igwHeobsBficjcnQFp
+	ZHhuglTncZtAUFMINCaTiA==;
+X-AuditID: c0a80fa6-9f3ff70000006371-4b-5df0a7222f77
+MIME-Version: 1.0
+From: <nonstopbanking@example.com>
+To: <platby@example.com>
+Date: Wed, 11 Dec 2019 09:21:53 +0100
+Subject: =?utf-8?B?SW5mb3Jtw6FjaWEgbyByZWFsaXrDoWNpaSBwcmV2b2R1IHph?=
+ =?utf-8?B?IHRvdmFyIMSNLm9iLiA5OTExOTI5NzM4?=
+Content-Type: multipart/mixed;
+	boundary="--boundary_136027_94c32d6f-7fb7-482f-ad1e-daf182375f86"
+Message-ID: <ecf4d6e01db4487392ba66754fd9a506@S1000550.example.com>
+Return-Path: nonstopbanking@example.com
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphluLIzCtJLcpLzFFi42LhYpLo11Va/iHW4GYzj8WiGd9ZHRg9nn36
+	whrAGMVlk5Kak1mWWqRvl8CV8fPHbLaCHqGKN5ffMzUw7hbsYuTkkBAwkej8cYcRxOYVEJQ4
+	OfMJC4jNJiArcWbTXbC4iICkxMKnO5hBbBYBVYntM54xdTFycAgLlEgsuCMPEmYWSJK4tmY7
+	K8QYO4lzTdfAyoUElCQ2LF7DOIGRcxaSDbOQtMwCmsQsoCmxfpc+RFhRYkr3Q3YI20xizdfJ
+	LJji8hKbl9xlWsDIvoqRtzg3MTPHUK+sNEmvOHsTIzBIDqzgX7aDce2dxEOMvByMUpypeclF
+	lQUlqSmHGFWAmh9tWH2BUYolLz8vVUmE93jbu1gh3pTEyqrUovz4otKc1OJDjNIcLErivJwR
+	z2KFBNITS1KzU1MLUotgskwcnFINjE0z5zcmznKX9J5tGls+K/5SY2XHlWIv/cN7Zq6s8Sg/
+	d+ao7d5XtzY7zZHNeij3+IfM+pK3+7ccczJaXBacqPRa6cNsla5lu1+VWrKHv94WmSTycs/3
+	f6qmS1I3bWh57fZpFUdB7gSlk4krN84M+nbk+L4C8XTmVRxpdVubtmt/TYzSvRvSU6rEUpyR
+	aKjFXFScCADQEgiWFwIAAA==
+
+----boundary_136027_94c32d6f-7fb7-482f-ad1e-daf182375f86
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+
+VsOhxb5lbsO9IGtsaWVudCwNCg0KdiBwcsOtbG9oZSBlLW1haWx1IFbDoW0gemFzaWVsYW1lICJJ
+bmZvcm3DoWNpYSBvIHJlYWxpesOhY2lpIHByZXZvZHUgemEgdG92YXIgxI0ub2IuIDk5MTE5Mjk3
+MzgiLg0KDQpWIHByw61wYWRlIG90w6F6b2sgc8O6IFbDoW0gayBkaXNwb3rDrWNpaSBwcmFjb3Zu
+w61jaSBzbHXFvmJ5IEtvbnRha3QgMDg1MCAxMjMgMDAwICh6byB6YWhyYW5pxI1pYSArNDIxIDIg
+NDg1NSA1OSA3MCksIGtvbnRha3RAdnViLnNrIGFsZWJvIHByYWNvdm7DrWNpIGt0b3JlamtvxL52
+ZWsgcG9ib8SNa3kgVsOaQiBiYW5reS4NCg0KVmHFoWEgVsOaQiBiYW5rYQ0KDQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXw0KDQpJbmZvcm1hY2llLCBrdG9yZSBzdSBvYnNhaG9tIHRl
+anRvIHNwcmF2eSBlbGVrdHJvbmlja2VqIHBvc3R5IGEgdnNldGt5IHByaXBvamVuZSBzdWJvcnkg
+YSBwcmlsb2h5IHN1IGRvdmVybmUgYSBzdS9tb3p1IGJ5dCBvYmNob2RueW0gYS9hbGVibyBiYW5r
+b3Z5bSB0YWpvbXN0dm9tIGFsZWJvIHN1L21venUgYnl0IHByYXZuZSBjaHJhbmVuZSBwb2RsYSBp
+bnljaCBwcmF2bnljaCBwcmVkcGlzb3YuIFByZSBibGl6c2llIGluZm9ybWFjaWUgbmF2c3RpdnRl
+LCBwcm9zaW0sIHd3dy52dWIuc2svbGVnYWxjYXV0aW9uLg0KDQpUaGUgaW5mb3JtYXRpb24gY29u
+dGFpbmVkIGluIHRoaXMgZWxlY3Ryb25pYyBtYWlsIG1lc3NhZ2UgYW5kIGFueSBmaWxlcyBhbmQg
+YXR0YWNobWVudHMgdHJhbnNtaXR0ZWQgYXJlIGNvbmZpZGVudGlhbCBhbmQgYXJlL21heSBiZSBh
+IHRyYWRlIGFuZC9vciBiYW5rIHNlY3JldCBvciBhcmUvbWF5IGJlIGxlZ2FsbHkgcHJpdmlsZWdl
+ZCB1bmRlciBvdGhlciBsZWdhbCByZWd1bGF0aW9ucy4gRm9yIGZ1cnRoZXIgaW5mb3JtYXRpb24s
+IHBsZWFzZSwgdmlzaXQgd3d3LnZ1Yi5zay9sZWdhbGNhdXRpb24uDQoNClZVQiwgYS5zLiwgTWx5
+bnNrZSBuaXZ5IDEsIDgyOSA5MCBCcmF0aXNsYXZhIDI1LCBTbG92ZW5za2EgcmVwdWJsaWthDQo=
+
+----boundary_136027_94c32d6f-7fb7-482f-ad1e-daf182375f86
+Content-Type: application/octet-stream; name="out.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment
+
+UEsDBBQAAAAIAElTTlCMvwQRvgAAAAsBAAAVABwAUFBheW1lbnRUcmFuc2ZlcjEudHh0VVQJAAO6
+Z0ZenmdGXnV4CwABBOgDAAAE6AMAAE2NPQrCQBBG+0DusAcQmZ/dZDZddpOIBNIELOy2sBCMgiQW
+3k08kldwjQYchoHvfTymej0f4zQUSinENdKaAG2adEHFIu5hLFTfGgMEv2HUJBkgcZr00xA+qkJe
+cZ4m+581TpH2rf7T0IpG+Gq7fpaUIouSE84wagu2CGnSLgkYJL4aw20G9+shnI73yy2coxKL7aab
+C+OdlNrUmkrntRi2dZaTs43U6DjejBqbN6WrnG9EoAKL7EwJXjSjr99QSwECHgMUAAAACABJU05Q
+jL8EEb4AAAALAQAAFQAYAAAAAAABAAAApIEAAAAAUFBheW1lbnRUcmFuc2ZlcjEudHh0VVQFAAO6
+Z0ZedXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEAWwAAAA0BAAAAAA==
+----boundary_136027_94c32d6f-7fb7-482f-ad1e-daf182375f86--
