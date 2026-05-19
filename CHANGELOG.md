@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.1.0] - 2026-05-19
+
+### Added
+- VUB test data files from the original repository
+
+### Changed
+- **TatraBanka parser**: explicit date formats for predictable parsing of new Tatrabanka email date variants (`strtotime` preserved as fallback) ([#20](https://github.com/tomaj/bank-mails-parser/pull/20))
+
 ## [4.0.0] - 2025-08-29
 
 ### Added
@@ -188,7 +196,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Account number parsing
 - Receiver message parsing
 
-[Unreleased]: https://github.com/tomaj/bank-mails-parser/compare/3.0.0...HEAD
+[Unreleased]: https://github.com/tomaj/bank-mails-parser/compare/4.1.0...HEAD
+[4.1.0]: https://github.com/tomaj/bank-mails-parser/compare/4.0.0...4.1.0
+[4.0.0]: https://github.com/tomaj/bank-mails-parser/compare/3.0.0...4.0.0
 [3.0.0]: https://github.com/tomaj/bank-mails-parser/compare/2.8.0...3.0.0
 [2.8.0]: https://github.com/tomaj/bank-mails-parser/compare/2.7.0...2.8.0
 [2.7.0]: https://github.com/tomaj/bank-mails-parser/compare/2.6.0...2.7.0
