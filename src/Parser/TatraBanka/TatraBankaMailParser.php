@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
+use DateTimeImmutable;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
@@ -22,7 +23,23 @@ class TatraBankaMailParser implements ParserInterface
             return null;
         }
 
-        $mailContent->setTransactionDate(strtotime($result[1]));
+        $transactionDateFormats = [
+            'j. n. Y G:i', // "19. 5. 2026 0:34"
+            'j.n.Y G:i',   // "19.5.2026 9:40"
+        ];
+        $transactionDate = false; // backward compatible default
+        foreach ($transactionDateFormats as $format) {
+            $parsedDate = DateTimeImmutable::createFromFormat($format, $result[1]);
+            if ($parsedDate) {
+                $transactionDate = $parsedDate->getTimestamp();
+                break;
+            }
+        }
+        if (!$transactionDate) {
+            $transactionDate = strtotime($result[1]);
+        }
+        $mailContent->setTransactionDate($transactionDate);
+
         $mailContent->setAccountNumber($result[2]);
 
         $amount = floatval(str_replace(',', '.', str_replace(' ', '', $result[4])));
