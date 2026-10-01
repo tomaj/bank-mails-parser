@@ -7,6 +7,133 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - TBD
+
+### Breaking Changes
+
+#### Minimum PHP Version
+- **BREAKING**: Minimum PHP version increased from 8.2 to **8.4**
+- Removed support for PHP 8.2 and 8.3
+- Added support for PHP 8.4 and 8.5
+
+#### MailContent API Redesign  
+- **BREAKING**: MailContent is now `final readonly class` - immutable value object
+- **BREAKING**: Constructor with named parameters replaces getter/setter methods
+- **BREAKING**: Parsers must create MailContent via constructor, not mutation
+- Properties are directly accessible: `$mailContent->amount` instead of `$mailContent->getAmount()`
+- Properties use PHP 8.4 property hooks for automatic empty string normalization
+- See [UPGRADE-5.0.md](UPGRADE-5.0.md) for detailed migration guide
+
+**Migration example:**
+```php
+// Before (4.x) - mutable
+$mailContent = new MailContent();
+$mailContent->setAmount(100);
+$amount = $mailContent->getAmount();
+
+// After (5.0) - immutable
+$mailContent = new MailContent(amount: 100);
+$amount = $mailContent->amount;
+```
+
+### Added
+
+- PHP 8.4 property hooks for automatic empty string normalization
+- `#[\Override]` attributes on all parser methods
+- Typed class constants (`private const array FIELD_MAP`)
+- First-class callable syntax (`mb_trim(...)`, `$this->parse(...)`)
+- `array_filter` + `array_map` for cleaner parseMulti implementations
+- MailContent as `final readonly class` for true immutability
+- All parsers as `final readonly class`
+- Constructor-based MailContent creation with named parameters
+- Comprehensive [UPGRADE-5.0.md](UPGRADE-5.0.md) migration guide
+- PHPUnit upgraded to ^13.3 (latest major version)
+- PHP-CS-Fixer with PER-CS + @PHP84Migration rules
+
+### Changed
+
+- Updated all dependencies to latest versions:
+  - Infection: ^0.29 → ^0.35 (breaking change: MSI decreased from 90% to 86% due to stricter mutators)
+  - PHPStan: ^2.1 → ^2.2 (latest)
+  - PHPUnit: ^11.5 (kept, version 13 not yet adopted)
+  - PHP_CodeSniffer: ^3.11 (kept, version 4 not yet stable)
+- CI now tests only PHP 8.4 and 8.5 (removed 8.2/8.3)
+- All CI jobs (code-style, static-analysis, security, mutation-testing) now use PHP 8.4
+- Documentation updated for new property-based API
+- API reference documentation reflects property access patterns
+- All code examples updated to use property syntax
+- PHPCS disabled for MailContent.php (PHP_CodeSniffer 3.x doesn't support PHP 8.4 property hooks)
+
+### Removed
+
+- **BREAKING**: All getter methods removed (`getAmount()`, `getCurrency()`, etc.)
+- **BREAKING**: All setter methods removed (`setAmount()`, `setCurrency()`, etc.)
+- **BREAKING**: Mutable MailContent API removed
+- **BREAKING**: PHP_CodeSniffer removed (replaced by PHP-CS-Fixer)
+- PHP 8.2 and 8.3 support removed from CI matrix
+- `--prefer-lowest` testing now on PHP 8.4 only
+
+### Added
+- **PHP 8.5 support** - Added PHP 8.5 to CI test matrix
+- **Mutation testing** - Integrated Infection for mutation testing (MSI: 79%, Covered MSI: 85%)
+- **Enhanced CI/CD pipeline**:
+  - Separate jobs for tests, code style, static analysis, security audit, and mutation testing
+  - `--prefer-lowest` dependency testing on PHP 8.2
+  - Composer security audit in dedicated job
+  - Improved job naming and structure
+- **Comprehensive documentation**:
+  - `CONTRIBUTING.md` - Complete contribution guidelines with bank parser guide
+  - `SECURITY.md` - Security policy and vulnerability reporting
+  - `CODE_OF_CONDUCT.md` - Contributor Covenant 2.1
+  - `CODEOWNERS` - Automatic reviewer assignment
+  - Issue templates (bug report, feature request, new bank)
+  - Pull request template with comprehensive checklist
+  - `DEPENDABOT.yml` - Monthly dependency updates for Composer and GitHub Actions
+- **Composer enhancements**:
+  - Added `support` section with issues, source, and docs links
+  - Added comprehensive `keywords` for better discoverability
+  - Added `scripts-descriptions` for all commands
+  - Added `archive.exclude` for cleaner package distribution
+  - New scripts: `cs`, `cs-fix`, `phpstan`, `infection`, `check`
+- **Type safety improvements**:
+  - Full property type declarations in `MailContent`
+  - Strict return type `void` for all setter methods
+  - Proper handling of union types (`int|false|null` for transaction dates)
+- **Enhanced test coverage**:
+  - Added tests for whitespace trimming in account numbers
+  - Added tests for multi-transaction parsing edge cases
+  - Achieved 90.37% code coverage (291/322 lines)
+  - 58 tests with 422 assertions
+- **Static analysis**:
+  - Upgraded PHPStan to level `max` with strict rules
+  - Added `phpstan/phpstan-strict-rules` for enhanced type checking
+  - All parsers now comply with strict boolean checks
+
+### Changed
+- **BREAKING (minor)**: `MailContent` properties now have explicit types (may affect reflection-based code)
+- **BREAKING (minor)**: `setTransactionDate()` now requires `int|false` instead of mixed types
+- **Code quality**:
+  - Replaced loose comparisons (`==`) with strict comparisons (`===`) throughout
+  - Replaced `empty()` checks with strict comparisons
+  - Fixed `preg_match()` result checking to use `=== 1` for strict rules compliance
+  - Added proper null handling in string replacement operations
+  - Created `phpcs.xml.dist` to configure PSR-12 checks and handle test data line lengths
+- **CI improvements**:
+  - Updated all GitHub Actions to v4
+  - Renamed job from `test` to `tests` with better matrix naming
+  - Separated concerns into dedicated jobs
+  - Enhanced PHP version matrix (8.2, 8.3, 8.4, 8.5)
+- **Documentation improvements**:
+  - Expanded `composer.json` description
+  - Added author email for better contact
+  - Updated `.gitattributes` with correct paths and additional exclusions
+
+### Fixed
+- `.gitattributes` typo: `phpunit.xmli.dist` → `phpunit.xml.dist`
+- PHPStan compatibility with dynamic method calls in `TatraBankaSimpleMailParser`
+- Proper type handling for OpenPGP library's dynamic types
+- Code style compliance (PSR-12) across all files
+
 ## [4.1.0] - 2026-05-19
 
 ### Added

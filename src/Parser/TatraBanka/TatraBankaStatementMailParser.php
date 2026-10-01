@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\TatraBanka;
@@ -6,26 +7,18 @@ namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
-class TatraBankaStatementMailParser implements ParserInterface
+final readonly class TatraBankaStatementMailParser implements ParserInterface
 {
-    private TatraBankaMailDecryptor $decryptor;
-
     public function __construct(
-        TatraBankaMailDecryptor $decryptor
-    ) {
-        $this->decryptor = $decryptor;
-    }
+        private TatraBankaMailDecryptor $decryptor,
+    ) {}
 
     /**
      * @return MailContent[]|null
      */
     public function parseMulti(string $content): ?array
     {
-        $mailContents = [];
-
-        $results = [];
-        $res = preg_match('/(-{5}BEGIN[A-Za-z0-9 \-\r?\n+\/=]+END PGP MESSAGE-{5})/m', $content, $results);
-        if (!$res) {
+        if (preg_match('/(-{5}BEGIN[A-Za-z0-9 \-\r?\n+\/=]+END PGP MESSAGE-{5})/m', $content, $results) !== 1) {
             return null;
         }
 
@@ -33,36 +26,32 @@ class TatraBankaStatementMailParser implements ParserInterface
         if ($decrypted === null) {
             return null;
         }
+
         $transactions = preg_split("/\r\n|\n|\r/", $decrypted);
-
-        foreach ($transactions as $line => $transaction) {
-            if (!$line) {
-                continue;
-            }
-
-            $mailContent = $this->parse($transaction);
-            if ($mailContent !== null) {
-                $mailContents[] = $mailContent;
-            }
-        }
-
-        return $mailContents;
-    }
-
-    public function parse(string $content): ?MailContent
-    {
-        $cols = array_filter(explode('|', $content));
-        if (empty($cols)) {
+        if ($transactions === false) {
             return null;
         }
 
-        $mailContent = new MailContent();
-        $mailContent->setAmount((float) $cols[9]);
-        $mailContent->setCurrency($cols[10]);
-        $mailContent->setVs($cols[18]);
-        $mailContent->setAccountNumber(trim($cols[19]));
-        $mailContent->setTransactionDate(strtotime($cols[0]));
+        return array_filter(
+            array_map($this->parse(...), array_slice($transactions, 1)),
+            static fn(?MailContent $mc): bool => $mc !== null,
+        );
+    }
 
-        return $mailContent;
+    #[\Override]
+    public function parse(string $content): ?MailContent
+    {
+        $cols = array_filter(explode('|', $content), static fn(string $value): bool => $value !== '' && $value !== '0');
+        if (count($cols) === 0) {
+            return null;
+        }
+
+        return new MailContent(
+            amount: (float) $cols[9],
+            currency: $cols[10],
+            vs: $cols[18],
+            accountNumber: mb_trim($cols[19]),
+            transactionDate: strtotime($cols[0]),
+        );
     }
 }

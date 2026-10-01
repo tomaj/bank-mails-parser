@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\Csob;
@@ -6,76 +7,69 @@ namespace Tomaj\BankMailsParser\Parser\Csob;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
-class SkCsobMailParser implements ParserInterface
+final readonly class SkCsobMailParser implements ParserInterface
 {
     /**
      * @return MailContent[]
      */
     public function parseMulti(string $content): array
     {
-        $transactions = array_slice(explode("dňa ", $content), 1);
+        $transactions = array_slice(explode('dňa ', $content), 1);
 
-        $mailContents = [];
-        foreach ($transactions as $transaction) {
-            $mailContent = $this->parse($transaction);
-            if ($mailContent !== null) {
-                $mailContents[] = $mailContent;
-            }
-        }
-
-        return $mailContents;
+        return array_filter(
+            array_map($this->parse(...), $transactions),
+            static fn(?MailContent $mc): bool => $mc !== null,
+        );
     }
 
+    #[\Override]
     public function parse(string $content): ?MailContent
     {
-        $mailContent = new MailContent();
-
-        $pattern1 = '/(.*) bola na účte (.*) zaúčtovaná suma SEPA platobného príkazu/m';
-        $res = preg_match($pattern1, $content, $result);
-        if (!$res) {
+        if (preg_match('/(.*) bola na účte (.*) zaúčtovaná suma SEPA platobného príkazu/m', $content, $result) !== 1) {
             return null;
         }
 
-        $mailContent->setTransactionDate(strtotime($result[1]));
+        $transactionDate = strtotime($result[1]);
 
-        $pattern2 = '/suma:.*?([+-])(.*?) ([A-Z]+)/m';
-        $res = preg_match($pattern2, $content, $result);
-        if ($res) {
-            // there's unicode non-breaking space (u00A0) in mime encoded version of email, unicode regex switched is necessary
-            $amount = floatval(str_replace(',', '.', preg_replace('/\s+/u', '', $result[2])));
+        $amount = null;
+        $currency = null;
+        if (preg_match('/suma:.*?([+-])(.*?) ([A-Z]+)/m', $content, $result) === 1) {
+            $normalized = preg_replace('/\s+/u', '', $result[2]);
+            $amount = floatval(str_replace(',', '.', $normalized ?? ''));
             $currency = $result[3];
             if ($result[1] === '-') {
                 $amount = -$amount;
             }
-            $mailContent->setAmount($amount);
-            $mailContent->setCurrency($currency);
         }
 
-        $pattern3 = '/informácia pre príjemcu: (.*)/m';
-        $res = preg_match($pattern3, $content, $result);
-        if ($res) {
-            $mailContent->setReceiverMessage(trim($result[1]));
+        $receiverMessage = null;
+        if (preg_match('/informácia pre príjemcu: (.*)/m', $content, $result) === 1) {
+            $receiverMessage = mb_trim($result[1]);
         }
 
-        $pattern4 = '/VS([0-9]+)/m';
-        $res = preg_match($pattern4, $content, $result);
-        if ($res) {
-            $mailContent->setVs($result[1]);
+        $vs = null;
+        if (preg_match('/VS([0-9]+)/m', $content, $result) === 1) {
+            $vs = $result[1];
         }
 
-        $pattern5 = '/KS([0-9]+)/m';
-        $res = preg_match($pattern5, $content, $result);
-        if ($res) {
-            $mailContent->setKs($result[1]);
+        $ks = null;
+        if (preg_match('/KS([0-9]+)/m', $content, $result) === 1) {
+            $ks = $result[1];
         }
 
-        $pattern6 = '/z účtu:.*?([A-Z0-9 ]+)/m';
-        $res = preg_match($pattern6, $content, $result);
-        if ($res) {
-            $iban = trim($result[1]);
-            $mailContent->setAccountNumber($iban);
+        $accountNumber = null;
+        if (preg_match('/z účtu:.*?([A-Z0-9 ]+)/m', $content, $result) === 1) {
+            $accountNumber = mb_trim($result[1]);
         }
 
-        return $mailContent;
+        return new MailContent(
+            amount: $amount,
+            currency: $currency,
+            transactionDate: $transactionDate,
+            accountNumber: $accountNumber,
+            vs: $vs,
+            ks: $ks,
+            receiverMessage: $receiverMessage,
+        );
     }
 }

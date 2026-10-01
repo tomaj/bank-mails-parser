@@ -1,76 +1,79 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
-use ReflectionParameter;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
-class TatraBankaSimpleMailParser implements ParserInterface
+final readonly class TatraBankaSimpleMailParser implements ParserInterface
 {
-    private $map = [
-        'VS' => 'setVs',
-        'RES' => 'setRes',
-        'AC' => 'setAc',
-        'SIGN' => 'setSign',
-        'TRES' => 'setRes',
-        'CID' => 'setCid',
-        'AMT' => 'setAmount',
-        'CURR' => 'setCurrency',
-        'CC' => 'setCc',
-        'TID' => 'setTid',
-        'TIMESTAMP' => 'setTransactionDate',
-        'TXN' => 'setTxn',
-        'RC' => 'setRc',
-        'HMAC' => 'setSign',
+    private const array FIELD_MAP = [
+        'VS' => 'vs',
+        'RES' => 'res',
+        'AC' => 'ac',
+        'SIGN' => 'sign',
+        'TRES' => 'res',
+        'CID' => 'cid',
+        'AMT' => 'amount',
+        'CURR' => 'currency',
+        'CC' => 'cc',
+        'TID' => 'tid',
+        'TIMESTAMP' => 'transactionDate',
+        'TXN' => 'txn',
+        'RC' => 'rc',
+        'HMAC' => 'sign',
     ];
 
-    /**
-     * @param $content
-     * @return ?MailContent
-     */
+    #[\Override]
     public function parse(string $content): ?MailContent
     {
-        $mailContent = new MailContent();
-
-        if (empty($content)) {
+        if ($content === '') {
             return null;
         }
 
+        $data = [];
         foreach (explode(' ', $content) as $part) {
-            [$key, $value] = array_map('trim', explode('=', $part));
+            $exploded = explode('=', $part);
+            if (count($exploded) !== 2) {
+                continue;
+            }
+            [$key, $value] = array_map(mb_trim(...), $exploded);
 
-            if (!isset($this->map[$key])) {
+            if (!isset(self::FIELD_MAP[$key])) {
                 continue;
             }
 
-            $method = $this->map[$key];
-
-            $param = new ReflectionParameter([MailContent::class, $method], 0);
-            if ($param->getType()) {
-                $type = $param->getType()->getName();
-                if ($type == 'string') {
-                    $mailContent->$method($value);
-                } elseif ($type == 'int') {
-                    $mailContent->$method(intval($value));
-                } elseif ($type == 'float') {
-                    $mailContent->$method(floatval($value));
-                } else {
-                    $mailContent->$method($value);
-                }
-            } else {
-                $mailContent->$method($value);
-            }
+            $property = self::FIELD_MAP[$key];
+            $data[$property] = match ($property) {
+                'amount' => (float) $value,
+                'transactionDate' => (int) $value,
+                default => $value,
+            };
         }
 
-        if ($mailContent->getRes() === null) {
+        if (!isset($data['res'])) {
             return null;
         }
 
-        if ($mailContent->getTransactionDate() === null) {
-            $mailContent->setTransactionDate(time());
+        if (!isset($data['transactionDate'])) {
+            $data['transactionDate'] = time();
         }
-        return $mailContent;
+
+        return new MailContent(
+            amount: isset($data['amount']) ? (float) $data['amount'] : null,
+            currency: isset($data['currency']) ? (string) $data['currency'] : null,
+            transactionDate: (int) $data['transactionDate'],
+            vs: isset($data['vs']) ? (string) $data['vs'] : null,
+            cid: isset($data['cid']) ? (string) $data['cid'] : null,
+            sign: isset($data['sign']) ? (string) $data['sign'] : null,
+            res: (string) $data['res'],
+            ac: isset($data['ac']) ? (string) $data['ac'] : null,
+            cc: isset($data['cc']) ? (string) $data['cc'] : null,
+            tid: isset($data['tid']) ? (string) $data['tid'] : null,
+            txn: isset($data['txn']) ? (string) $data['txn'] : null,
+            rc: isset($data['rc']) ? (string) $data['rc'] : null,
+        );
     }
 }

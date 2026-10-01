@@ -1,0 +1,133 @@
+name: 🏦 Add New Bank Support
+description: Request support for a new bank
+title: "[New Bank]: "
+labels: ["enhancement", "new-bank", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for requesting a new bank! This helps us expand support to more institutions.
+
+  - type: input
+    id: bank-name
+    attributes:
+      label: Bank Name
+      description: Official name of the bank
+      placeholder: "Example Bank SK, a.s."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: country
+    attributes:
+      label: Country
+      description: Which country is this bank from?
+      options:
+        - Slovakia
+        - Czech Republic
+        - Other EU
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: email-format
+    attributes:
+      label: Email Format Description
+      description: Describe the structure of the bank's notification emails
+      placeholder: |
+        The email contains:
+        - Transaction date: DD.MM.YYYY format
+        - Amount: "Suma: 123,45 EUR"
+        - Variable symbol: "VS: 1234567890"
+    validations:
+      required: true
+
+  - type: textarea
+    id: email-sample
+    attributes:
+      label: Anonymized Email Sample
+      description: Paste an anonymized sample (REMOVE ALL PERSONAL DATA!)
+      render: text
+      placeholder: |
+        Subject: Payment notification
+
+        Dear client,
+        Amount: 123.45 EUR
+        Date: 01.01.2024
+        VS: 1234567890
+        ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: email-format-type
+    attributes:
+      label: Email Format Type
+      description: What format are the emails in?
+      options:
+        - Plain text
+        - HTML
+        - Both plain text and HTML
+        - PGP encrypted
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: transaction-type
+    attributes:
+      label: Transaction Type
+      description: Does one email contain one or multiple transactions?
+      options:
+        - Single transaction per email
+        - Multiple transactions per email
+        - Both types exist
+    validations:
+      required: false
+
+  - type: textarea
+    id: special-features
+    attributes:
+      label: Special Features
+      description: Any special characteristics of the emails?
+      placeholder: |
+        - Emails are PGP encrypted
+        - Contains SEPA payment details
+        - Multiple currencies
+    validations:
+      required: false
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Contribution Intent
+      description: Would you like to contribute the parser implementation?
+      options:
+        - Yes, I can implement the parser
+        - No, requesting someone else to implement
+        - Maybe, need guidance
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: This bank is used by...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have removed ALL personal data from the email sample (IBANs, names, addresses, etc.)
+          required: true
+        - label: I have checked this bank is not already supported
+          required: true
+        - label: I have provided at least one anonymized email sample
+          required: true

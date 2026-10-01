@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/tomaj/bank-mails-parser/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📧 Email Support
+    url: mailto:tomasmajer@gmail.com
+    about: Contact the maintainer directly for private inquiries
