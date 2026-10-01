@@ -1,9 +1,12 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
 parameters:
-    level: 5
+    level: max
     paths:
         - src
     ignoreErrors:
-        # OpenPGP library has dynamic types
+        # OpenPGP library has dynamic types and lacks proper type annotations
         - '#Instanceof between mixed and OpenPGP_SecretSubkeyPacket will always evaluate to false#'
-        # PHP 7.2 compatibility - ReflectionType::getName() was added in PHP 7.1
-        - '#Call to an undefined method ReflectionType::getName\(\)#'
+        - path: src/Parser/TatraBanka/TatraBankaMailDecryptor.php
+          message: '#^(Argument of an invalid type|Cannot access|Method .* should return)#'

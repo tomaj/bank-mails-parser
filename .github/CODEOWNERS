@@ -1,0 +1,25 @@
+# Code Owners for bank-mails-parser
+# These owners will be automatically requested for review when PRs are opened
+
+# Default owners for everything in the repo
+*       @tomaj
+
+# Parser implementations
+/src/Parser/                    @tomaj
+
+# Tests
+/tests/                         @tomaj
+
+# Configuration files
+composer.json                   @tomaj
+phpstan.neon                    @tomaj
+phpunit.xml.dist                @tomaj
+infection.json5                 @tomaj
+
+# CI/CD
+/.github/workflows/             @tomaj
+
+# Documentation
+/README.md                      @tomaj
+/CONTRIBUTING.md                @tomaj
+/SECURITY.md                    @tomaj

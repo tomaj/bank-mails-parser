@@ -1,0 +1,34 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "build/infection.log",
+        "html": "build/infection.html",
+        "summary": "build/infection-summary.log",
+        "json": "build/infection.json"
+    },
+    "mutators": {
+        "@default": true,
+        "PregMatchRemoveFlags": {
+            "ignore": [
+                // Equivalent mutants: /m flag removal from patterns without ^ or $ anchors
+                // The /m flag only affects ^ and $ behavior (multiline mode)
+                // These patterns don't use anchors, so /m has no effect
+                "Tomaj\\BankMailsParser\\Parser\\Csob\\CsobMailParser::parse",
+                "Tomaj\\BankMailsParser\\Parser\\Csob\\SkCsobMailParser::parse",
+                "Tomaj\\BankMailsParser\\Parser\\TatraBanka\\TatraBankaMailParser::parse",
+                "Tomaj\\BankMailsParser\\Parser\\Vub\\VubMailParser::parse"
+            ]
+        }
+    },
+    "minMsi": 89,
+    "minCoveredMsi": 90,
+    "timeout": 10,
+    "phpUnit": {
+        "configDir": "."
+    }
+}

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\TatraBanka;
@@ -7,110 +8,86 @@ use DateTimeImmutable;
 use Tomaj\BankMailsParser\MailContent;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 
-class TatraBankaMailParser implements ParserInterface
+final readonly class TatraBankaMailParser implements ParserInterface
 {
-    /**
-     * @param $content
-     * @return ?MailContent
-     */
+    #[\Override]
     public function parse(string $content): ?MailContent
     {
-        $mailContent = new MailContent();
-
         $pattern1 = '/(.*) bol zostatok Vasho uctu ([a-zA-Z0-9]+) (zvyseny|znizeny) o ([0-9 ]+,[0-9]+) ([a-zA-Z]+)/m';
-        $res = preg_match($pattern1, $content, $result);
-        if (!$res) {
+        if (preg_match($pattern1, $content, $matches) !== 1) {
             return null;
         }
 
         $transactionDateFormats = [
-            'j. n. Y G:i', // "19. 5. 2026 0:34"
-            'j.n.Y G:i',   // "19.5.2026 9:40"
+            'j. n. Y G:i',
+            'j.n.Y G:i',
         ];
-        $transactionDate = false; // backward compatible default
+        $transactionDate = false;
         foreach ($transactionDateFormats as $format) {
-            $parsedDate = DateTimeImmutable::createFromFormat($format, $result[1]);
-            if ($parsedDate) {
+            $parsedDate = DateTimeImmutable::createFromFormat($format, $matches[1]);
+            if ($parsedDate !== false) {
                 $transactionDate = $parsedDate->getTimestamp();
                 break;
             }
         }
-        if (!$transactionDate) {
-            $transactionDate = strtotime($result[1]);
+        if ($transactionDate === false) {
+            $transactionDate = strtotime($matches[1]);
         }
-        $mailContent->setTransactionDate($transactionDate);
 
-        $mailContent->setAccountNumber($result[2]);
-
-        $amount = floatval(str_replace(',', '.', str_replace(' ', '', $result[4])));
-        $currency = $result[5];
-        if ($result[3] === 'znizeny') {
+        $accountNumber = $matches[2];
+        $amount = floatval(str_replace(',', '.', str_replace(' ', '', $matches[4])));
+        if ($matches[3] === 'znizeny') {
             $amount = -$amount;
         }
-        $mailContent->setAmount($amount);
-        $mailContent->setCurrency($currency);
+        $currency = $matches[5];
 
-        $pattern = '/Informacia pre prijemcu: (.*)/m';
-        $res = preg_match($pattern, $content, $result);
-        if ($res) {
-            $mailContent->setReceiverMessage($result[1]);
+        $vs = null;
+        $ss = null;
+        $ks = null;
+        $hasStructuredRef = false;
+        if (preg_match('/Referencia platitela: \/VS(.*)\/SS(.*)\/KS(.*)/m', $content, $refMatches) === 1) {
+            $hasStructuredRef = true;
+            $vs = $refMatches[1] !== '' ? $refMatches[1] : null;
+            $ss = $refMatches[2] !== '' ? $refMatches[2] : null;
+            $ks = $refMatches[3] !== '' ? $refMatches[3] : null;
         }
 
-        // loads VS provided in format:
-        // - Referencia platitela: /VS1234056789/SS/KS
-        $pattern = '/Referencia platitela: \/VS(.*)\/SS(.*)\/KS(.*)/m';
-        $res = preg_match($pattern, $content, $result);
-        if ($res) {
-            $mailContent->setVs($result[1]);
-            $mailContent->setSs($result[2]);
-            $mailContent->setKs($result[3]);
+        if ($vs === null && preg_match('/vs([0-9]{1,10})/i', $content, $vsMatches) === 1) {
+            $vs = $vsMatches[1];
         }
 
-        // search whole email for number with `vs` prefix
-        if ($mailContent->getVs() === null) {
-            $pattern = '/vs([0-9]{1,10})/i';
-            $res = preg_match($pattern, $content, $result);
-            if ($res) {
-                $mailContent->setVs($result[1]);
-            }
+        $receiverMessage = null;
+        if (preg_match('/Informacia pre prijemcu: (.*)/m', $content, $recvMatches) === 1) {
+            $receiverMessage = $recvMatches[1];
         }
 
-        // if still no number found, check receiver message
-        // - some payers incorrectly set this field with VS number but without "VS" prefix
-        // - some banks send here variable symbol in Creditor Reference Information - SEPA XML format
-        // loads VS provided in formats:
-        // - Informacia pre prijemcu: 1234056789
-        // - Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
-        if ($mailContent->getVs() === null) {
-            $pattern = '/Informacia pre prijemcu:.*\b([0-9]{1,10})\b.*/i';
-            $res = preg_match($pattern, $content, $result);
-            if ($res) {
-                $mailContent->setVs($result[1]);
-            }
+        if ($vs === null && preg_match('/Informacia pre prijemcu:.*?([0-9]{1,10})/i', $content, $recvVsMatches) === 1) {
+            $vs = $recvVsMatches[1];
         }
 
-        // if still no number found, check unique mandate reference
-        // some payers incorrectly set this field without correct prefixes /VS/SS/KS
-        // loads VS provided in format:
-        // - Referencia platitela: 1234056789
-        if ($mailContent->getVs() === null) {
-            $pattern = '/Referencia platitela:.*\b([0-9]{1,10})\b.*/i';
-            $res = preg_match($pattern, $content, $result);
-            if ($res) {
-                $mailContent->setVs($result[1]);
-            }
+        if (!$hasStructuredRef && $vs === null && preg_match('/Referencia platitela:.*?([0-9]{1,10})/i', $content, $refVsMatches) === 1) {
+            $vs = $refVsMatches[1];
         }
 
-        $pattern4 = '/Popis transakcie: (.*)/m';
-        $res = preg_match($pattern4, $content, $result);
-        if ($res) {
-            $mailContent->setDescription($result[1]);
-
-            $descriptionParts = explode(' ', $result[1], 2);
-            $hasPrefix = count($descriptionParts) === 2;
-            $mailContent->setSourceAccountNumber($descriptionParts[$hasPrefix ? 1 : 0]);
+        $description = null;
+        $sourceAccountNumber = null;
+        if (preg_match('/Popis transakcie: (.*)/m', $content, $descMatches) === 1) {
+            $description = $descMatches[1];
+            $descriptionParts = explode(' ', $descMatches[1], 2);
+            $sourceAccountNumber = count($descriptionParts) === 2 ? $descriptionParts[1] : $descriptionParts[0];
         }
 
-        return $mailContent;
+        return new MailContent(
+            amount: $amount,
+            currency: $currency,
+            transactionDate: $transactionDate,
+            accountNumber: $accountNumber,
+            sourceAccountNumber: $sourceAccountNumber,
+            vs: $vs,
+            ss: $ss,
+            ks: $ks,
+            receiverMessage: $receiverMessage,
+            description: $description,
+        );
     }
 }

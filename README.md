@@ -1,402 +1,284 @@
 # Bank Mails Parser
 
-A professional PHP library for processing bank confirmation emails from Slovak and Czech banks. Extract transaction details, account numbers, amounts, and symbols automatically from bank notification emails.
-
-## 🏦 Supported Banks
-
-| Bank | Country | Parsers | Email Formats | Features |
-|------|---------|---------|---------------|----------|
-| TatraBanka | 🇸🇰 Slovakia | 3 parsers | Plain text, ComfortPay, PGP encrypted | Multi-format support, PGP decryption |
-| ČSOB CZ | 🇨🇿 Czech Republic | 1 parser | Multi-transaction HTML | Batch processing |
-| ČSOB SK | 🇸🇰 Slovakia | 1 parser | Multi-transaction HTML | Batch processing |
-| VUB | 🇸🇰 Slovakia | 1 parser | Plain text | Simple format |
-
-## ✨ Features
-
-- 📧 **Multiple email formats**: Plain text, HTML, PGP encrypted
-- 💰 **Financial data extraction**: Amounts, currencies, account numbers
-- 🔢 **Banking symbols**: Variable Symbol (VS), Constant Symbol (KS), Specific Symbol (SS)
-- 🔐 **PGP decryption**: Handle encrypted bank statements
-- 🔄 **Multi-transaction support**: Process emails with multiple payments
-- 🛡️ **Type safety**: Full PHP 8.2+ strict typing
-- ✅ **Well tested**: 95%+ code coverage with comprehensive test suite
-
+Professional PHP library for parsing bank confirmation emails from Slovak and Czech banks. Extract transaction details, account numbers, amounts, and banking symbols automatically from email notifications.
 
 [![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-91.75%25-brightgreen.svg)](https://tomaj.github.io/bank-mails-parser/)
-[![PHP Version Require](http://poser.pugx.org/tomaj/bank-mails-parser/require/php)](https://packagist.org/packages/tomaj/bank-mails-parser)
-[![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
-[![License](https://poser.pugx.org/tomaj/bank-mails-parser/license.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![PHP Version Require](https://poser.pugx.org/tomaj/bank-mails-parser/require/php)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![License](https://poser.pugx.org/tomaj/bank-mails-parser/license)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://tomaj.github.io/bank-mails-parser/)
 
-## 📋 Requirements
+## Why This Library?
 
-- **PHP 8.2+** (PHP 8.3, 8.4 recommended)
-- **Composer** for installation
+Manual processing of bank notification emails is error-prone and time-consuming. This library provides a robust, tested solution for automatically extracting payment information from bank emails, enabling seamless integration with accounting systems, payment verification workflows, and financial automation.
 
-## ⚡ Quick Start
+## Features
 
-### Installation
+- **Multiple Bank Support**: TatraBanka, ČSOB (CZ/SK), VÚB
+- **Multiple Email Formats**: Plain text, HTML, PGP encrypted
+- **Comprehensive Data Extraction**: Amounts, currencies, account numbers, banking symbols (VS, KS, SS)
+- **Multi-Transaction Support**: Process emails containing multiple payments
+- **PGP Decryption**: Handle encrypted bank statements
+- **Type Safety**: Full PHP 8.4+ strict typing with property hooks
+- **Well Tested**: High code coverage, comprehensive test suite, mutation tested
+- **Production Ready**: PHPStan level max, PSR-12 compliant
+
+## Supported Banks
+
+| Bank | Country | Parser Classes | Email Types |
+|------|---------|----------------|-------------|
+| **TatraBanka** | Slovakia | `TatraBankaMailParser`<br>`TatraBankaSimpleMailParser`<br>`TatraBankaStatementMailParser` | Plain text<br>ComfortPay<br>PGP encrypted |
+| **ČSOB** | Czech Republic | `CsobMailParser` | HTML multi-transaction |
+| **ČSOB** | Slovakia | `SkCsobMailParser` | HTML multi-transaction |
+| **VÚB** | Slovakia | `VubMailParser` | Plain text |
+
+## Requirements
+
+- PHP 8.4 or 8.5
+- Composer
+
+## Installation
 
 ```bash
 composer require tomaj/bank-mails-parser
 ```
 
-> **Upgrading from 3.x?** See the [4.0 Upgrade Guide](UPGRADE-4.0.md) for breaking changes and migration steps.
+### Upgrading from 3.x?
 
-### Basic Usage
+See the [4.0 Upgrade Guide](UPGRADE-4.0.md) for breaking changes and migration steps.
+
+## Quick Start
 
 ```php
 <?php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
-// Initialize parser
 $parser = new TatraBankaMailParser();
+$mailContent = $parser->parse($emailBody);
 
-// Parse bank email content
-$mailContent = $parser->parse($emailBodyContent);
-
-// Extract transaction details
 if ($mailContent) {
-    echo "Amount: " . $mailContent->getAmount() . " " . $mailContent->getCurrency() . "\n";
-    echo "Variable Symbol: " . $mailContent->getVs() . "\n";
-    echo "Account: " . $mailContent->getAccountNumber() . "\n";
+    echo "Amount: " . $mailContent->amount . " " . $mailContent->currency . "\n";
+    echo "Variable Symbol: " . $mailContent->vs . "\n";
+    echo "Account: " . $mailContent->accountNumber . "\n";
 }
 ```
 
-## 📊 Compatibility Matrix
+## Usage Examples
 
-| PHP Version | Library Version | Status |
-|-------------|----------------|---------|
-| 8.4 | 4.0+ | ✅ Fully supported |
-| 8.3 | 4.0+ | ✅ Fully supported |  
-| 8.2 | 4.0+ | ✅ Fully supported |
-| 8.1 | 3.0 only | ⚠️ Legacy support |
-| 7.4 | 3.0 only | ⚠️ Legacy support |
+### TatraBanka
 
-## 📧 Email Format Examples
+#### Standard Notification Emails
 
-### TatraBanka Plain Text Format
-```
-Váš zostatok po transakcii je 1234.56 EUR
-Suma: 50.00 EUR
-VS: 1234567890
-KS: 0308
-SS: 123
-```
-
-### ČSOB Multi-transaction HTML
-```html
-<tr>
-  <td>15.12.2023</td>
-  <td>+1,234.50 CZK</td>
-  <td>CZ1234567890</td>
-  <td>VS: 987654321</td>
-</tr>
-```
-
-### VUB Plain Text Format
-```
-Dtum: 11.12.2019
-Suma: 34,90
-Z tu: SK4502000000001123100000
-VS: 9911929700
-KS: 0308
-```
-
-## 📖 Detailed Usage
-
-### TatraBanka parsers
-
-Basic usage with TatraBanka parser:
-
-``` php
+```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
-$tatraBankaMailParser = new TatraBankaMailParser();
-$mailContent = $tatraBankaMailParser->parse('mail content');
+$parser = new TatraBankaMailParser();
+$mailContent = $parser->parse($emailBody);
 
-echo $mailContent->getKs() . "\n";
-echo $mailContent->getSs() . "\n";
-echo $mailContent->getVs() . "\n";
-echo $mailContent->getReceiverMessage() . "\n";
-echo $mailContent->getDescription() . "\n";
-echo $mailContent->getCurrency() . "\n";
-echo $mailContent->getTransactionDate() . "\n";
-echo $mailContent->getAccountNumber() . "\n";
-echo $mailContent->getAmount() . "\n";
-echo $mailContent->getAccountNumber() . "\n";
-echo $mailContent->getTxn() . "\n";
+// Access transaction details
+$mailContent->amount;              // float|null
+$mailContent->currency;            // string|null (EUR, USD, etc.)
+$mailContent->accountNumber;       // string|null
+$mailContent->sourceAccountNumber; // string|null
+$mailContent->vs;                  // string|null (Variable Symbol)
+$mailContent->ks;                  // string|null (Constant Symbol)
+$mailContent->ss;                  // string|null (Specific Symbol)
+$mailContent->transactionDate;     // int|false|null (Unix timestamp)
+$mailContent->receiverMessage;     // string|null
+$mailContent->description;         // string|null
 ```
 
-With *TatraBankaSimpleMailParser* you can parse comforpay emails. There are other getters like CID for reccurent payments.
+#### ComfortPay Payments
 
-``` php
-echo $mailContent->getCid() . "\n";
-echo $mailContent->getSign() . "\n";
-echo $mailContent->getRes() . "\n";
+```php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
+
+$parser = new TatraBankaSimpleMailParser();
+$mailContent = $parser->parse($emailBody);
+
+// Additional ComfortPay fields
+$mailContent->cid;   // string|null (Client ID)
+$mailContent->sign;  // string|null (HMAC signature)
+$mailContent->res;   // string|null (Result code: OK, FAIL)
+$mailContent->ac;    // string|null
+$mailContent->txn;   // string|null (Transaction ID)
+$mailContent->rc;    // string|null (Return code)
 ```
 
-With *TatraBankaStatementMailParser* you can parse encrypted PGP emails containing payment statements:
+#### PGP Encrypted Statements
 
-``` php
+```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 
-$decryptor = new TatraBankaMailDecryptor('/path/to/private-key.asc', 'passphrase');
+$decryptor = new TatraBankaMailDecryptor(
+    '/path/to/private-key.asc',
+    'your-passphrase'
+);
 $parser = new TatraBankaStatementMailParser($decryptor);
-$mailContents = $parser->parseMulti('encrypted mail content');
+$mailContents = $parser->parseMulti($encryptedEmailBody);
 
 foreach ($mailContents as $mailContent) {
-    echo $mailContent->getVs() . "\n";
-    echo $mailContent->getAmount() . "\n";
-    echo $mailContent->getCurrency() . "\n";
+    echo $mailContent->amount . " " . $mailContent->currency . "\n";
 }
 ```
 
-### ČSOB parsers
+### ČSOB Czech Republic
 
-For Czech ČSOB emails:
-
-``` php
+```php
 use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
 
-$csobMailParser = new CsobMailParser();
-$mailContents = $csobMailParser->parseMulti('mail content');
+$parser = new CsobMailParser();
+$mailContents = $parser->parseMulti($emailBody);
 
 foreach ($mailContents as $mailContent) {
-    echo $mailContent->getVs() . "\n";
-    echo $mailContent->getKs() . "\n";
-    echo $mailContent->getAmount() . "\n";
-    echo $mailContent->getCurrency() . "\n";
-    echo $mailContent->getAccountNumber() . "\n";
-    echo $mailContent->getSourceAccountNumber() . "\n";
+    echo "VS: " . $mailContent->vs . "\n";
+    echo "Amount: " . $mailContent->amount . " " . $mailContent->currency . "\n";
+    echo "Account: " . $mailContent->accountNumber . "\n";
+    echo "From: " . $mailContent->sourceAccountNumber . "\n";
 }
 ```
 
-For Slovak ČSOB emails:
+### ČSOB Slovakia
 
-``` php
+```php
 use Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser;
 
-$skCsobMailParser = new SkCsobMailParser();
-$mailContents = $skCsobMailParser->parseMulti('mail content');
+$parser = new SkCsobMailParser();
+$mailContents = $parser->parseMulti($emailBody);
 
 foreach ($mailContents as $mailContent) {
-    echo $mailContent->getVs() . "\n";
-    echo $mailContent->getKs() . "\n";
-    echo $mailContent->getAmount() . "\n";
-    echo $mailContent->getCurrency() . "\n";
-    echo $mailContent->getAccountNumber() . "\n";
+    echo "VS: " . $mailContent->getVs() . "\n";
+    echo "KS: " . $mailContent->getKs() . "\n";
+    echo "Amount: " . $mailContent->getAmount() . " " . $mailContent->getCurrency() . "\n";
 }
 ```
 
-### VUB parser
+### VÚB
 
-For VUB bank emails:
-
-``` php
+```php
 use Tomaj\BankMailsParser\Parser\Vub\VubMailParser;
 
-$vubMailParser = new VubMailParser();
-$mailContent = $vubMailParser->parse('mail content');
+$parser = new VubMailParser();
+$mailContent = $parser->parse($emailBody);
 
-echo $mailContent->getVs() . "\n";
-echo $mailContent->getKs() . "\n";
-echo $mailContent->getAmount() . "\n";
-echo $mailContent->getAccountNumber() . "\n";
-echo $mailContent->getTransactionDate() . "\n";
+if ($mailContent) {
+    echo "VS: " . $mailContent->vs . "\n";
+    echo "KS: " . $mailContent->ks . "\n";
+    echo "Amount: " . $mailContent->amount . "\n";
+    echo "Date: " . date('Y-m-d', $mailContent->transactionDate) . "\n";
+}
 ```
 
-## 🔍 MailContent API
+## MailContent API
 
 The `MailContent` object provides access to all extracted transaction data:
 
-### Core Methods
 ```php
-// Financial data
+// Financial Information
 $mailContent->getAmount(): ?float           // Transaction amount
-$mailContent->getCurrency(): ?string        // Currency code (EUR, CZK, etc.)
-$mailContent->getTransactionDate(): ?int    // Unix timestamp of transaction
+$mailContent->getCurrency(): ?string        // Currency code (EUR, CZK, USD, etc.)
+$mailContent->getTransactionDate(): int|false|null  // Unix timestamp
 
-// Account information  
+// Account Information
 $mailContent->getAccountNumber(): ?string        // Destination account
-$mailContent->getSourceAccountNumber(): ?string  // Source account (if available)
+$mailContent->getSourceAccountNumber(): ?string  // Source account (when available)
 
-// Banking symbols
+// Banking Symbols
 $mailContent->getVs(): ?string              // Variable Symbol
-$mailContent->getKs(): ?string              // Constant Symbol  
+$mailContent->getKs(): ?string              // Constant Symbol
 $mailContent->getSs(): ?string              // Specific Symbol
 
-// Additional data
+// Transaction Details
 $mailContent->getReceiverMessage(): ?string // Payment message
 $mailContent->getDescription(): ?string     // Transaction description
 $mailContent->getTxn(): ?string            // Transaction ID
-```
 
-### TatraBanka-specific Methods
-```php
-$mailContent->getCid(): ?string             // ComfortPay Client ID
+// TatraBanka ComfortPay Specific
+$mailContent->getCid(): ?string             // Client ID
 $mailContent->getSign(): ?string            // HMAC signature
-$mailContent->getRes(): ?string             // Result code
-$mailContent->getRc(): ?string              // Return code
+$mailContent->getRes(): ?string             // Result code (OK, FAIL)
+$mailContent->getAc(): ?string             // Authorization code
+$mailContent->getCc(): ?string             // Credit card info
+$mailContent->getRc(): ?string             // Return code
 ```
 
-## ⚠️ Error Handling
+All getters return `null` if the data is not present in the email.
 
-### Parser Return Values
+## Integration with IMAP
+
+Example integration with [tomaj/imap-email-downloader](https://github.com/tomaj/imap-email-downloader):
+
 ```php
-$parser = new TatraBankaMailParser();
-$result = $parser->parse($emailContent);
-
-if ($result === null) {
-    // Email format not recognized or parsing failed
-    echo "Unable to parse email content";
-} else {
-    // Successfully parsed - $result is MailContent object
-    echo "Amount: " . ($result->getAmount() ?? 'N/A');
-}
-```
-
-### Common Error Scenarios
-- **Unknown email format**: Parser returns `null`
-- **Partial data**: Some MailContent getters may return `null` 
-- **Invalid amounts**: Non-numeric values are handled gracefully
-- **Date parsing failures**: Invalid dates result in `null` timestamp
-
-### Validation Example
-```php
-function validateTransaction(MailContent $content): bool {
-    return $content->getAmount() !== null 
-        && $content->getAmount() > 0
-        && $content->getVs() !== null
-        && strlen($content->getVs()) > 0;
-}
-```
-
-## 📚 Migration Guides
-
-### Upgrade from 3.x to 4.x
-
-**⚠️ Breaking Changes:**
-- **PHP 8.2+ required** (dropped PHP 7.4, 8.0, 8.1 support)
-- **PHPUnit 11** for development (if extending library)
-
-**✅ Non-breaking Changes:**
-- All existing parser APIs remain unchanged
-- Same method signatures and return types
-- Improved test coverage and GitHub Pages reporting
-
-```bash
-# Update your composer.json
-composer require tomaj/bank-mails-parser:^4.0
-```
-
-### Upgrade from 2.x to 3.x
-
-**⚠️ Breaking Changes:**
-- **PHP 7.4+ required** (dropped PHP 7.1, 7.2, 7.3)
-- **ParserInterface changes**: Returns `?MailContent` instead of `false`
-- **Strict types**: Added `declare(strict_types=1)` throughout codebase
-- **Namespace changes**: TatraBanka parsers moved to `\TatraBanka` subfolder
-
-**Migration Steps:**
-```php
-// Before (v2.x)
-if ($parser->parse($content) === false) {
-    // Handle parsing failure
-}
-
-// After (v3.x)  
-if ($parser->parse($content) === null) {
-    // Handle parsing failure
-}
-```
-
-### Upgrade from 1.x to 2.x
-
-**⚠️ Breaking Changes:**
-- Parser now returns `MailContent` for both successful and failed bank responses
-- In v1.x, parser returned `MailContent` only for successful transactions
-
-**💡 See full changelog**: [CHANGELOG.md](CHANGELOG.md)
-
-
-Usage with imap mail downlaoder
--------------------------------
-
-Example how to use with [imap mail downloader](https://github.com/tomaj/bank-mails-parser):
-
-``` php
 use Tomaj\ImapMailDownloader\Downloader;
 use Tomaj\ImapMailDownloader\MailCriteria;
 use Tomaj\ImapMailDownloader\Email;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
-$downloader = new Downloader('*imap host*', *port*, '*username*', '*password*');
+$downloader = new Downloader('imap.example.com', 993, 'user@example.com', 'password');
 
 $criteria = new MailCriteria();
-$criteria->setFrom('some@email.com');
+$criteria->setFrom('notifications@tatrabanka.sk');
+
 $downloader->fetch($criteria, function(Email $email) {
-    $tatraBankaMailParser = new TatraBankaMailParser();
-	$mailContent = $tatraBankaMailParser->parse($email->getBody());
-	
-	// process $mailContent data...
-	
-	return true;
+    $parser = new TatraBankaMailParser();
+    $mailContent = $parser->parse($email->getBody());
+    
+    if ($mailContent) {
+        // Process the transaction data
+        processPayment($mailContent);
+    }
+    
+    return true;
 });
 ```
 
-*Note*: You have to include package *imap-email-downloader*: ```composer require tomaj/imap-email-downloader```
+## Error Handling
 
-## 🔒 Security Considerations
+Parsers return `null` when the email format is not recognized:
 
-### Production Recommendations
-- Store PGP keys outside web root
-- Use environment variables for sensitive configuration
-- Log parsing failures for security monitoring
-- Validate all extracted amounts before processing payments
-- Never expose raw email content in error messages
+```php
+$parser = new TatraBankaMailParser();
+$mailContent = $parser->parse($emailBody);
 
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-### Adding New Bank Parsers
-
-1. **Fork the repository** and create feature branch
-2. **Study existing parsers** in `src/Parser/` for patterns
-3. **Create parser class** implementing `ParserInterface`:
-   ```php
-   namespace Tomaj\BankMailsParser\Parser\YourBank;
-   
-   class YourBankMailParser implements ParserInterface 
-   {
-       public function parse(string $content): ?MailContent { /* ... */ }
-   }
-   ```
-4. **Add comprehensive tests** in `tests/Parser/YourBank/`
-5. **Update documentation** - README, CHANGELOG
-6. **Submit Pull Request** with example email formats
-
-### Development Setup
-```bash
-git clone https://github.com/tomaj/bank-mails-parser.git
-cd bank-mails-parser
-composer install
-./vendor/bin/phpunit        # Run tests
-./vendor/bin/phpstan analyse # Static analysis
+if ($mailContent === null) {
+    // Email format not recognized or parsing failed
+    log("Unable to parse email");
+} else {
+    // Successfully parsed
+    processTransaction($mailContent);
+}
 ```
 
-### Coding Standards
-- PHP 8.2+ with strict types
-- PSR-12 coding standard
-- 100% test coverage for new parsers
-- Comprehensive PHPDoc comments
+## Security Considerations
 
-### Bank Parser Requirements
-- Must handle both successful and failed transactions
-- Support for multi-transaction emails (if applicable)
-- Robust regex patterns with proper escaping
-- Currency and amount parsing with locale support
+- Store PGP private keys outside the web root
+- Use environment variables for sensitive configuration
+- Validate all extracted amounts before processing payments
+- Never expose raw email content in error messages
+- Log parsing failures for security monitoring
 
-**💡 Need help?** Open an issue or check existing parser implementations for guidance!
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
+
+- How to add support for new banks
+- Development setup and coding standards
+- Testing requirements and quality checks
+- Pull request process
+
+## License
+
+This library is licensed under the [LGPL-2.0-or-later](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html) license.
+
+## Support
+
+- **Documentation**: [https://tomaj.github.io/bank-mails-parser/](https://tomaj.github.io/bank-mails-parser/)
+- **Coverage Report**: [https://tomaj.github.io/bank-mails-parser/coverage/](https://tomaj.github.io/bank-mails-parser/coverage/)
+- **Issues**: [GitHub Issues](https://github.com/tomaj/bank-mails-parser/issues)
+- **Email**: tomasmajer@gmail.com
+- **Discussions**: [GitHub Discussions](https://github.com/tomaj/bank-mails-parser/discussions)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.

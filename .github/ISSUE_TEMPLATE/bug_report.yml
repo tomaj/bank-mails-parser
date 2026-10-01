@@ -1,0 +1,128 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: "[Bug]: "
+labels: ["bug", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below with as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: The parser returns null when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Parse email with...
+        2. Call method...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: The parser should return...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Instead, it returns...
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Sample
+      description: Minimal code to reproduce the issue
+      render: php
+      placeholder: |
+        $parser = new TatraBankaMailParser();
+        $result = $parser->parse($content);
+        // ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: email-sample
+    attributes:
+      label: Email Sample
+      description: Anonymized email content (REMOVE ALL PERSONAL DATA!)
+      render: text
+      placeholder: |
+        Paste anonymized email content here...
+        Replace IBANs, names, addresses with placeholder values.
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Library Version
+      description: What version are you using?
+      placeholder: "4.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP Version
+      description: What PHP version are you running?
+      placeholder: "8.3"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: bank
+    attributes:
+      label: Bank
+      description: Which bank parser is affected?
+      options:
+        - TatraBanka
+        - ČSOB CZ
+        - ČSOB SK
+        - VÚB
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other information that might help
+      placeholder: This started happening after...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm the following
+      options:
+        - label: I have removed all personal data from the email sample
+          required: true
+        - label: I have searched existing issues and this is not a duplicate
+          required: true
+        - label: I have provided a minimal code sample to reproduce the issue
+          required: false

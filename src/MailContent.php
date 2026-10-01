@@ -1,238 +1,64 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser;
 
-class MailContent
+/**
+ * Immutable value object representing parsed transaction data from a bank email.
+ *
+ * All properties are readonly and must be provided via constructor.
+ * Empty strings are automatically normalized to null.
+ */
+final readonly class MailContent
 {
-    private $amount;
-
-    private $accountNumber;
-
-    private $sourceAccountNumber;
-
-    private $vs;
-
-    private $ss;
-
-    private $ks;
-
-    private $transactionDate;
-
-    private $currency;
-
-    private $receiverMessage;
-
-    private $description;
-
-    private $sign;
-
-    private $cid;
-
-    private $res;
-
-    private $ac;
-
-    private $cc;
-
-    private $tid;
-
-    private $txn;
-
-    private $rc;
-
-    public function getKs(): ?string
-    {
-        return $this->ks;
+    public function __construct(
+        public ?float $amount = null,
+        public ?string $currency = null,
+        public int|false|null $transactionDate = null,
+        public ?string $accountNumber = null,
+        public ?string $sourceAccountNumber = null,
+        ?string $vs = null,
+        ?string $ss = null,
+        ?string $ks = null,
+        public ?string $receiverMessage = null,
+        public ?string $description = null,
+        ?string $cid = null,
+        ?string $sign = null,
+        ?string $res = null,
+        ?string $ac = null,
+        ?string $cc = null,
+        ?string $tid = null,
+        ?string $txn = null,
+        ?string $rc = null,
+    ) {
+        $this->vs = self::normalizeEmptyString($vs);
+        $this->ss = self::normalizeEmptyString($ss);
+        $this->ks = self::normalizeEmptyString($ks);
+        $this->cid = self::normalizeEmptyString($cid);
+        $this->sign = self::normalizeEmptyString($sign);
+        $this->res = self::normalizeEmptyString($res);
+        $this->ac = self::normalizeEmptyString($ac);
+        $this->cc = self::normalizeEmptyString($cc);
+        $this->tid = self::normalizeEmptyString($tid);
+        $this->txn = self::normalizeEmptyString($txn);
+        $this->rc = self::normalizeEmptyString($rc);
     }
 
-    public function setKs(string $ks)
-    {
-        if ($ks == '') {
-            $ks = null;
-        }
-        $this->ks = $ks;
-    }
+    public ?string $vs;
+    public ?string $ss;
+    public ?string $ks;
+    public ?string $cid;
+    public ?string $sign;
+    public ?string $res;
+    public ?string $ac;
+    public ?string $cc;
+    public ?string $tid;
+    public ?string $txn;
+    public ?string $rc;
 
-    public function getSs(): ?string
+    private static function normalizeEmptyString(?string $value): ?string
     {
-        return $this->ss;
-    }
-
-    public function setSs(string $ss)
-    {
-        if ($ss == '') {
-            $ss = null;
-        }
-        $this->ss = $ss;
-    }
-
-    public function getVs(): ?string
-    {
-        return $this->vs;
-    }
-
-    public function setVs(string $vs)
-    {
-        if ($vs == '') {
-            $vs = null;
-        }
-        $this->vs = $vs;
-    }
-
-    public function getCc(): ?string
-    {
-        return $this->cc;
-    }
-
-    public function setCc(string $cc)
-    {
-        if ($cc == '') {
-            $cc = null;
-        }
-        $this->cc = $cc;
-    }
-
-    public function getTid(): ?string
-    {
-        return $this->tid;
-    }
-
-    public function setTid(string $tid)
-    {
-        if ($tid == '') {
-            $tid = null;
-        }
-        $this->tid = $tid;
-    }
-
-    public function getReceiverMessage(): ?string
-    {
-        return $this->receiverMessage;
-    }
-
-    public function setReceiverMessage(string $receiverMessage)
-    {
-        $this->receiverMessage = $receiverMessage;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description)
-    {
-        $this->description = $description;
-    }
-
-    public function getCurrency(): ?string
-    {
-        return $this->currency;
-    }
-
-    public function setCurrency(string $currency)
-    {
-        $this->currency = $currency;
-    }
-
-    public function getTransactionDate() // TODO
-    {
-        return $this->transactionDate;
-    }
-
-    public function setTransactionDate($transactionDate)
-    {
-        $this->transactionDate = $transactionDate;
-    }
-
-    public function getAccountNumber(): ?string
-    {
-        return $this->accountNumber;
-    }
-
-    public function setAccountNumber(string $accountNumber)
-    {
-        $this->accountNumber = $accountNumber;
-    }
-
-    public function getSourceAccountNumber(): ?string
-    {
-        return $this->sourceAccountNumber;
-    }
-
-    public function setSourceAccountNumber(string $sourceAccountNumber): void
-    {
-        $this->sourceAccountNumber = $sourceAccountNumber;
-    }
-
-    public function getAmount(): ?float
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(float $amount)
-    {
-        $this->amount = $amount;
-    }
-
-    public function setCid(string $cid)
-    {
-        $this->cid = $cid;
-    }
-
-    public function getCid(): ?string
-    {
-        return $this->cid;
-    }
-
-    public function setSign(string $sign)
-    {
-        $this->sign = $sign;
-    }
-
-    public function getSign(): ?string
-    {
-        return $this->sign;
-    }
-
-    public function setRes(string $res)
-    {
-        $this->res = $res;
-    }
-
-    public function getRes(): ?string
-    {
-        return $this->res;
-    }
-
-    public function setAc(string $ac)
-    {
-        $this->ac = $ac;
-    }
-
-    public function getAc(): ?string
-    {
-        return $this->ac;
-    }
-
-    public function setTxn(string $txn)
-    {
-        $this->txn = $txn;
-    }
-
-    public function getTxn(): ?string
-    {
-        return $this->txn;
-    }
-
-    public function setRc(string $rc)
-    {
-        $this->rc = $rc;
-    }
-
-    public function getRc(): ?string
-    {
-        return $this->rc;
+        return $value === '' ? null : $value;
     }
 }
