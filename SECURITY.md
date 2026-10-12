@@ -4,12 +4,11 @@
 
 We actively support the following versions with security updates:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 4.x     | :white_check_mark: |
-| 3.x     | :x:                |
-| 2.x     | :x:                |
-| 1.x     | :x:                |
+| Version | Supported                          |
+| ------- | ---------------------------------- |
+| 5.x     | :white_check_mark: Fully supported |
+| 4.x     | Security fixes only                |
+| < 4.0   | :x:                                |
 
 ## Reporting a Vulnerability
 
@@ -19,7 +18,9 @@ If you discover a security vulnerability in this library, please report it respo
 
 **DO NOT** open a public issue for security vulnerabilities.
 
-Instead, please email security details to: **tomasmajer@gmail.com**
+The preferred way to report a vulnerability is [GitHub Private vulnerability reporting](https://github.com/tomaj/bank-mails-parser/security/advisories/new).
+
+As a backup, email security details to: **tomasmajer@gmail.com**
 
 Include:
 - Description of the vulnerability
@@ -29,9 +30,14 @@ Include:
 
 ### Response Timeline
 
+- **Acknowledgment**: Within 14 days
 - **Initial Response**: Within 48 hours
 - **Fix Timeline**: Critical issues within 7 days, others within 30 days
 - **Public Disclosure**: After fix is released and users have time to update
+
+### Disclosure Process
+
+We follow coordinated disclosure. When a fix is ready, we publish a GitHub Security Advisory and record the security fix in the CHANGELOG.
 
 ## Security Best Practices
 
