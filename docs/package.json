@@ -6,12 +6,14 @@
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:preview": "vitepress preview",
+    "docs:links": "bash scripts/check-links.sh"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "linkinator": "6.1.2",
     "vitepress": "^1.5.0"
   }
 }
