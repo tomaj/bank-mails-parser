@@ -2,6 +2,10 @@
 
 Professional PHP library for parsing bank confirmation emails from Slovak and Czech banks. Extract transaction details, account numbers, amounts, and banking symbols automatically from email notifications.
 
+**📖 Documentation: https://tomaj.github.io/bank-mails-parser/**
+
+[Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started) · [API reference](https://tomaj.github.io/bank-mails-parser/api/reference) · [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) · [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/)
+
 [![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tomaj/bank-mails-parser/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/bank-mails-parser)
 [![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable)](https://packagist.org/packages/tomaj/bank-mails-parser)
@@ -39,6 +43,14 @@ Manual processing of bank notification emails is error-prone and time-consuming.
 - `ext-mbstring`
 - Composer
 
+## Documentation
+
+- [Documentation](https://tomaj.github.io/bank-mails-parser/)
+- [Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started)
+- [API reference](https://tomaj.github.io/bank-mails-parser/api/reference)
+- [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md)
+- [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/)
+
 ## Installation
 
 ```bash
@@ -47,8 +59,8 @@ composer require tomaj/bank-mails-parser ^5.0
 
 ### Upgrading?
 
-- **From 4.x to 5.0**: See the [5.0 Upgrade Guide](UPGRADE-5.0.md) for breaking changes and migration steps
-- **From 3.x to 4.0**: See the [4.0 Upgrade Guide](UPGRADE-4.0.md)
+- **From 4.x to 5.0**: See the [5.0 Upgrade Guide](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) for breaking changes and migration steps
+- **From 3.x to 4.0**: See the [4.0 Upgrade Guide](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-4.0.md)
 
 ## Quick Start
 
@@ -289,6 +301,10 @@ This library is licensed under the [MIT License](LICENCE).
 ## Support
 
 - **Documentation**: [https://tomaj.github.io/bank-mails-parser/](https://tomaj.github.io/bank-mails-parser/)
+- **Getting started**: [https://tomaj.github.io/bank-mails-parser/guide/getting-started](https://tomaj.github.io/bank-mails-parser/guide/getting-started)
+- **API reference**: [https://tomaj.github.io/bank-mails-parser/api/reference](https://tomaj.github.io/bank-mails-parser/api/reference)
+- **Upgrade guide 4.x → 5.0**: [UPGRADE-5.0.md](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md)
+- **4.x docs**: [https://tomaj.github.io/bank-mails-parser/4.x/](https://tomaj.github.io/bank-mails-parser/4.x/)
 - **Coverage Report**: [https://tomaj.github.io/bank-mails-parser/coverage/](https://tomaj.github.io/bank-mails-parser/coverage/)
 - **Issues**: [GitHub Issues](https://github.com/tomaj/bank-mails-parser/issues)
 - **Email**: tomasmajer@gmail.com
