@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [5.0.0] - 2026-10-12
 
 See the repository [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blob/master/CHANGELOG.md) for the 5.0.0 notes. Summary:
 
@@ -106,7 +106,7 @@ See the repository [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blo
 ## [2.5.0] - 2019-08-15
 
 ### Added
-- **RC parameter processing** for ComfortPay emails ([#9](https://github.com/mikoczy/mikoczy/comfortpay_rc))
+- **RC parameter processing** for ComfortPay emails ([#9](https://github.com/tomaj/bank-mails-parser/pull/9))
 
 ### Changed
 - Updated minimal PHP version requirements
@@ -115,14 +115,14 @@ See the repository [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blo
 ## [2.4.0] - 2019-06-10
 
 ### Added
-- **TXN parameter processing** for ComfortPay emails ([#8](https://github.com/mikoczy/comfortpay_txn))
+- **TXN parameter processing** for ComfortPay emails ([#8](https://github.com/tomaj/bank-mails-parser/pull/8))
 - TXN parameter documentation in README
 
 ## [2.3.0] - 2019-03-20
 
 ### Fixed
-- **CardPay HMAC regexp** improvements for optional fields ([#7](https://github.com/rootpd/fail-mails-2))
-- Enhanced support for failed payment emails ([#6](https://github.com/rootpd/fail-mails))
+- **CardPay HMAC regexp** improvements for optional fields ([#7](https://github.com/tomaj/bank-mails-parser/pull/7))
+- Enhanced support for failed payment emails ([#6](https://github.com/tomaj/bank-mails-parser/pull/6))
 
 ### Changed
 - Removed PHP 5.4 and 5.5 from Travis CI
@@ -131,7 +131,7 @@ See the repository [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blo
 ## [2.2.0] - 2018-12-01
 
 ### Added
-- **Description field support** ([#5](https://github.com/danieljaniga/master))
+- **Description field support** ([#5](https://github.com/tomaj/bank-mails-parser/pull/5))
 - Enhanced email parsing capabilities
 
 ### Fixed
@@ -141,11 +141,11 @@ See the repository [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blo
 ## [2.1.0] - 2018-08-15
 
 ### Added
-- **CC parameter** support within HMAC confirmation emails ([#4](https://github.com/rootpd/hmac-cc-param-optional))
+- **CC parameter** support within HMAC confirmation emails ([#4](https://github.com/tomaj/bank-mails-parser/pull/4))
 - Made CC parameter optional in HMAC emails
 
 ### Fixed
-- Variable symbol parsing from receiver message ([#2](https://github.com/davidkoberan/master))
+- Variable symbol parsing from receiver message ([#2](https://github.com/tomaj/bank-mails-parser/pull/2))
 - Enhanced VS detection in whole message content
 
 ## [2.0.0] - 2018-05-01
@@ -203,7 +203,7 @@ See the repository [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blo
 - Account number parsing
 - Receiver message parsing
 
-[Unreleased]: https://github.com/tomaj/bank-mails-parser/compare/4.1.0...HEAD
+[5.0.0]: https://github.com/tomaj/bank-mails-parser/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/tomaj/bank-mails-parser/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/tomaj/bank-mails-parser/compare/3.0.0...4.0.0
 [3.0.0]: https://github.com/tomaj/bank-mails-parser/compare/2.8.0...3.0.0
