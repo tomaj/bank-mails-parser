@@ -1,0 +1,9 @@
+Nějaký předchozí text
+
+Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
+Částka: +1 234,56 CZK
+Účet protistrany/IBAN: SK1122334455667788
+Název protistrany: Příjemce s diakritikou ščřžýáíéúů
+Zpráva příjemci: Testovací zpráva s čárkami
+Variabilní symbol: 23456789
+Další text pokračuje

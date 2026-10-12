@@ -1,0 +1,6 @@
+            Vážený kliente,
+
+            Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
+            Částka: +1 234,56 CZK
+            Variabilní symbol: 23456789
+            Identifikace: 999

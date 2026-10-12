@@ -1,0 +1,31 @@
+{
+    "sha256": "d98994a6575ff8f3fdc9435eff1de6cd150f9640756c145938a6a5d24fe80353",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 250000,
+                "currency": "CZK",
+                "decimal": "2500.00",
+                "date": "2026-10-03 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "1234567890/0300",
+                "ownAccountNumber": null,
+                "vs": "2024001",
+                "ss": null,
+                "ks": "0308",
+                "receiverMessage": "Částka: záloha 2 500 Kč",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

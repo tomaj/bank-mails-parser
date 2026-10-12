@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Get version from tag
+        id: version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Require the tag commit to be on master
+        run: |
+          git fetch origin master
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/master
+
+      - name: Extract changelog for version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if ! grep -q "^## \\[$VERSION\\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no section for $VERSION" >&2
+            exit 1
+          fi
+          HEADING=$(grep "^## \\[$VERSION\\]" CHANGELOG.md | head -1)
+          case "$HEADING" in
+            *TBD*|*Unreleased*)
+              echo "CHANGELOG section for $VERSION is not a released section" >&2
+              exit 1
+              ;;
+          esac
+          awk -v version="$VERSION" '
+            $0 ~ "^## \\[" version "\\]" {flag=1; next}
+            /^## \[/ {flag=0}
+            flag {print}
+          ' CHANGELOG.md > release-notes.txt
+          if [ ! -s release-notes.txt ]; then
+            echo "CHANGELOG section for $VERSION is empty" >&2
+            exit 1
+          fi
+          if grep -qE 'TBD|Unreleased' release-notes.txt; then
+            echo "CHANGELOG section for $VERSION still contains TBD or Unreleased" >&2
+            exit 1
+          fi
+
+      - name: Create release archive
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git archive --format=tar.gz --prefix="bank-mails-parser-${VERSION}/" HEAD > "bank-mails-parser-${VERSION}.tar.gz"
+          sha256sum "bank-mails-parser-${VERSION}.tar.gz" > "bank-mails-parser-${VERSION}.tar.gz.sha256"
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: 'bank-mails-parser-*.tar.gz'
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          name: Release ${{ steps.version.outputs.version }}
+          body_path: release-notes.txt
+          files: |
+            bank-mails-parser-*.tar.gz
+            bank-mails-parser-*.tar.gz.sha256
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Packagist updates through the repository webhook configured in the Packagist
+      # project settings. This workflow does not call Packagist.

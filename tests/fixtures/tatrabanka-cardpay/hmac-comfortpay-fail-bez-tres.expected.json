@@ -1,0 +1,31 @@
+{
+    "sha256": "6c32a26f8d0c7f287056f9a2b181958729775d748d59a79f80e45a595efed8b0",
+    "result": {
+        "parser": "tatrabanka-cardpay",
+        "transactions": [
+            {
+                "amount": 499,
+                "currency": "EUR",
+                "decimal": "4.99",
+                "date": "2020-03-27 12:17:40 +00:00",
+                "accountNumber": null,
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "5555534283",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": "b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1",
+                "res": "FAIL",
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

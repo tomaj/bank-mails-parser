@@ -1,0 +1,27 @@
+Vážený kliente,
+
+toto je automaticky generovaný e-mail ze služby ČSOB CEB, neodpovídejte na něj.
+
+Dne 18.8.2022 byl na účtu 123456789 zaúčtovaný SEPA převod.
+
+Název smlouvy: CRM International a.s.
+Číslo smlouvy: 87654321
+Majitel smlouvy: Shmelina a.s.
+Účet: 123456789, CZK, CRM INTERNATION
+Zaslaná částka platby: 150,00 EUR
+Kurz: 23,878
+Částka: +3 581,70 CZK
+Účet protistrany: NL56 ABNA 1234 5678 90
+Název protistrany: 360GEORGE SRS
+Adresa protistrany: NETHERLANDS
+Číslo transakce ČSOB: 9876543210
+Reference plátce: CT12345678901234
+Dne 1.1.2026 byl na účtu 123456789 zaúčtovaný SEPA převod.
+Částka: +99 999,00 CZK
+Identifikace: 23456789
+Účel platby: 23456789
+
+Zůstatek na účtu po zaúčtování transakce: +1 234 567,89 CZK.
+
+S přáním krásného dne
+Vaše ČSOB

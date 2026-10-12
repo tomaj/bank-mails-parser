@@ -1,0 +1,31 @@
+{
+    "sha256": "e454f208125a018ec28c14fe13e457a024046c5c4d835e6481bb062892dfb50c",
+    "result": {
+        "parser": "tatrabanka-cardpay",
+        "transactions": [
+            {
+                "amount": 100,
+                "currency": "EUR",
+                "decimal": "1.00",
+                "date": null,
+                "accountNumber": null,
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "1",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": "def",
+                "res": "OK",
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

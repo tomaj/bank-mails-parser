@@ -1,0 +1,54 @@
+{
+    "sha256": "3c0fad261cfa1de3c2e202a0e9e7a9860596f61aa7d88cacba502ee705b5bd9e",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 250000,
+                "currency": "CZK",
+                "decimal": "2500.00",
+                "date": "2026-10-03 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "1234567890/0300",
+                "ownAccountNumber": null,
+                "vs": "2024001",
+                "ss": null,
+                "ks": "0308",
+                "receiverMessage": "Platba za fakturu 2024001",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            },
+            {
+                "amount": 10000,
+                "currency": "CZK",
+                "decimal": "100.00",
+                "date": "2026-10-03 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "1234567890/0300",
+                "ownAccountNumber": null,
+                "vs": "2024001",
+                "ss": null,
+                "ks": "0308",
+                "receiverMessage": "Platba za fakturu 2024001",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

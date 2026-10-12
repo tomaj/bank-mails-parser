@@ -1,0 +1,8 @@
+{
+    "sha256": "9fb2113abc8e4eca444a4cda3e7b10b2dd10a77d568adf738cb0f7d0125e1272",
+    "result": {
+        "parser": "csob-cz",
+        "exception": "Tomaj\\BankMailsParser\\Exception\\InvalidEmailFormatException",
+        "message": "Parser Tomaj\\BankMailsParser\\Parser\\Csob\\CsobMailParser: Transaction is missing a balance line"
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "sha256": "de3f3a9555959a5b9f5c37a4eea41122940c8a8658bc43b65c88a651450b3a1a",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 330000,
+                "currency": "CZK",
+                "decimal": "3300.00",
+                "date": "2023-12-05 00:00:00 +01:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "SK99 1100 0000 7777 8888 9999",
+                "ownAccountNumber": null,
+                "vs": null,
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

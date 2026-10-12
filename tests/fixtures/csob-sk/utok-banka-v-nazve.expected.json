@@ -1,0 +1,31 @@
+{
+    "sha256": "c21ab7d9701ab5bb142a9f675a668a9c4e59b9c318f31502f64011a2b8d6e5aa",
+    "result": {
+        "parser": "csob-sk",
+        "transactions": [
+            {
+                "amount": 115000,
+                "currency": "EUR",
+                "decimal": "1150.00",
+                "date": "2019-09-06 00:00:00 +02:00",
+                "accountNumber": "SK91 7500 0000 0030 2072 9058",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": "SK13 7500 0000 0040 1942 5381",
+                "vs": "212049000",
+                "ss": "964",
+                "ks": "0308",
+                "receiverMessage": "Maroko 2019 rodicia",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

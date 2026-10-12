@@ -1,0 +1,19 @@
+Vážený kliente,
+
+toto je automaticky generovaný e-mail ze služby ČSOB CEB, neodpovídejte na něj.
+
+Dne 21.2.2024 byla na účtu 123456789 zaúčtována zahraniční transakce.
+
+Název smlouvy: CRM International a.s.
+Číslo smlouvy: 87654321
+Majitel smlouvy: Shmelina a.s.
+Účet: 123456789, CZK, CRM INTERNATION
+Částka: +1 980,00 CZK
+Účet protistrany: 6012345678/2700
+Název protistrany: NETOPÍŘ KAREL
+Zpráva příjemci: vs3723199116
+
+Zůstatek na účtu po zaúčtování transakce: +12 345 678,90 CZK.
+
+S přáním krásného dne
+Vaše ČSOB

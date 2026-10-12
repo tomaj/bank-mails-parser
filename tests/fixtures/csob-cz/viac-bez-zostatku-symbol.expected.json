@@ -1,0 +1,54 @@
+{
+    "sha256": "ab059b9fa4f9ef1b9111c93364fbaff37360bcb047dff394d36280d875475b88",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 144000,
+                "currency": "CZK",
+                "decimal": "1440.00",
+                "date": "2024-03-01 00:00:00 +01:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "2233445566/2600",
+                "ownAccountNumber": null,
+                "vs": null,
+                "ss": null,
+                "ks": "0000",
+                "receiverMessage": "/Eva Adamova",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            },
+            {
+                "amount": 9999900,
+                "currency": "CZK",
+                "decimal": "99999.00",
+                "date": "2026-01-01 00:00:00 +01:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "0449274899",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

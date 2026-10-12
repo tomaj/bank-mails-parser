@@ -1,0 +1,31 @@
+{
+    "sha256": "cd7679acf1961ad794110e0b3bc46bbcc344deab1ef80069bf783751a88c7472",
+    "result": {
+        "parser": "vub",
+        "transactions": [
+            {
+                "amount": 1337,
+                "currency": "EUR",
+                "decimal": "13.37",
+                "date": "2019-12-11 00:00:00 +01:00",
+                "accountNumber": "SK1111111111111111111111",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": "SK9999999999999999999999",
+                "vs": "9999999999",
+                "ss": "910",
+                "ks": "0308",
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": "5CB8A45E42ABC48539E672B9F8E1B3F8E62F97FABDBCF880D0913B5A0C8431CE",
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

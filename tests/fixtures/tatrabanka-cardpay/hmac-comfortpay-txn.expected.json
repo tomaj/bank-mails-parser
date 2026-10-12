@@ -1,0 +1,31 @@
+{
+    "sha256": "455da8eea5fd2ce00266a26c9886c191d74ca6e022560f754370b903488e0db0",
+    "result": {
+        "parser": "tatrabanka-cardpay",
+        "transactions": [
+            {
+                "amount": 4488,
+                "currency": "EUR",
+                "decimal": "44.88",
+                "date": "2016-11-26 12:16:31 +00:00",
+                "accountNumber": null,
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "4444255333",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": "824452",
+                "sign": "b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1",
+                "res": "OK",
+                "ac": "644311",
+                "cc": null,
+                "tid": "11224444",
+                "txn": "PA",
+                "rc": null,
+                "tres": "OK"
+            }
+        ]
+    }
+}

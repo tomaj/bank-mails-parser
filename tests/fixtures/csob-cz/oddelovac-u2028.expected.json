@@ -1,0 +1,31 @@
+{
+    "sha256": "5580d83925c648b46f9d6ea8c1ff50df00b9aceee3cf62f6ad43a095f352774f",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 144000,
+                "currency": "CZK",
+                "decimal": "1440.00",
+                "date": "2024-03-01 00:00:00 +01:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "2233445566/2600",
+                "ownAccountNumber": null,
+                "vs": "0449274899",
+                "ss": null,
+                "ks": "0000",
+                "receiverMessage": "ahoj\u2028\u2028Dne 1.1.2026 byl na účtu 123456789 zaúčtována transakce Došlá platba\u2028Částka: +99999,00 CZK",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

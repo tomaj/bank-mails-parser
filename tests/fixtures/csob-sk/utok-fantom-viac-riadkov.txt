@@ -1,0 +1,9 @@
+Prvý riadok textu
+dňa 6.9.2019 bola na účte SK91 7500 0000 0030 2072 9058 zaúčtovaná suma SEPA platobného príkazu:
+suma:                    +1150,50 EUR
+názov protiúčtu:         NOVÁČEK Ján č. účtu
+referencia platiteľa:    /VS212049000/KS0308
+informácia pre príjemcu: Platba za služby č. ščřžýáíéúô
+S: 1
+dňa 1.1.2026 bola na účte SK91 7500 0000 0030 2072 9058 zaúčtovaná suma SEPA platobného príkazu:
+suma: +99999,00 EUR

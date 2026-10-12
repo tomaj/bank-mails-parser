@@ -1,0 +1,18 @@
+Vážený kliente,
+
+toto je automaticky generovaný e-mail ze služby ČSOB CEB, neodpovídejte na něj.
+
+Dne 18.12.2023 byla na účtu 99991111 zaúčtována hotovostní transakce.
+
+Název smlouvy: CRM International a.s.
+Číslo smlouvy: 4200000
+Majitel smlouvy: CRM International a.s.
+Účet: 99991111, CZK, CRM INTERNATIONAL A.S.
+Částka: +3 300,00 CZK
+Variabilní symbol: 1122334455
+Zpráva příjemci: VS1122334455
+
+Zůstatek na účtu po zaúčtování transakce: +11111 CZK.
+
+S přáním krásného dne
+Vaše ČSOB

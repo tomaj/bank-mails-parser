@@ -1,0 +1,31 @@
+{
+    "sha256": "0aa26faa21f8ce8a8ecc620509cbe6981cecd36581affca5cf751bea22023cd7",
+    "result": {
+        "parser": "csob-sk",
+        "transactions": [
+            {
+                "amount": 115050,
+                "currency": "EUR",
+                "decimal": "1150.50",
+                "date": "2019-09-06 00:00:00 +02:00",
+                "accountNumber": null,
+                "sourceAccountNumber": null,
+                "ownAccountNumber": "SK91 7500 0000 0030 2072 9058",
+                "vs": "212049000",
+                "ss": null,
+                "ks": "0308",
+                "receiverMessage": "Platba za služby č. ščřžýáíéúô",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

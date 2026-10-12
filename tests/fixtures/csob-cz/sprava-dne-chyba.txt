@@ -1,0 +1,22 @@
+Vážený kliente,
+
+toto je automaticky generovaný e-mail ze služby ČSOB CEB, neodpovídejte na něj.
+
+Dne 3.10.2026 byla na účtu 123456789 zaúčtována transakce typu: Příchozí úhrada.
+
+Název smlouvy: CRM International a.s.
+Číslo smlouvy: 87654321
+Majitel smlouvy: Shmelina a.s.
+Účet: 123456789, CZK, CRM INTERNATION
+Částka: +2 500,00 CZK
+Účet protistrany: 1234567890/0300
+Název protistrany: Novák Jan
+Variabilní symbol: 2024001
+Konstantní symbol: 0308
+Specifický symbol: 77
+Zpráva příjemci: Dne 1.10.2026 byla na účtu chyba, vracím
+
+Zůstatek na účtu po zaúčtování transakce: +12 345,67 CZK.
+
+S přáním krásného dne
+Vaše ČSOB
