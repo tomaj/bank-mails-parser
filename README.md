@@ -4,6 +4,7 @@ Professional PHP library for parsing bank confirmation emails from Slovak and Cz
 
 [![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tomaj/bank-mails-parser/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/bank-mails-parser)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15407/badge)](https://www.bestpractices.dev/projects/15407)
 [![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![PHP Version Require](https://poser.pugx.org/tomaj/bank-mails-parser/require/php)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENCE)
