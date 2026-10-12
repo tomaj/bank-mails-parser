@@ -4,7 +4,7 @@ Professional PHP library for parsing bank confirmation emails from Slovak and Cz
 
 **📖 Documentation: https://tomaj.github.io/bank-mails-parser/**
 
-[Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started) · [API reference](https://tomaj.github.io/bank-mails-parser/api/reference) · [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) · [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/)
+[Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started) · [API reference](https://tomaj.github.io/bank-mails-parser/api/reference) · [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) · [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/)
 
 [![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tomaj/bank-mails-parser/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/bank-mails-parser)
@@ -46,7 +46,7 @@ Manual processing of bank notification emails is error-prone and time-consuming.
 
 ## Documentation
 
-- [Documentation](https://tomaj.github.io/bank-mails-parser/)
+- [Documentation](https://tomaj.github.io/bank-mails-parser/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/)
 - [Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started)
 - [API reference](https://tomaj.github.io/bank-mails-parser/api/reference)
 - [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md)
@@ -301,11 +301,11 @@ This library is licensed under the [MIT License](LICENCE).
 
 ## Support
 
-- **Documentation**: [https://tomaj.github.io/bank-mails-parser/](https://tomaj.github.io/bank-mails-parser/)
+- **Documentation**: [English](https://tomaj.github.io/bank-mails-parser/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/)
 - **Getting started**: [https://tomaj.github.io/bank-mails-parser/guide/getting-started](https://tomaj.github.io/bank-mails-parser/guide/getting-started)
 - **API reference**: [https://tomaj.github.io/bank-mails-parser/api/reference](https://tomaj.github.io/bank-mails-parser/api/reference)
 - **Upgrade guide 4.x → 5.0**: [UPGRADE-5.0.md](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md)
-- **4.x docs**: [https://tomaj.github.io/bank-mails-parser/4.x/](https://tomaj.github.io/bank-mails-parser/4.x/)
+- **4.x docs**: [English](https://tomaj.github.io/bank-mails-parser/4.x/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/4.x/)
 - **Coverage Report**: [https://tomaj.github.io/bank-mails-parser/coverage/](https://tomaj.github.io/bank-mails-parser/coverage/)
 - **Issues**: [GitHub Issues](https://github.com/tomaj/bank-mails-parser/issues)
 - **Email**: tomasmajer@gmail.com

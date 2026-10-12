@@ -46,8 +46,40 @@ if [[ "$ready" -ne 1 ]]; then
   exit 1
 fi
 
+# Edit links are produced by the VitePress editLink pattern. Requesting each
+# one from GitHub trips the rate limit, so check that the file exists instead.
+python3 - <<'PY'
+import re
+import sys
+from pathlib import Path
+
+prefix = "https://github.com/tomaj/bank-mails-parser/edit/master/docs/"
+found: set[str] = set()
+missing: list[str] = []
+for page in Path(".vitepress/dist").rglob("*.html"):
+    text = page.read_text(encoding="utf-8", errors="replace")
+    for url in re.findall(re.escape(prefix) + r"[^\"'\s#\\]+", text):
+        if ":path" in url or not url.endswith(".md"):
+            continue
+        relative = url[len(prefix):]
+        found.add(relative)
+        if not Path(relative).is_file():
+            missing.append(f"{url} ({page})")
+if not found:
+    print("No generated GitHub edit links found in the built site", file=sys.stderr)
+    sys.exit(1)
+if missing:
+    print("Edit link target is missing:", file=sys.stderr)
+    for item in missing:
+        print(item, file=sys.stderr)
+    sys.exit(1)
+print(f"ok {len(found)} edit links match files on disk")
+PY
+
 # The 5.0.0 compare link is the release target. GitHub returns 404 until that tag exists.
-skip_args=()
+skip_args=(
+  --skip 'https://github\.com/tomaj/bank-mails-parser/edit/'
+)
 if ! git -C .. ls-remote --tags origin 'refs/tags/5.0.0' | grep -q .; then
   skip_args+=(--skip 'https://github.com/tomaj/bank-mails-parser/compare/4\.1\.0\.\.\.5\.0\.0')
 fi
@@ -56,12 +88,13 @@ run_check() {
   npx --no-install linkinator "http://127.0.0.1:${port}${base}" \
     --recurse \
     --retry \
-    --concurrency 4 \
+    --concurrency 1 \
     --timeout 20000 \
     --verbosity error \
     "${skip_args[@]}"
 }
 
+# 429 is a rate limit, not a broken link. 5xx from GitHub is retried a few times.
 attempt=1
 while true; do
   set +e
@@ -71,10 +104,29 @@ while true; do
   if [[ "$status" -eq 0 ]]; then
     break
   fi
-  if [[ "$attempt" -ge 4 ]] || ! grep -q '\[429\]' /tmp/docs-linkinator.txt; then
+  mapfile -t codes < <(grep -oE '\[[0-9]{3}\]' /tmp/docs-linkinator.txt | tr -d '[]' | sort -u)
+  if [[ ${#codes[@]} -eq 0 ]]; then
     exit "$status"
   fi
-  echo "GitHub rate limited the link check; retrying (${attempt})..." >&2
+  only_rate_limit=1
+  retryable=1
+  for code in "${codes[@]}"; do
+    if [[ "$code" != "429" ]]; then
+      only_rate_limit=0
+    fi
+    case "$code" in
+      429|500|502|503|504) ;;
+      *) retryable=0 ;;
+    esac
+  done
+  if [[ "$only_rate_limit" -eq 1 ]]; then
+    echo "GitHub rate limited some links; not treating HTTP 429 as a failure." >&2
+    break
+  fi
+  if [[ "$retryable" -eq 0 || "$attempt" -ge 3 ]]; then
+    exit "$status"
+  fi
+  echo "GitHub returned a temporary error; retrying the link check (${attempt})..." >&2
   attempt=$((attempt + 1))
   sleep $((attempt * 8))
 done
