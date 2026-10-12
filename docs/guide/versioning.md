@@ -21,6 +21,12 @@ Use the version dropdown in the navigation bar to switch between documentation v
 - **5.x (latest)** - Immutable API with direct property access
 - **4.x** - Mutable API with getters/setters
 
+The same dropdown is on Slovak pages. From a Slovak page, 4.x opens the Slovak archive at `/bank-mails-parser/sk/4.x/`.
+
+## Languages
+
+English is the default locale, served at the site root. Slovak pages live in `docs/sk/` and are served at `/bank-mails-parser/sk/` (5.x) and `/bank-mails-parser/sk/4.x/` (archive). The **EN / SK** control in the navigation bar opens the same page in the other language. The version menu stays in the current language.
+
 ## Versioning Strategy
 
 ### Major Versions (X.0.0)
@@ -56,11 +62,11 @@ Patch versions include bug fixes and minor improvements:
 
 ### Updating Current Version
 
-Documentation for the current version lives in the `master` branch under `docs/`.
+Documentation for the current version lives in the `master` branch under `docs/`. The Slovak text lives in `docs/sk/`.
 
 To update:
 
-1. Edit files in `docs/` directory
+1. Edit the English files in `docs/` and the matching files in `docs/sk/`
 2. Test locally: `npm run docs:dev`
 3. Build: `npm run docs:build`
 4. Submit pull request
@@ -71,8 +77,9 @@ When a new major version is released:
 
 1. Copy the current version documentation to a versioned subdirectory (e.g., `docs/4.x/`)
 2. Adapt the archived version content to match that version's API
-3. Update `.vitepress/config.mts` to configure path-based sidebars for each version
+3. Update `.vitepress/config.mts` and `site-nav.ts` to configure path-based sidebars for each version
 4. Add version dropdown navigation items
+5. Keep the Slovak translation of the current version in `docs/sk/`
 
 Example: Version 5.0.0 was released with breaking API changes. The 4.x documentation was preserved in `docs/4.x/` and adapted to show the 4.x API (getters/setters). When version 6.0.0 is released, create `docs/5.x/` directory with the 5.x documentation.
 
@@ -81,9 +88,10 @@ Example: Version 5.0.0 was released with breaking API changes. The 4.x documenta
 ```
 docs/
 ├── .vitepress/
-│   ├── config.mts          # VitePress configuration (with path-based sidebars)
+│   ├── config.mts          # VitePress configuration and locales
 │   └── theme/              # Custom theme
-├── 4.x/                    # Version 4.x documentation (archived)
+├── site-nav.ts             # Navigation, version menu, and sidebars
+├── 4.x/                    # Version 4.x documentation (archived, English)
 │   ├── index.md            # 4.x homepage
 │   ├── guide/
 │   │   ├── getting-started.md
@@ -95,13 +103,22 @@ docs/
 │   │   └── adding-bank.md
 │   └── api/
 │       └── reference.md    # 4.x API (getters/setters)
-├── guide/                  # Version 5.x documentation (current)
+├── sk/                     # Slovak documentation
+│   ├── index.md            # Slovak 5.x homepage
+│   ├── 4.x/                # Slovak 4.x archive
+│   ├── guide/
+│   ├── api/
+│   ├── contributing.md
+│   └── changelog.md
+├── guide/                  # Version 5.x documentation (current, English)
 │   ├── getting-started.md  # Installation & quickstart
 │   ├── examples.md         # Code examples
 │   ├── tatrabanka.md       # Bank-specific guide
 │   ├── csob-cz.md          # Bank-specific guide
 │   ├── csob-sk.md          # Bank-specific guide
 │   ├── vub.md              # Bank-specific guide
+│   ├── bank-detection.md   # Bank detection
+│   ├── exceptions.md       # Exceptions
 │   ├── adding-bank.md      # Developer guide
 │   └── versioning.md       # This page
 ├── api/
@@ -136,9 +153,10 @@ Output: `docs/.vitepress/dist/`
 ### Dead Link Check
 
 ```bash
-npm run docs:build
-# Check build output for warnings about dead links
+npm run docs:links
 ```
+
+The command builds the site, checks that SVG files are well-formed XML, and crawls the result for broken links. The same check runs on pull requests, including the Slovak pages.
 
 ## GitHub Pages Deployment
 
@@ -148,8 +166,10 @@ Documentation is automatically deployed to GitHub Pages via GitHub Actions when 
 
 **Base URL:** `https://tomaj.github.io/bank-mails-parser/`
 
-- Current version (5.x): `/bank-mails-parser/`
-- Archived 4.x: `/bank-mails-parser/4.x/`
+- Current version (5.x, English): `/bank-mails-parser/`
+- Current version (5.x, Slovak): `/bank-mails-parser/sk/`
+- Archived 4.x (English): `/bank-mails-parser/4.x/`
+- Archived 4.x (Slovak): `/bank-mails-parser/sk/4.x/`
 - Coverage report: `/bank-mails-parser/coverage/`
 
 All versions are built and deployed together in a single build process.

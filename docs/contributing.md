@@ -232,7 +232,7 @@ All checks must pass locally.
 - [ ] All tests pass locally
 - [ ] Code style (PHP-CS-Fixer) compliant
 - [ ] PHPStan level max passes
-- [ ] Documentation updated (README, CHANGELOG)
+- [ ] Documentation updated (README, CHANGELOG, English and Slovak docs)
 - [ ] No decrease in code coverage
 - [ ] Commit messages are clear and descriptive
 

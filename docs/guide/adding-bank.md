@@ -227,8 +227,8 @@ composer cs-fix
 
 Add documentation for your parser:
 
-1. Create `docs/guide/yourbank.md` with usage examples
-2. Add entry to sidebar in `docs/.vitepress/config.mts`
+1. Create `docs/guide/yourbank.md` with usage examples and the Slovak page `docs/sk/guide/yourbank.md`
+2. Add the English and Slovak sidebar entries in `docs/site-nav.ts`
 3. Update main README.md if needed
 
 ## Best Practices
