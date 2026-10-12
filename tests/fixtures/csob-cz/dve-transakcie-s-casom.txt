@@ -1,0 +1,11 @@
+Vážený kliente,
+
+Dne 25.9.2018 14:30 byla na účtu 123456789 zaúčtována transakce typu: Došlá platba.
+Částka: +100,00 CZK
+Variabilní symbol: 1111
+
+Dne 25.9.2018 15:45 byla na účtu 123456789 zaúčtována transakce typu: Došlá platba.
+Částka: +200,00 CZK
+Variabilní symbol: 2222
+
+Vaše ČSOB

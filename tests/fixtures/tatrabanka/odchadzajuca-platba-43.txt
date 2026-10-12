@@ -1,0 +1,20 @@
+Vazeny klient,
+
+16.1.2015 12:11 bol zostatok Vasho uctu SK9812353347235 znizeny o 43,29 USD.
+uctovny zostatok:                            22,11 EUR
+aktualny zostatok:                           22,11 EUR
+disponibilny zostatok:                       22,11 EUR
+
+Popis transakcie: CCINT 1100/000000-261426464
+Referencia platitela: /VS1234056789/SS9087654321/KS5428175648
+Informacia pre prijemcu: test-sprava-druha
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk
+
+Poznamka: Vase pripomienky alebo otazky tykajuce sa tejto spravy alebo inej nasej sluzby nam poslite, prosim, pouzitim kontaktneho formulara na nasej Web stranke.
+
+Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu uctu najdete v ucelenom tvare v pohyboch cez internet banking a nemusite ju pracne skladat zo starych bmailov.

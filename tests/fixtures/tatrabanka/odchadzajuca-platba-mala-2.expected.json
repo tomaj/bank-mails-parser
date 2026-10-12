@@ -1,0 +1,31 @@
+{
+    "sha256": "c49a63e0d630f314795c30ac645f7b11dc2cab417820988f248c96ffc5799c80",
+    "result": {
+        "parser": "tatrabanka",
+        "transactions": [
+            {
+                "amount": -220,
+                "currency": "EUR",
+                "decimal": "-2.20",
+                "date": "2015-01-12 12:11:00 +01:00",
+                "accountNumber": "SK9812369347235",
+                "sourceAccountNumber": "1100/000000-261426464",
+                "ownAccountNumber": null,
+                "vs": "1234056789",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": "VS1234056789",
+                "description": "CCINT 1100/000000-261426464",
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

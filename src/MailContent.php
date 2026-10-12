@@ -1,238 +1,111 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser;
 
-class MailContent
+use DateTimeImmutable;
+use Tomaj\BankMailsParser\ValueObject\Money;
+
+/**
+ * Immutable value object representing parsed transaction data from a bank email.
+ *
+ * Every string is trimmed. An empty string becomes null.
+ */
+final readonly class MailContent
 {
-    private $amount;
+    public ?Money $money;
 
-    private $accountNumber;
+    public ?DateTimeImmutable $transactionDate;
 
-    private $sourceAccountNumber;
+    public ?string $accountNumber;
 
-    private $vs;
+    public ?string $sourceAccountNumber;
 
-    private $ss;
+    /**
+     * The account at the bank that sent the mail (ČSOB SK `na účte`, VÚB `Na účet`).
+     * `$accountNumber` stays the payer account, as in 4.x.
+     */
+    public ?string $ownAccountNumber;
 
-    private $ks;
+    public ?string $vs;
 
-    private $transactionDate;
+    public ?string $ss;
 
-    private $currency;
+    public ?string $ks;
 
-    private $receiverMessage;
+    public ?string $receiverMessage;
 
-    private $description;
+    public ?string $description;
 
-    private $sign;
+    public ?string $cid;
 
-    private $cid;
+    public ?string $sign;
 
-    private $res;
+    public ?string $res;
 
-    private $ac;
+    public ?string $ac;
 
-    private $cc;
+    public ?string $cc;
 
-    private $tid;
+    public ?string $tid;
 
-    private $txn;
+    public ?string $txn;
 
-    private $rc;
+    public ?string $rc;
 
-    public function getKs(): ?string
-    {
-        return $this->ks;
-    }
+    public ?string $tres;
 
-    public function setKs(string $ks)
-    {
-        if ($ks == '') {
-            $ks = null;
-        }
-        $this->ks = $ks;
-    }
-
-    public function getSs(): ?string
-    {
-        return $this->ss;
-    }
-
-    public function setSs(string $ss)
-    {
-        if ($ss == '') {
-            $ss = null;
-        }
-        $this->ss = $ss;
-    }
-
-    public function getVs(): ?string
-    {
-        return $this->vs;
-    }
-
-    public function setVs(string $vs)
-    {
-        if ($vs == '') {
-            $vs = null;
-        }
-        $this->vs = $vs;
-    }
-
-    public function getCc(): ?string
-    {
-        return $this->cc;
-    }
-
-    public function setCc(string $cc)
-    {
-        if ($cc == '') {
-            $cc = null;
-        }
-        $this->cc = $cc;
-    }
-
-    public function getTid(): ?string
-    {
-        return $this->tid;
-    }
-
-    public function setTid(string $tid)
-    {
-        if ($tid == '') {
-            $tid = null;
-        }
-        $this->tid = $tid;
-    }
-
-    public function getReceiverMessage(): ?string
-    {
-        return $this->receiverMessage;
-    }
-
-    public function setReceiverMessage(string $receiverMessage)
-    {
-        $this->receiverMessage = $receiverMessage;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description)
-    {
-        $this->description = $description;
-    }
-
-    public function getCurrency(): ?string
-    {
-        return $this->currency;
-    }
-
-    public function setCurrency(string $currency)
-    {
-        $this->currency = $currency;
-    }
-
-    public function getTransactionDate() // TODO
-    {
-        return $this->transactionDate;
-    }
-
-    public function setTransactionDate($transactionDate)
-    {
+    public function __construct(
+        ?Money $money = null,
+        ?DateTimeImmutable $transactionDate = null,
+        ?string $accountNumber = null,
+        ?string $sourceAccountNumber = null,
+        ?string $ownAccountNumber = null,
+        ?string $vs = null,
+        ?string $ss = null,
+        ?string $ks = null,
+        ?string $receiverMessage = null,
+        ?string $description = null,
+        ?string $cid = null,
+        ?string $sign = null,
+        ?string $res = null,
+        ?string $ac = null,
+        ?string $cc = null,
+        ?string $tid = null,
+        ?string $txn = null,
+        ?string $rc = null,
+        ?string $tres = null,
+    ) {
+        $this->money = $money;
         $this->transactionDate = $transactionDate;
+        $this->accountNumber = self::normalize($accountNumber);
+        $this->sourceAccountNumber = self::normalize($sourceAccountNumber);
+        $this->ownAccountNumber = self::normalize($ownAccountNumber);
+        $this->vs = self::normalize($vs);
+        $this->ss = self::normalize($ss);
+        $this->ks = self::normalize($ks);
+        $this->receiverMessage = self::normalize($receiverMessage);
+        $this->description = self::normalize($description);
+        $this->cid = self::normalize($cid);
+        $this->sign = self::normalize($sign);
+        $this->res = self::normalize($res);
+        $this->ac = self::normalize($ac);
+        $this->cc = self::normalize($cc);
+        $this->tid = self::normalize($tid);
+        $this->txn = self::normalize($txn);
+        $this->rc = self::normalize($rc);
+        $this->tres = self::normalize($tres);
     }
 
-    public function getAccountNumber(): ?string
+    private static function normalize(?string $value): ?string
     {
-        return $this->accountNumber;
-    }
+        if ($value === null) {
+            return null;
+        }
 
-    public function setAccountNumber(string $accountNumber)
-    {
-        $this->accountNumber = $accountNumber;
-    }
+        $value = mb_trim($value, " \t\n\r\0\x0B\u{00A0}\u{2009}\u{202F}");
 
-    public function getSourceAccountNumber(): ?string
-    {
-        return $this->sourceAccountNumber;
-    }
-
-    public function setSourceAccountNumber(string $sourceAccountNumber): void
-    {
-        $this->sourceAccountNumber = $sourceAccountNumber;
-    }
-
-    public function getAmount(): ?float
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(float $amount)
-    {
-        $this->amount = $amount;
-    }
-
-    public function setCid(string $cid)
-    {
-        $this->cid = $cid;
-    }
-
-    public function getCid(): ?string
-    {
-        return $this->cid;
-    }
-
-    public function setSign(string $sign)
-    {
-        $this->sign = $sign;
-    }
-
-    public function getSign(): ?string
-    {
-        return $this->sign;
-    }
-
-    public function setRes(string $res)
-    {
-        $this->res = $res;
-    }
-
-    public function getRes(): ?string
-    {
-        return $this->res;
-    }
-
-    public function setAc(string $ac)
-    {
-        $this->ac = $ac;
-    }
-
-    public function getAc(): ?string
-    {
-        return $this->ac;
-    }
-
-    public function setTxn(string $txn)
-    {
-        $this->txn = $txn;
-    }
-
-    public function getTxn(): ?string
-    {
-        return $this->txn;
-    }
-
-    public function setRc(string $rc)
-    {
-        $this->rc = $rc;
-    }
-
-    public function getRc(): ?string
-    {
-        return $this->rc;
+        return $value === '' ? null : $value;
     }
 }

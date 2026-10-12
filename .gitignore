@@ -2,3 +2,7 @@ vendor
 composer.lock
 .idea/
 .phpunit.result.cache
+build/
+docs/.vitepress/dist
+docs/.vitepress/cache
+docs/node_modules

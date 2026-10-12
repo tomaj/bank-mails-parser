@@ -4,48 +4,120 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\Parser\Vub;
 
+use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
 use Tomaj\BankMailsParser\MailContent;
+use Tomaj\BankMailsParser\Parser\BankDate;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
+use Tomaj\BankMailsParser\Parser\ParsesBankMail;
 
-class VubMailParser implements ParserInterface
+final readonly class VubMailParser implements ParserInterface
 {
-    public function parse(string $content): ?MailContent
+    use ParsesBankMail;
+
+    /**
+     * @return list<string>
+     */
+    #[\Override]
+    public function bankDomains(): array
     {
-        $mailContent = new MailContent();
+        return ['vub.sk'];
+    }
 
-        $pattern1 = '/Dtum:.*?(.*)/m';
-        $res = preg_match($pattern1, $content, $result);
-        if ($res) {
-            $mailContent->setTransactionDate(strtotime(trim($result[1])));
+    #[\Override]
+    public function supports(string $content, ?string $sender = null, ?string $subject = null): bool
+    {
+        return $this->supportsQuietly(function () use ($content): bool {
+            $content = $this->withoutByteOrderMark($content);
+            $hasDate = $this->matched($this->field('D(?:á|a)?tum', ':'), $content);
+            $hasSource = $this->matched($this->field('Z[ \t\x{00A0}\x{2009}\x{202F}]*(?:(?:ú|u)?čtu|tu)', ':'), $content);
+            $hasDestination = $this->matched($this->field('Na[ \t\x{00A0}\x{2009}\x{202F}]+(?:účet|et)', ':'), $content);
+            $hasStatus = $this->matched($this->field('(?:Stav|SIGN)', ':'), $content);
+            $hasAmount = $this->matched($this->field('Suma', ':'), $content);
+            $hasVs = $this->matched($this->field('VS', ':'), $content);
+
+            return $hasDate && $hasSource && $hasDestination && $hasStatus && $hasAmount && $hasVs;
+        });
+    }
+
+    public function parse(string $content): MailContent
+    {
+        $content = $this->requireUniformLineBreaks($content);
+        $signals = 0;
+
+        $transactionDate = null;
+        if ($this->matched($this->field('D(?:á|a)?tum:', '(.*)$'), $content, $result)) {
+            ++$signals;
+            $transactionDate = BankDate::parseFirst(mb_trim($this->group($result, 1), " \t\n\r\0\x0B\u{00A0}\u{2009}\u{202F}"), ['!j.n.Y', '!Y-m-d', '!j.n.Y G:i'], BankDate::bratislava());
         }
 
-        $pattern2 = '/Z tu:.*?([A-Z0-9]+)/m';
-        $res = preg_match($pattern2, $content, $result);
-        if ($res) {
-            $iban = trim($result[1]);
-            $mailContent->setAccountNumber($iban);
+        $ownAccountNumber = null;
+        if ($this->matched($this->field('Na[ \t\x{00A0}\x{2009}\x{202F}]+(?:účet|et):', '([A-Z0-9 \x{00A0}\x{2009}\x{202F}\t]*)'), $content, $result)) {
+            $account = $this->normalizeAccount($this->group($result, 1));
+            if ($account !== '') {
+                ++$signals;
+                $ownAccountNumber = $account;
+            }
         }
 
-        $pattern3 = '/Suma:.*?([0-9,]+)/m';
-        $res = preg_match($pattern3, $content, $result);
-        if ($res) {
-            // there's unicode non-breaking space (u00A0) in mime encoded version of email, unicode regex switched is necessary
-            $amount = floatval(str_replace(',', '.', preg_replace('/\s+/u', '', $result[1])));
-            $mailContent->setAmount($amount);
+        $accountNumber = null;
+        if ($this->matched($this->field('Z[ \t\x{00A0}\x{2009}\x{202F}]*(?:(?:ú|u)?čtu|tu):', '([A-Z0-9 \x{00A0}\x{2009}\x{202F}\t]*)'), $content, $result)) {
+            $account = $this->normalizeAccount($this->group($result, 1));
+            if ($account !== '') {
+                ++$signals;
+                $accountNumber = $account;
+            }
         }
 
-        $pattern4 = '/VS:.*?([0-9,]+)/m';
-        $res = preg_match($pattern4, $content, $result);
-        if ($res) {
-            $mailContent->setVs($result[1]);
+        $money = null;
+        if ($this->matched($this->field('Suma:', '(.*)$'), $content, $result)) {
+            ++$signals;
+            $raw = trim(str_replace(["\u{00A0}", "\u{2009}", "\u{202F}", "\t"], ' ', $this->group($result, 1)));
+            if ($raw !== '' && preg_match('/^(-?\d(?:[\d \x{00A0}\x{2009}\x{202F}\t.,]*\d)?)(?:[ \t]*([A-Z]{3}))?$/u', $raw, $amount) === 1) {
+                $currency = $amount[2] ?? 'EUR';
+                $money = $this->moneyOrNull($amount[1], $currency, ',');
+            }
         }
 
-        $pattern5 = '/KS:.*?([0-9,]+)/m';
-        $res = preg_match($pattern5, $content, $result);
-        if ($res) {
-            $mailContent->setKs($result[1]);
+        $vs = null;
+        if ($this->matched($this->field('VS:', '([0-9]+)'), $content, $result)) {
+            ++$signals;
+            $vs = $this->paymentSymbol($this->group($result, 1));
         }
 
-        return $mailContent;
+        $ks = null;
+        if ($this->matched($this->field('KS:', '([0-9]+)'), $content, $result)) {
+            ++$signals;
+            $ks = $this->paymentSymbol($this->group($result, 1));
+        }
+
+        $ss = null;
+        if ($this->matched($this->field('(?:ŠS|SS|S):', '([0-9]+)'), $content, $result)) {
+            ++$signals;
+            $ss = $this->paymentSymbol($this->group($result, 1));
+        }
+
+        $sign = null;
+        if ($this->matched($this->field('SIGN:', '(.*)$'), $content, $result)) {
+            ++$signals;
+            $value = mb_trim($this->group($result, 1), " \t\n\r\0\x0B\u{00A0}\u{2009}\u{202F}");
+            if ($value !== '') {
+                $sign = $value;
+            }
+        }
+
+        if ($signals < 2) {
+            throw InvalidEmailFormatException::malformedContent(self::class, 'No VÚB fields found');
+        }
+
+        return new MailContent(
+            money: $money,
+            transactionDate: $transactionDate,
+            accountNumber: $accountNumber,
+            ownAccountNumber: $ownAccountNumber,
+            vs: $vs,
+            ss: $ss,
+            ks: $ks,
+            sign: $sign,
+        );
     }
 }

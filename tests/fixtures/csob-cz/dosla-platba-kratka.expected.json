@@ -1,0 +1,31 @@
+{
+    "sha256": "dec672b6000d40bdf8fcdb79111f389af3344c4ebeea5f042ace289667a2b06b",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 123456,
+                "currency": "CZK",
+                "decimal": "1234.56",
+                "date": "2018-09-25 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "SK1122334455667788",
+                "ownAccountNumber": null,
+                "vs": "23456789",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": "Testovací zpráva s čárkami",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

@@ -1,0 +1,7 @@
+dňa 6.9.2019 bola na účte SK91 7500 0000 0030 2072 9058 zaúčtovaná suma SEPA platobného príkazu:
+suma: +100,00 EUR
+
+dňa invalid text that does not match pattern
+
+dňa 7.9.2019 bola na účte SK92 7500 0000 0030 2072 9059 zaúčtovaná suma SEPA platobného príkazu:
+suma: +200,00 EUR

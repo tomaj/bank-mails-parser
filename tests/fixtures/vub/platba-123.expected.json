@@ -1,0 +1,31 @@
+{
+    "sha256": "e6f528782e2a37bfa8a2e78f32e8a8c49924b7ef2c9bfa4a638b9287c20382b7",
+    "result": {
+        "parser": "vub",
+        "transactions": [
+            {
+                "amount": 12345,
+                "currency": "EUR",
+                "decimal": "123.45",
+                "date": "2015-01-12 00:00:00 +01:00",
+                "accountNumber": "SK1234567890123456",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "9876543210",
+                "ss": null,
+                "ks": "0308",
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

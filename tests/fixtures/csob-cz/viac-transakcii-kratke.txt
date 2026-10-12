@@ -1,0 +1,9 @@
+Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
+Částka: +100,00 CZK
+Variabilní symbol: 111111
+
+Dne invalid text that does not match the required pattern
+
+Dne 26.9.2018 byla na účtu 987654321 zaúčtovaná transakce typu: Došlá platba.
+Částka: +200,00 CZK
+Variabilní symbol: 222222

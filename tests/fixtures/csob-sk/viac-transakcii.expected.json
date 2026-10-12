@@ -1,0 +1,54 @@
+{
+    "sha256": "9074587dc57345204469d3082f3e59fd747f518d7b0dceb62f16b6e0f90d8982",
+    "result": {
+        "parser": "csob-sk",
+        "transactions": [
+            {
+                "amount": 10000,
+                "currency": "EUR",
+                "decimal": "100.00",
+                "date": "2019-09-06 00:00:00 +02:00",
+                "accountNumber": null,
+                "sourceAccountNumber": null,
+                "ownAccountNumber": "SK91 7500 0000 0030 2072 9058",
+                "vs": null,
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            },
+            {
+                "amount": 20000,
+                "currency": "EUR",
+                "decimal": "200.00",
+                "date": "2019-09-07 00:00:00 +02:00",
+                "accountNumber": null,
+                "sourceAccountNumber": null,
+                "ownAccountNumber": "SK92 7500 0000 0030 2072 9059",
+                "vs": null,
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

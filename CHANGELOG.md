@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking Changes
+
+- Minimum PHP version is 8.4. PHP 8.2 and 8.3 are no longer supported. PHP 8.5 is tested.
+- `MailContent` is a `final readonly` class. Getters and setters are removed.
+- Amount and currency are `?Money`. `Money::$amount` is an integer in minor units. `toDecimalString()` returns the decimal text. There is no float amount on the public API.
+- `transactionDate` is `?DateTimeImmutable`. The `int|false|null` timestamp is gone.
+- `parse()` throws `InvalidEmailFormatException` or, on `BankMailsParser`, `UnsupportedBankException` or `AmbiguousBankException`. `tryParse()` returns `null`. There is no `parseOrFail()`.
+- `Currency` is an ISO 4217 value object for every active code (list one, 2026-09-17). Numeric codes such as `978` are stored as `EUR`. An unknown CardPay `CURR` keeps the notification and sets `money` to null.
+- `accountNumber` on ČSOB SK and VÚB is the payer account (`z účtu` / `Z účtu`), as in 4.x. `ownAccountNumber` is the new property for `na účte` / `Na účet`. `sourceAccountNumber` is the ČSOB CZ or Tatra counterparty.
+- A variable symbol follows 4.1.0. Tatra reads `/VS…/SS…/KS…` and keeps more than 10 digits, then a `VS` token, then the last number in `Informacia pre prijemcu` when `Referencia platitela` is absent (4.1.0), then a bare `Referencia platitela` including one that follows a blank line. ČSOB CZ reads `Variabilní symbol` (all zeros are skipped), then `Identifikace` replaces it, then a `VS` or `v.s.` token, then the last number in `Zpráva příjemci`, then `Účel platby`. More than 10 digits on ČSOB CZ is `null`, not a truncated symbol. ČSOB SK reads `/VS`, `/SS`, and `/KS` from `referencia platiteľa` with no length cap, then `VS` or `KS` from the `informácia pre príjemcu` line only, not from the payer name. The payer writes the message, so a matched payment must also be checked against the amount.
+- Parser classes and `TatraBankaMailDecryptor` are `final readonly`. `decrypt()` returns `string` and throws; it never returns `null`. Statement `parseMulti()` returns the rows or throws; it does not return `null`.
+- Dates for Slovak and Czech bank emails use `Europe/Bratislava`. On a UTC server every such timestamp is +1 h or +2 h versus 4.x. `16.1.2015 24:00` is the next day at 00:00. Tatra also accepts an English month (`16 January 2015 12:51`). The Tatra header must start the line: `Dobry den, 16.1.2015 12:51 bol zostatok…` does not parse. `12,315` EUR is rejected. A two-digit year, `31.2`, and a DST gap stay null. CardPay `TIMESTAMP` of 14 digits is UTC. A missing CardPay timestamp stays `null` (4.x used `time()`). Invalid UTF-8 in a Tatra or CardPay body is scrubbed and parsed.
+- `Money::fromDecimalString()` rejects ambiguous separators, non-zero extra fraction digits, and values that do not fit in an integer, including `PHP_INT_MIN`. Trailing zeros beyond the currency scale are accepted (`1234,00` JPY). Space, NBSP, U+2009, U+202F and tab are thousands separators only in groups of three (`1 234,56` is accepted, `1 2 3,45` is not). Overflow is `InvalidArgumentException`, wrapped by parsers as `InvalidEmailFormatException`.
+- `tryParse()` returns `null` for invalid input and does not swallow `ConfigurationException`.
+- `parseAll()` returns every transaction. ČSOB and Tatra statements throw one exception listing any transaction that matched and could not be parsed. A PGP statement without a decryptor, with a missing or unreadable key, or with a wrong passphrase throws `ConfigurationException`.
+- VÚB detection requires the date, both account labels, the amount, `VS`, and `Stav` or `SIGN`, each at the start of a line. EUR is the fallback only when the email does not name a currency. An empty `Na účet:` does not read the next line.
+- CardPay reads `KEY=value` from the first contiguous notification block. A word that is not `KEY=value` on that line is skipped, so `Vysledok: VS=… RES=OK …` parses. A later line that mixes prose is not part of the block. Quoted lines that start with `>` are ignored, so a notice that exists only as quoted history is not a payment. A repeated key with a different value throws `InvalidEmailFormatException`. When both `SIGN` and `HMAC` are present, `sign` is the HMAC. When `TRES` is present, `res` is that value, as in 4.x, and `tres` stores it too. A missing `CURR` is EUR. An unknown `CURR` leaves `money` null. `supports()` returns false when a pattern cannot run; it does not throw.
+- Payer-written fields are fail-closed only for a real bank line. ČSOB CZ: `Název protistrany`, `Adresa protistrany`, `Adresa plátce`, `Zpráva příjemci`, `Účel platby`, `Identifikace`, `Reference plátce`. ČSOB SK: `názov protiúčtu`, `meno protiúčtu`, `informácia pre príjemcu`, `referencia platiteľa`. Tatra: `Informacia pre prijemcu`, `Popis transakcie`, `popis`, `Referencia platitela`. A blank line, or a line of spaces, tabs or NBSP, ends the field. An arbitrary `Word:` does not. A closing line has to be the bank's own shape: the full balance sentence (`Zůstatek na účtu po zaúčtování transakce: +1 234,56 CZK.` or `Zostatok na účte po zaúčtovaní sumy platobnej operácie: +14050,70 EUR`), a symbol line whose value is digits only, an account line, or a Tatra `aktualny zostatok` / `uctovny zostatok` / `disponibilny zostatok` line. Bare `Zůstatek`, `zostatok`, and `banka:` do not close it. Lines inside the field are blanked when bank fields are read. A full transaction header or a signed amount in that text does not reject the mail and does not become a transaction. `Částka: záloha 2 500 Kč`, `Dne 1.10.2026 byla na účtu chyba, vracím`, `Suma: 50 EUR za obed`, and `suma: 12,31 EUR za januar` stay payer text. When the mail already contains LF, a lone CR, VT, FF, U+0085, U+2028 or U+2029 stays an ordinary character: it does not split a line and it does not open a transaction. Those separators become newlines only when the mail has no LF. When a ČSOB mail has more than one transaction and at least one balance line, each transaction needs exactly one balance. That line is the bank's. A second balance line in the same transaction throws `InvalidEmailFormatException` with `Transaction has more than one balance line`. The previous balance plus the amount must equal the next balance. A mail with no balance line still parses several transactions, the same as 4.1.0. That is a known limitation: without balance lines a forged transaction in payer text cannot be distinguished from a real one. Check the amount against the bank API or a statement. ČSOB CZ `Účel platby` uses the 4.1.0 word-boundary number up to `Zůstatek`. Without `Zůstatek` a footer number is not a symbol. `AB12`, `INV2026`, and `FV2024001` are not symbols. More than 10 digits is `null`. ČSOB SK reads the first `VS` token on the `informácia pre príjemcu` line. A counterparty account is the account token only. Trailing prose such as ` (Fio banka)` is dropped, and so is `<br>`. `supports()` returns false instead of throwing. A ČSOB header does not need a blank line in front of it. Splits do not use `explode()`.
+- `BankMailsParser::parse()` throws `MultipleTransactionsException` when the mail has more than one transaction. Use `parseAll()`. `tryParse()` returns `null`.
+- The default facade registers `TatraBankaStatementMailParser` only when a decryptor is passed. A PGP mail without one is `UnsupportedBankException` (`tryParse()` returns `null`).
+- When ČSOB CZ, ČSOB SK, or VÚB recognizes a transaction and the amount is missing, unreadable, or in an unknown currency, `money` is `null`. The row is returned.
+- Leading indentation and NBSP, U+2009, and U+202F are whitespace in every parser.
+- ČSOB SK reads a structured symbol from `referencia platiteľa`, then `VS` or `KS` from the `informácia pre príjemcu` line only. A payer name such as `ADVS2` is not a symbol. Digits longer than 10 are kept.
+- When a sender is passed, `BankMailsParser` uses only parsers whose `bankDomains()` match that host. Two parsers accepting one mail throw `AmbiguousBankException` instead of keeping the first match. The library does not verify CardPay `HMAC`/`SIGN` or DKIM. The caller must.
+- The release attestation covers the git archive tarball, not the Composer GitHub zipball. Verify it with `gh attestation verify bank-mails-parser-<version>.tar.gz --repo tomaj/bank-mails-parser`.
+
+### Added
+
+- `Money::fromDecimalString()` accepts `12.34`, `12,34`, `-1 234,56`, and `1.234,56`.
+- `Currency::fromCode()`, `Currency::tryFromCode()`, and `Currency::minorUnits()`. Known scales include JPY/ISK 0 and BHD/KWD/OMR/TND 3. `XXX` (`N.A.`) is stored with 2 minor units. An unknown code throws `InvalidArgumentException`; it does not fall back to 2.
+- `AmbiguousBankException`, `MailContent::$tres`, and `ParserInterface::bankDomains()`.
+- `ext-mbstring` is a required extension. `src/` calls `mb_trim()`.
+- `BankMailsParser` selects a parser with `supports()`. `null` registers the built-in parsers. The statement parser is included only when a decryptor is passed. An array uses exactly that list.
+- `ParserInterface` is `supports()`, `parseAll()`, and `bankDomains()`. `parse()` and `tryParse()` stay on the concrete parser via `ParsesBankMail`. `BankDate`, `Iso4217`, and the trait helpers other than `money()` are `@internal`.
+- Withdrawn `BGN` (`975`) and `HRK` (`191`) are accepted so older mail can be parsed. `Money::equals()` and `Currency::equals()` compare by value.
+- VÚB `SIGN` is stored on `MailContent::$sign`. VÚB `ŠS`, `SS`, and `S` are `ss`.
+- Release tags have no `v` prefix (`5.0.0`, same as `4.1.0`).
+- Exception hierarchy: `ParseException`, `UnsupportedBankException`, `InvalidEmailFormatException`, `AmbiguousBankException`, `DecryptionException`, and `ConfigurationException` (not a `ParseException`).
+- Release workflow reads the matching section from this changelog, publishes a `.tar.gz` plus SHA256, and attests the archive with `actions/attest-build-provenance`. Packagist updates through the repository webhook. This is not release-please.
+- OpenSSF Scorecard (including pull requests) and a README badge.
+- CodeQL for `actions` and `javascript-typescript` with `build-mode: none`. PHP is not a CodeQL language.
+- Guides: `docs/guide/bank-detection.md`, `docs/guide/exceptions.md`. 4.x docs stay under `docs/4.x/`.
+- CI coverage gate: statement coverage must be at least 97% on PHP 8.4. Infection thresholds stay at MSI 89 and covered MSI 90.
+
+### Changed
+
+- The declared license is MIT. `composer.json` previously said `LGPL-2.0-or-later`. The `LICENCE` file already contained the MIT text.
+- PHP-CS-Fixer (PER-CS and PHP 8.4 migration rules) replaces PHP_CodeSniffer.
+- PHPStan level max.
+- Infection 0.35, PHPStan 2.1 (installed 2.3), PHPUnit 13.0 (installed 13.4).
+- GitHub Actions are pinned to commit SHAs.
+
 ## [4.1.0] - 2026-05-19
 
 ### Added

@@ -1,0 +1,17 @@
+Vážený kliente,
+
+toto je automaticky generovaný e-mail ze služby ČSOB CEB, neodpovídejte na něj.
+
+Dne 5.12.2023 byla na účtu 123456789 zaúčtována zahraniční transakce.
+
+Název smlouvy: CRM International a.s.
+Číslo smlouvy: 87654321
+Majitel smlouvy: Shmelina a.s.
+Účet: 123456789, CZK, CRM INTERNATION
+Částka: +3 300,00 CZK
+Účet protistrany/IBAN: SK99 1100 0000 7777 8888 9999
+Název protistrany: NOVAK PETER
+Kód poplatku: SHA
+Účel platby: NOVAK PETER faktura
+
+ČSOB, a.s., Radlická 333/150, 150 57 Praha 5, IČO: 00001350

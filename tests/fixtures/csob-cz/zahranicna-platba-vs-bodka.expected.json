@@ -1,0 +1,31 @@
+{
+    "sha256": "fd07a85c004e841279b3252f9cfc287e7b9211c6103e48da0fdc687a820613ac",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 198000,
+                "currency": "CZK",
+                "decimal": "1980.00",
+                "date": "2024-02-21 00:00:00 +01:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "6012345678/2700",
+                "ownAccountNumber": null,
+                "vs": "3723199116",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": "v.s.3723199116",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

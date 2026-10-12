@@ -1,0 +1,31 @@
+{
+    "sha256": "344d17cfff48a1fdfab98dd77e7c2bb378d684322f5d44637019fe00267e1c09",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 50000,
+                "currency": "CZK",
+                "decimal": "500.00",
+                "date": "2024-03-01 00:00:00 +01:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "1111111111/0800",
+                "ownAccountNumber": null,
+                "vs": "1234",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": "platba faktury",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

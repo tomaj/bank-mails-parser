@@ -1,0 +1,32 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "build/infection.log",
+        "html": "build/infection.html",
+        "summary": "build/infection-summary.log",
+        "json": "build/infection.json"
+    },
+    "mutators": {
+        "@default": true,
+        "PregMatchRemoveFlags": {
+            "ignore": [
+                // Ignore is method-scoped. multilineSymbol() is the only method whose /m
+                // patterns have no ^ or $. Removing /m there does not change the match.
+                // Do not ignore TRANSACTION, HEADER, field(), or any other method:
+                // those patterns use ^, and /m decides whether ^ matches after a newline.
+                "Tomaj\\BankMailsParser\\Parser\\Csob\\CsobMailParser::multilineSymbol"
+            ]
+        }
+    },
+    "minMsi": 89,
+    "minCoveredMsi": 90,
+    "timeout": 10,
+    "phpUnit": {
+        "configDir": "."
+    }
+}

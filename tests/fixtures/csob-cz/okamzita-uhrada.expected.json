@@ -1,0 +1,31 @@
+{
+    "sha256": "9e43e412c8c701c877cba96bed4af9920a38ab992b73bcfb599e99cb503a236b",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 41400,
+                "currency": "CZK",
+                "decimal": "414.00",
+                "date": "2022-08-18 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "1122334455/9999",
+                "ownAccountNumber": null,
+                "vs": "23456789",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": "VS23456789",
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

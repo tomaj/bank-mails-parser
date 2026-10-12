@@ -1,0 +1,6 @@
+Dátum: 11.12.2019
+Na účet: SK2
+Z účtu: SK1
+Suma: 13,37
+VS: 10
+SIGN: ABC123

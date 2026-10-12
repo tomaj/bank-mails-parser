@@ -1,0 +1,16 @@
+Vazeny klient,
+
+16.1.2015 12:51 bol zostatok Vasho uctu SK9812353347235 zvyseny o 12,31 EUR.
+uctovny zostatok:                            142,11 EUR
+aktualny zostatok:                           142,11 EUR
+disponibilny zostatok:                       142,11 EUR
+
+Popis transakcie: CCINT 1100/000000-261426464
+Referencia platitela: /VS1234056789/SS/KS
+Informacia pre prijemcu: suma: 12,31 EUR za januar
+
+S pozdravom
+
+TATRA BANKA, a.s.
+
+http://www.tatrabanka.sk

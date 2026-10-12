@@ -1,0 +1,54 @@
+{
+    "sha256": "8a9ae56d24b9e419dbfac8f0fb66133b9ca7ca99857e19d546c6089570fc6e87",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 10000,
+                "currency": "CZK",
+                "decimal": "100.00",
+                "date": "2018-09-25 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "111111",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            },
+            {
+                "amount": 20000,
+                "currency": "CZK",
+                "decimal": "200.00",
+                "date": "2018-09-26 00:00:00 +02:00",
+                "accountNumber": "987654321",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": null,
+                "vs": "222222",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "sha256": "4f143cf929e38bd8b4c3720a3a7a9fe3ba45d349c45ed58ae6d097b32b32f57c",
+    "result": {
+        "parser": "csob-sk",
+        "transactions": [
+            {
+                "amount": 115000,
+                "currency": "EUR",
+                "decimal": "1150.00",
+                "date": "2019-09-06 00:00:00 +02:00",
+                "accountNumber": "SK91 7500 0000 0030 2072 9058",
+                "sourceAccountNumber": null,
+                "ownAccountNumber": "SK13 7500 0000 0040 1942 5381",
+                "vs": "212049000",
+                "ss": "964",
+                "ks": "0308",
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}

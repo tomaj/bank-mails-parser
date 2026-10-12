@@ -1,0 +1,7 @@
+Dátum: 1.1.2020
+Z účtu: SK1
+Na účet: SK2
+poznamka Suma: 999,00
+Suma: 1,00
+VS: 10
+Stav: ok

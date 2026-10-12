@@ -1,0 +1,31 @@
+{
+    "sha256": "e021cdff5446618362ffd6ec4c33dfdf83daffa1a4d1490cf2c53f5af3822981",
+    "result": {
+        "parser": "csob-cz",
+        "transactions": [
+            {
+                "amount": 358170,
+                "currency": "CZK",
+                "decimal": "3581.70",
+                "date": "2022-08-18 00:00:00 +02:00",
+                "accountNumber": "123456789",
+                "sourceAccountNumber": "NL56 ABNA 1234 5678 90",
+                "ownAccountNumber": null,
+                "vs": "23456789",
+                "ss": null,
+                "ks": null,
+                "receiverMessage": null,
+                "description": null,
+                "cid": null,
+                "sign": null,
+                "res": null,
+                "ac": null,
+                "cc": null,
+                "tid": null,
+                "txn": null,
+                "rc": null,
+                "tres": null
+            }
+        ]
+    }
+}
