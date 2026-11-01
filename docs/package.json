@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "linkinator": "6.1.2",
+    "linkinator": "8.1.0",
     "vitepress": "^1.5.0"
   }
 }
