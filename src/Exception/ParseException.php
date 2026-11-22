@@ -9,4 +9,4 @@ use RuntimeException;
 /**
  * Base exception for parsing errors. Invalid input becomes this type, never a bare TypeError.
  */
-class ParseException extends RuntimeException {}
+class ParseException extends RuntimeException implements BankMailsParserException {}

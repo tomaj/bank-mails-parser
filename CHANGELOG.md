@@ -4,6 +4,10 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ## [Unreleased][unreleased]
 
+### Added
+
+- `Tomaj\BankMailsParser\Exception\BankMailsParserException`: a marker interface implemented by every exception the package throws (`ParseException` and its subclasses, `ConfigurationException`, and the new `Tomaj\BankMailsParser\Exception\InvalidArgumentException`), so `catch (BankMailsParserException)` catches anything from the package. `Money` and `Currency` throw the new `InvalidArgumentException`, which extends PHP's `\InvalidArgumentException`, so existing catch blocks keep working ([#37](https://github.com/tomaj/bank-mails-parser/issues/37))
+
 ### Changed
 
 - PHP 8.6 is tested and supported. CI requires PHP 8.4, 8.5 and 8.6 and also runs PHP 8.7 (nightly) without failing the build. The minimum stays PHP 8.4.

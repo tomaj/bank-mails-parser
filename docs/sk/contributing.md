@@ -100,7 +100,7 @@ composer infection
 - Pokrytie kódu má rásť, nie klesať
 - PHPStan na úrovni max s prísnymi pravidlami
 - Súlad so štýlom (PHP-CS-Fixer s PER-CS a @PHP8x4Migration)
-- Mutation Score Indicator (MSI) ≥ 89 %, covered MSI ≥ 90 %
+- Mutation Score Indicator (MSI) ≥ 95 %, covered MSI ≥ 95 % (`infection.json5`)
 
 ## Požiadavky na testy
 

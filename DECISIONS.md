@@ -155,9 +155,9 @@ ParseException (base)
 ## 6. Testing Strategy
 
 **Coverage targets**:
-- Line coverage: ≥97% (maintained)
-- MSI (Mutation Score Indicator): ≥89%
-- Covered MSI: ≥90%
+- Statement coverage: ≥97% (CI on PHP 8.6)
+- MSI (Mutation Score Indicator): ≥95% (`infection.json5`, raised from 89% in 5.1.0)
+- Covered MSI: ≥95% (raised from 90% in 5.1.0)
 
 **Test additions**:
 - Currency enum tests
