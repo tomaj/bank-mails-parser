@@ -99,7 +99,7 @@ composer infection
 - ✅ Code coverage should increase, not decrease
 - ✅ PHPStan level max with strict rules
 - ✅ PER-CS code style (see `docs/contributing.md`)
-- ✅ Mutation Score Indicator (MSI) ≥ 89%, Covered MSI ≥ 90%
+- ✅ Mutation Score Indicator (MSI) ≥ 95%, Covered MSI ≥ 95% (`infection.json5`)
 
 ## Testing Requirements
 
