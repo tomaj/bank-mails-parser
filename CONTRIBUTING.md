@@ -204,7 +204,7 @@ That command regenerates every `.expected.json`. Review those diffs in the pull 
 
 ### 5. Releasing
 
-Tags have no `v` prefix (`5.0.0`). Before tagging, rename `## [Unreleased]` to `## [5.0.0] - YYYY-MM-DD` in `CHANGELOG.md` and `docs/changelog.md`, and rename both compare links from `[Unreleased]: …/compare/4.1.0...HEAD` to `[5.0.0]: …/compare/4.1.0...5.0.0`. The release notes section must not contain maintainer instructions.
+Releases are tagged by the maintainer. The steps (CHANGELOG section, tag, release workflow) are in [RELEASING.md](RELEASING.md).
 
 ### 6. Update Documentation
 

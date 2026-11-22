@@ -6,13 +6,15 @@ Professional PHP library for parsing bank confirmation emails from Slovak and Cz
 
 [Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started) · [API reference](https://tomaj.github.io/bank-mails-parser/api/reference) · [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) · [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/)
 
-[![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml)
+[![Latest Stable Version](https://img.shields.io/packagist/v/tomaj/bank-mails-parser.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Coverage Status](https://coveralls.io/repos/github/tomaj/bank-mails-parser/badge.svg?branch=master)](https://coveralls.io/github/tomaj/bank-mails-parser?branch=master)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-brightgreen.svg)](https://phpstan.org/)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tomaj/bank-mails-parser/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/bank-mails-parser)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15407/badge)](https://www.bestpractices.dev/projects/15407)
-[![Latest Stable Version](https://poser.pugx.org/tomaj/bank-mails-parser/v/stable)](https://packagist.org/packages/tomaj/bank-mails-parser)
-[![PHP Version Require](https://poser.pugx.org/tomaj/bank-mails-parser/require/php)](https://packagist.org/packages/tomaj/bank-mails-parser)
+[![Documentation](https://img.shields.io/badge/docs-5.x-4f46e5.svg)](https://tomaj.github.io/bank-mails-parser/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENCE)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://tomaj.github.io/bank-mails-parser/)
+[![PHP Version Require](https://img.shields.io/packagist/dependency-v/tomaj/bank-mails-parser/php.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 
 ## Why This Library?
 

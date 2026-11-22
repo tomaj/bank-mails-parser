@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: 💬 Discussions
-    url: https://github.com/tomaj/bank-mails-parser/discussions
-    about: Ask questions and discuss ideas with the community
-  - name: 📧 Email Support
+  - name: Security vulnerability
+    url: https://github.com/tomaj/bank-mails-parser/security/advisories/new
+    about: Report a vulnerability in private. See SECURITY.md for supported versions (5.x, and 4.x security fixes until 2027-04-12). Do not open a public issue.
+  - name: Email the maintainer
     url: mailto:tomasmajer@gmail.com
-    about: Contact the maintainer directly for private inquiries
+    about: Contact the maintainer directly for private inquiries.
