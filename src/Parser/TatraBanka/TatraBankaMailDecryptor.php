@@ -54,7 +54,7 @@ final readonly class TatraBankaMailDecryptor
             $decryptor = new \OpenPGP_Crypt_RSA($secret);
             $decrypted = $decryptor->decrypt($msg);
 
-            if ($decrypted && isset($decrypted->packets[0]->data) && is_string($decrypted->packets[0]->data) && $decrypted->packets[0]->data !== '') {
+            if ($decrypted instanceof \OpenPGP_Message && isset($decrypted->packets[0]->data) && is_string($decrypted->packets[0]->data) && $decrypted->packets[0]->data !== '') {
                 return $decrypted->packets[0]->data;
             }
 
