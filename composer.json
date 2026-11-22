@@ -21,13 +21,15 @@
     {
       "name": "Tomas Majer",
       "email": "tomasmajer@gmail.com",
-      "homepage": "http://tomaj.sk"
+      "homepage": "http://www.tomaj.sk/"
     }
   ],
+  "homepage": "https://tomaj.github.io/bank-mails-parser/",
   "support": {
     "issues": "https://github.com/tomaj/bank-mails-parser/issues",
     "source": "https://github.com/tomaj/bank-mails-parser",
-    "docs": "https://tomaj.github.io/bank-mails-parser/"
+    "docs": "https://tomaj.github.io/bank-mails-parser/",
+    "security": "https://github.com/tomaj/bank-mails-parser/security/policy"
   },
   "require": {
     "php": "^8.4",
@@ -35,11 +37,11 @@
     "singpolyma/openpgp-php": "^0.7"
   },
   "require-dev": {
-    "phpunit/phpunit": "^13.0",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "infection/infection": "^0.35",
     "phpstan/phpstan": "^2.1",
     "phpstan/phpstan-strict-rules": "^2.0",
-    "infection/infection": "^0.35",
-    "friendsofphp/php-cs-fixer": "^3.0"
+    "phpunit/phpunit": "^13.0"
   },
   "minimum-stability": "stable",
   "autoload": {
@@ -77,6 +79,7 @@
   "config": {
     "allow-plugins": {
       "infection/extension-installer": true
-    }
+    },
+    "sort-packages": true
   }
 }

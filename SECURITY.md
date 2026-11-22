@@ -2,13 +2,15 @@
 
 ## Supported Versions
 
-We actively support the following versions with security updates:
+Security fixes are provided for the lines below.
 
-| Version | Supported                          |
-| ------- | ---------------------------------- |
-| 5.x     | :white_check_mark: Fully supported |
-| 4.x     | Security fixes only                |
-| < 4.0   | :x:                                |
+| Version | Supported |
+| ------- | --------- |
+| 5.x     | Yes: bug fixes and security fixes |
+| 4.x     | Security fixes only, until 2027-04-12 |
+| < 4.0   | No |
+
+5.x is the current stable line. 4.x gets fixes for security vulnerabilities only, for six months after the 5.0.0 release (until 2027-04-12); there is no 4.x maintenance branch, so a fix is released from one created from the `4.1.0` tag. Upgrade to 5.x with [UPGRADE-5.0.md](UPGRADE-5.0.md). Versions older than 4.0 do not receive security updates.
 
 ## Reporting a Vulnerability
 
@@ -28,16 +30,13 @@ Include:
 - Potential impact
 - Suggested fix (if any)
 
-### Response Timeline
+### Response
 
-- **Acknowledgment**: Within 14 days
-- **Initial Response**: Within 48 hours
-- **Fix Timeline**: Critical issues within 7 days, others within 30 days
-- **Public Disclosure**: After fix is released and users have time to update
+You will receive an acknowledgement within 14 days. We then confirm the issue, agree on a disclosure date with you, and keep you informed while the fix is prepared.
 
-### Disclosure Process
+### Coordinated disclosure
 
-We follow coordinated disclosure. When a fix is ready, we publish a GitHub Security Advisory and record the security fix in the CHANGELOG.
+We follow coordinated disclosure. Please give us time to prepare a fix before discussing the issue in public. When the fix is released, we publish a GitHub Security Advisory and record the fix in the CHANGELOG with a `**Security**:` entry.
 
 ## Security Best Practices
 
@@ -72,13 +71,6 @@ The `TatraBankaStatementMailParser` decrypts PGP-encrypted emails:
 - Use strong passphrases
 - Rotate keys regularly
 - Restrict file system access to key files
-
-## Security Update Policy
-
-- **Critical vulnerabilities**: Emergency release within 48 hours
-- **High severity**: Release within 7 days
-- **Medium severity**: Included in next regular release
-- **Low severity**: Documented and fixed in future versions
 
 ## Acknowledgments
 
