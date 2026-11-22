@@ -38,7 +38,7 @@ final readonly class Money
 
     public function toDecimalString(): string
     {
-        $scale = self::scale($this->currency->minorUnits());
+        $scale = $this->scale($this->currency->minorUnits());
         $negative = $this->amount < 0;
         if ($this->amount === PHP_INT_MIN) {
             throw new InvalidArgumentException('Amount is too small to format.');
@@ -90,14 +90,14 @@ final readonly class Money
 
     private static function toMinorUnits(string $amount, int $minorUnits, ?string $decimalSeparator): int
     {
-        if ($decimalSeparator !== null && $decimalSeparator !== '.' && $decimalSeparator !== ',') {
+        if (!in_array($decimalSeparator, [null, '.', ','], true)) {
             throw new InvalidArgumentException('Decimal separator must be "." or ",".');
         }
 
         $spaced = trim(str_replace(["\u{00A0}", "\u{2009}", "\u{202F}", "\t"], ' ', trim($amount)));
         self::assertSpaceGroups($spaced, $amount);
         $normalized = str_replace(' ', '', $spaced);
-        if ($normalized === '' || $normalized === '-' || $normalized === '+') {
+        if (in_array($normalized, ['', '-', '+'], true)) {
             throw new InvalidArgumentException('Amount must be a decimal number.');
         }
 
@@ -232,7 +232,7 @@ final readonly class Money
         }
     }
 
-    private static function scale(int $minorUnits): int
+    private function scale(int $minorUnits): int
     {
         $scale = 1;
         for ($i = 0; $i < $minorUnits; ++$i) {

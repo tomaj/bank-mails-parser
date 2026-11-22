@@ -17,7 +17,10 @@ final class FixtureSnapshotTest extends TestCase
     public static function fixtures(): iterable
     {
         $root = dirname(__DIR__);
-        $paths = glob($root . '/tests/fixtures/*/*.txt') ?: [];
+        $paths = glob($root . '/tests/fixtures/*/*.txt');
+        if ($paths === false) {
+            $paths = [];
+        }
         sort($paths);
         if ($paths === []) {
             throw new RuntimeException('No fixtures found');
@@ -35,9 +38,9 @@ final class FixtureSnapshotTest extends TestCase
     {
         $root = dirname(__DIR__);
         $expectedPath = $root . '/' . substr($relative, 0, -4) . '.expected.json';
-        $this->assertFileExists($expectedPath, $relative . ' is missing .expected.json');
+        self::assertFileExists($expectedPath, $relative . ' is missing .expected.json');
         $expected = json_decode((string) file_get_contents($expectedPath), true);
-        $this->assertIsArray($expected, $relative);
-        $this->assertSame($expected, FixtureCatalog::expected($root, $relative), $relative);
+        self::assertIsArray($expected, $relative);
+        self::assertSame($expected, FixtureCatalog::expected($root, $relative), $relative);
     }
 }

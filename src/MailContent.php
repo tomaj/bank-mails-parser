@@ -79,26 +79,26 @@ final readonly class MailContent
     ) {
         $this->money = $money;
         $this->transactionDate = $transactionDate;
-        $this->accountNumber = self::normalize($accountNumber);
-        $this->sourceAccountNumber = self::normalize($sourceAccountNumber);
-        $this->ownAccountNumber = self::normalize($ownAccountNumber);
-        $this->vs = self::normalize($vs);
-        $this->ss = self::normalize($ss);
-        $this->ks = self::normalize($ks);
-        $this->receiverMessage = self::normalize($receiverMessage);
-        $this->description = self::normalize($description);
-        $this->cid = self::normalize($cid);
-        $this->sign = self::normalize($sign);
-        $this->res = self::normalize($res);
-        $this->ac = self::normalize($ac);
-        $this->cc = self::normalize($cc);
-        $this->tid = self::normalize($tid);
-        $this->txn = self::normalize($txn);
-        $this->rc = self::normalize($rc);
-        $this->tres = self::normalize($tres);
+        $this->accountNumber = $this->normalize($accountNumber);
+        $this->sourceAccountNumber = $this->normalize($sourceAccountNumber);
+        $this->ownAccountNumber = $this->normalize($ownAccountNumber);
+        $this->vs = $this->normalize($vs);
+        $this->ss = $this->normalize($ss);
+        $this->ks = $this->normalize($ks);
+        $this->receiverMessage = $this->normalize($receiverMessage);
+        $this->description = $this->normalize($description);
+        $this->cid = $this->normalize($cid);
+        $this->sign = $this->normalize($sign);
+        $this->res = $this->normalize($res);
+        $this->ac = $this->normalize($ac);
+        $this->cc = $this->normalize($cc);
+        $this->tid = $this->normalize($tid);
+        $this->txn = $this->normalize($txn);
+        $this->rc = $this->normalize($rc);
+        $this->tres = $this->normalize($tres);
     }
 
-    private static function normalize(?string $value): ?string
+    private function normalize(?string $value): ?string
     {
         if ($value === null) {
             return null;

@@ -77,26 +77,26 @@ final class Review7FindingsTest extends TestCase
             . "Účet protistrany: 2233445566/2600\n"
             . "Variabilní symbol: 0449274899\n";
         $line = new CsobMailParser()->parse($base . "Zpráva příjemci: /Eva Adamova\u{2028}dakujem\n");
-        $this->assertSame('1440.00', $line->money?->toDecimalString());
-        $this->assertSame("/Eva Adamova\u{2028}dakujem", $line->receiverMessage);
-        $this->assertSame('0449274899', $line->vs);
+        self::assertSame('1440.00', $line->money?->toDecimalString());
+        self::assertSame("/Eva Adamova\u{2028}dakujem", $line->receiverMessage);
+        self::assertSame('0449274899', $line->vs);
 
         $nel = new CsobMailParser()->parse($base . "Zpráva příjemci: /Eva Adamova koniec\u{0085}\n");
-        $this->assertSame('1440.00', $nel->money?->toDecimalString());
-        $this->assertSame("/Eva Adamova koniec\u{0085}", $nel->receiverMessage);
+        self::assertSame('1440.00', $nel->money?->toDecimalString());
+        self::assertSame("/Eva Adamova koniec\u{0085}", $nel->receiverMessage);
 
         $crlf = new CsobMailParser()->parse($base . "Zpráva příjemci: /Eva Adamova\r\n/dalsi\n");
-        $this->assertSame('1440.00', $crlf->money?->toDecimalString());
-        $this->assertSame('/Eva Adamova', $crlf->receiverMessage);
+        self::assertSame('1440.00', $crlf->money?->toDecimalString());
+        self::assertSame('/Eva Adamova', $crlf->receiverMessage);
     }
 
     private function assertBalanceAttackRejected(CsobMailParser|SkCsobMailParser $parser, string $mail): void
     {
         try {
             $parser->parseAll($mail);
-            $this->fail('A payer-written balance must not admit a forged transaction');
+            self::fail('A payer-written balance must not admit a forged transaction');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('Transaction has more than one balance line', $exception->getMessage());
+            self::assertStringContainsString('Transaction has more than one balance line', $exception->getMessage());
         }
     }
 }

@@ -88,6 +88,7 @@ final readonly class CsobMailParser implements ParserInterface
         return $parsed;
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         $original = $this->normalizeHtmlLineBreaks($this->requireUniformLineBreaks($content));
@@ -126,9 +127,7 @@ final readonly class CsobMailParser implements ParserInterface
         if ($vs === null && $this->matched('/Zpráva příjemci:.*\b([0-9]{1,10})\b.*/i', $original, $symbol)) {
             $vs = $this->group($symbol, 1);
         }
-        if ($vs === null) {
-            $vs = $this->multilineSymbol($original, 'purpose') ?? $this->lastNumberInPurpose($original);
-        }
+        $vs ??= $this->multilineSymbol($original, 'purpose') ?? $this->lastNumberInPurpose($original);
 
         $ks = null;
         if ($this->matched($this->field('Konstantní symbol:', '([0-9]+)'), $original, $symbol)) {
@@ -161,7 +160,7 @@ final readonly class CsobMailParser implements ParserInterface
             return null;
         }
 
-        $last = $numbers[1][array_key_last($numbers[1])] ?? null;
+        $last = end($numbers[1]);
 
         return is_string($last) ? $last : null;
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tomaj\BankMailsParser\Parser;
 
 use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
+use Tomaj\BankMailsParser\MailContent;
 
 /**
  * What a bank parser must provide so the facade can select it and read every transaction.
@@ -23,7 +24,7 @@ interface ParserInterface
     /**
      * Parse every transaction in the email.
      *
-     * @return list<\Tomaj\BankMailsParser\MailContent>
+     * @return list<MailContent>
      * @throws InvalidEmailFormatException if email format is recognized but invalid
      */
     public function parseAll(string $content): array;

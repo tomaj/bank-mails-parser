@@ -28,14 +28,14 @@ final class MutationKillsTest extends TestCase
         $facade = new BankMailsParser();
         $body = $this->tatra();
 
-        $this->assertSame('1.00', $facade->parse($body, " \t")->money?->toDecimalString());
-        $this->assertSame('1.00', $facade->parse($body, '<Notify@TatraBanka.sk>')->money?->toDecimalString());
+        self::assertSame('1.00', $facade->parse($body, " \t")->money?->toDecimalString());
+        self::assertSame('1.00', $facade->parse($body, '<Notify@TatraBanka.sk>')->money?->toDecimalString());
 
         try {
             $facade->parse($body, 'user@tatrabankaXsk');
-            $this->fail('A dot in the bank domain must not match an arbitrary character');
-        } catch (UnsupportedBankException) {
-            $this->assertTrue(true);
+            self::fail('A dot in the bank domain must not match an arbitrary character');
+        } catch (UnsupportedBankException $exception) {
+            self::assertStringContainsString('No parser found', $exception->getMessage());
         }
     }
 
@@ -44,8 +44,8 @@ final class MutationKillsTest extends TestCase
     {
         $parsed = BankDate::parse(' 6.9.2019', '!j.n.Y', BankDate::bratislava());
 
-        $this->assertNotNull($parsed);
-        $this->assertSame('2019-09-06', $parsed->format('Y-m-d'));
+        self::assertNotNull($parsed);
+        self::assertSame('2019-09-06', $parsed->format('Y-m-d'));
     }
 
     #[Test]
@@ -58,9 +58,9 @@ final class MutationKillsTest extends TestCase
 
         try {
             new BankMailsParser()->parse($both);
-            $this->fail('Two banks must be reported');
+            self::fail('Two banks must be reported');
         } catch (AmbiguousBankException $exception) {
-            $this->assertStringContainsString(
+            self::assertStringContainsString(
                 'Email matches more than one bank parser: Tomaj\\BankMailsParser\\Parser\\TatraBanka\\TatraBankaMailParser',
                 $exception->getMessage(),
             );
@@ -74,9 +74,9 @@ final class MutationKillsTest extends TestCase
 
         try {
             $parser->parse('AMT=10.00 AMT=99.00 CURR=978 VS=1 RES=OK');
-            $this->fail('A conflicting duplicate key must fail');
+            self::fail('A conflicting duplicate key must fail');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('Duplicate CardPay field amount', $exception->getMessage());
+            self::assertStringContainsString('Duplicate CardPay field amount', $exception->getMessage());
         }
     }
 
@@ -87,9 +87,9 @@ final class MutationKillsTest extends TestCase
 
         try {
             $parser->parse('TIMESTAMP=01012024120000999 RES=OK AMT=10.00 CURR=978 VS=1');
-            $this->fail('A timestamp longer than 14 digits is not a date');
+            self::fail('A timestamp longer than 14 digits is not a date');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('TIMESTAMP is not a valid date', $exception->getMessage());
+            self::assertStringContainsString('TIMESTAMP is not a valid date', $exception->getMessage());
         }
     }
 
@@ -98,17 +98,17 @@ final class MutationKillsTest extends TestCase
     {
         $facade = new BankMailsParser();
         $card = $facade->parse("VS=1111 RES=OK AMT=10.00 CURR=978\n", 'a@tatrabanka.sk');
-        $this->assertSame('10.00', $card->money?->toDecimalString());
-        $this->assertNull($facade->tryParse("-----BEGIN PGP MESSAGE-----\nabc\n-----END PGP MESSAGE-----\n"));
+        self::assertSame('10.00', $card->money?->toDecimalString());
+        self::assertNull($facade->tryParse("-----BEGIN PGP MESSAGE-----\nabc\n-----END PGP MESSAGE-----\n"));
 
         $withDecryptor = new BankMailsParser(decryptor: new TatraBankaMailDecryptor('/nonexistent/key.asc', 'heslo'));
         try {
             $withDecryptor->parse("-----BEGIN PGP MESSAGE-----\nabc\n-----END PGP MESSAGE-----\n", 'notify@tatrabanka.sk');
-            $this->fail('A PGP statement with a decryptor still has to open the key');
+            self::fail('A PGP statement with a decryptor still has to open the key');
         } catch (ConfigurationException $exception) {
-            $this->assertStringContainsString('PGP', $exception->getMessage());
+            self::assertStringContainsString('PGP', $exception->getMessage());
         }
-        $this->assertNull($withDecryptor->tryParse("-----BEGIN PGP MESSAGE-----\nabc\n-----END PGP MESSAGE-----\n", 'a@example.com'));
+        self::assertNull($withDecryptor->tryParse("-----BEGIN PGP MESSAGE-----\nabc\n-----END PGP MESSAGE-----\n", 'a@example.com'));
     }
 
     #[Test]
@@ -116,16 +116,16 @@ final class MutationKillsTest extends TestCase
     {
         try {
             Currency::fromCode('EUR978');
-            $this->fail('A numeric code glued to letters is not ISO 4217');
-        } catch (\InvalidArgumentException) {
-            $this->assertTrue(true);
+            self::fail('A numeric code glued to letters is not ISO 4217');
+        } catch (\InvalidArgumentException $exception) {
+            self::assertSame('Unsupported currency code "EUR978".', $exception->getMessage());
         }
 
         try {
             Currency::fromCode('978EUR');
-            $this->fail('A numeric code glued to letters is not ISO 4217');
-        } catch (\InvalidArgumentException) {
-            $this->assertTrue(true);
+            self::fail('A numeric code glued to letters is not ISO 4217');
+        } catch (\InvalidArgumentException $exception) {
+            self::assertSame('Unsupported currency code "978EUR".', $exception->getMessage());
         }
     }
 
@@ -134,15 +134,15 @@ final class MutationKillsTest extends TestCase
     {
         $parser = new VubMailParser();
         $kept = $parser->parse("Suma: 1,00   \nVS: 10\n");
-        $this->assertSame('1.00', $kept->money?->toDecimalString());
+        self::assertSame('1.00', $kept->money?->toDecimalString());
         $payer = $parser->parse("Z účtu:   SK12  \nSuma: 1,00\n");
-        $this->assertSame('SK12', $payer->accountNumber);
-        $this->assertNull($payer->sourceAccountNumber);
+        self::assertSame('SK12', $payer->accountNumber);
+        self::assertNull($payer->sourceAccountNumber);
 
         foreach (['Suma: xx1,00', 'Suma: 1,00 abc'] as $amountLine) {
             $unreadable = $parser->parse($amountLine . "\nVS: 10\n");
-            $this->assertNull($unreadable->money, $amountLine);
-            $this->assertSame('10', $unreadable->vs, $amountLine);
+            self::assertNull($unreadable->money, $amountLine);
+            self::assertSame('10', $unreadable->vs, $amountLine);
         }
     }
 
@@ -157,9 +157,9 @@ final class MutationKillsTest extends TestCase
             . "Částka: +2,00 CZK\n",
         );
 
-        $this->assertCount(1, $second);
-        $this->assertSame('2.00', $second[0]->money?->toDecimalString());
-        $this->assertSame('2018-09-25T14:30:00+02:00', $second[0]->transactionDate?->format('c'));
+        self::assertCount(1, $second);
+        self::assertSame('2.00', $second[0]->money?->toDecimalString());
+        self::assertSame('2018-09-25T14:30:00+02:00', $second[0]->transactionDate?->format('c'));
 
         $unreadable = $parser->parseAll(
             "Dne 25.9.2018 byla na účtu 111 zaúčtovaná transakce typu: Došlá platba.\n"
@@ -168,11 +168,11 @@ final class MutationKillsTest extends TestCase
             . "Dne 26.9.2018 byla na účtu 222 zaúčtovaná transakce typu: Došlá platba.\n"
             . "Částka: +9.8.7 CZK\n",
         );
-        $this->assertCount(2, $unreadable);
-        $this->assertNull($unreadable[0]->money);
-        $this->assertSame('111', $unreadable[0]->accountNumber);
-        $this->assertNull($unreadable[1]->money);
-        $this->assertSame('222', $unreadable[1]->accountNumber);
+        self::assertCount(2, $unreadable);
+        self::assertNull($unreadable[0]->money);
+        self::assertSame('111', $unreadable[0]->accountNumber);
+        self::assertNull($unreadable[1]->money);
+        self::assertSame('222', $unreadable[1]->accountNumber);
     }
 
     #[Test]
@@ -185,8 +185,8 @@ final class MutationKillsTest extends TestCase
             . "suma: +3,00 EUR\n",
         );
 
-        $this->assertCount(1, $second);
-        $this->assertSame('3.00', $second[0]->money?->toDecimalString());
+        self::assertCount(1, $second);
+        self::assertSame('3.00', $second[0]->money?->toDecimalString());
 
         $unreadable = $parser->parseAll(
             "dňa 6.9.2019 bola na účte SK11 zaúčtovaná suma SEPA platobného príkazu:\n"
@@ -194,16 +194,16 @@ final class MutationKillsTest extends TestCase
             . "dňa 7.9.2019 bola na účte SK22 zaúčtovaná suma SEPA platobného príkazu:\n"
             . "suma: +9.8.7 EUR\n",
         );
-        $this->assertCount(2, $unreadable);
-        $this->assertNull($unreadable[0]->money);
-        $this->assertSame('SK11', $unreadable[0]->ownAccountNumber);
-        $this->assertNull($unreadable[1]->money);
-        $this->assertSame('SK22', $unreadable[1]->ownAccountNumber);
+        self::assertCount(2, $unreadable);
+        self::assertNull($unreadable[0]->money);
+        self::assertSame('SK11', $unreadable[0]->ownAccountNumber);
+        self::assertNull($unreadable[1]->money);
+        self::assertSame('SK22', $unreadable[1]->ownAccountNumber);
         try {
             $parser->parseAll('not a mail');
-            $this->fail('An empty parse still fails');
+            self::fail('An empty parse still fails');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('Could not find transaction pattern', $exception->getMessage());
+            self::assertStringContainsString('Could not find transaction pattern', $exception->getMessage());
         }
     }
 
@@ -212,36 +212,36 @@ final class MutationKillsTest extends TestCase
     {
         try {
             Money::fromDecimalString('1.2310', 'EUR');
-            $this->fail('Extra fraction digits that are not zero must fail');
+            self::fail('Extra fraction digits that are not zero must fail');
         } catch (\InvalidArgumentException $exception) {
-            $this->assertStringContainsString('more fraction digits', $exception->getMessage());
+            self::assertStringContainsString('more fraction digits', $exception->getMessage());
         }
 
         try {
             Money::fromDecimalString('1.234', 'EUR');
-            $this->fail('Three fraction digits are ambiguous without a separator hint');
+            self::fail('Three fraction digits are ambiguous without a separator hint');
         } catch (\InvalidArgumentException $exception) {
-            $this->assertStringContainsString('Ambiguous decimal amount', $exception->getMessage());
+            self::assertStringContainsString('Ambiguous decimal amount', $exception->getMessage());
         }
 
         try {
             Money::fromDecimalString('1.234.5678', 'EUR');
-            $this->fail('A thousands group must be exactly three digits');
+            self::fail('A thousands group must be exactly three digits');
         } catch (\InvalidArgumentException $exception) {
-            $this->assertStringContainsString('Invalid decimal amount', $exception->getMessage());
+            self::assertStringContainsString('Invalid decimal amount', $exception->getMessage());
         }
 
         foreach (['x1 234', '1 234x'] as $amount) {
             try {
                 Money::fromDecimalString($amount, 'EUR');
-                $this->fail($amount . ' is not a grouped amount');
+                self::fail($amount . ' is not a grouped amount');
             } catch (\InvalidArgumentException $exception) {
-                $this->assertStringContainsString('Invalid decimal amount', $exception->getMessage());
+                self::assertStringContainsString('Invalid decimal amount', $exception->getMessage());
             }
         }
 
-        $this->assertSame('99.00', Money::fromDecimalString('99.00', 'EUR')->toDecimalString());
-        $this->assertSame(
+        self::assertSame('99.00', Money::fromDecimalString('99.00', 'EUR')->toDecimalString());
+        self::assertSame(
             '92233720368547758.07',
             Money::fromDecimalString('92233720368547758.07', 'EUR')->toDecimalString(),
         );

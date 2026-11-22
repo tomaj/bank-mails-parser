@@ -37,11 +37,17 @@
     "singpolyma/openpgp-php": "^0.7"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.0",
+    "friendsofphp/php-cs-fixer": "^3.64",
     "infection/infection": "^0.35",
-    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan": "^2.3",
+    "phpstan/phpstan-deprecation-rules": "^2.0",
+    "phpstan/phpstan-phpunit": "^2.0.5",
     "phpstan/phpstan-strict-rules": "^2.0",
-    "phpunit/phpunit": "^13.0"
+    "phpunit/phpunit": "^13.2",
+    "rector/rector": "^2.8"
+  },
+  "conflict": {
+    "phpseclib/phpseclib": "<3.0.58"
   },
   "minimum-stability": "stable",
   "autoload": {
@@ -55,26 +61,44 @@
     }
   },
   "scripts": {
-    "test": "phpunit",
-    "cs": "php-cs-fixer fix --dry-run --diff --verbose",
-    "cs-fix": "php-cs-fixer fix",
-    "phpstan": "phpstan analyse",
-    "infection": "XDEBUG_MODE=coverage infection --threads=max",
-    "fixtures:update": "php tests/fixtures-update.php",
     "check": [
-      "@cs",
+      "@phpcs",
       "@phpstan",
+      "@rector",
       "@test"
-    ]
+    ],
+    "coverage": [
+      "@putenv XDEBUG_MODE=coverage",
+      "phpunit --coverage-clover build/logs/clover.xml --coverage-html build/coverage"
+    ],
+    "cs-fix": "php-cs-fixer fix",
+    "fixtures:update": "php tests/fixtures-update.php",
+    "infection": [
+      "@putenv XDEBUG_MODE=coverage",
+      "infection --threads=max"
+    ],
+    "phpcs": "php-cs-fixer fix --dry-run --diff --verbose",
+    "phpstan": "phpstan analyse --memory-limit=1G",
+    "phpunit": [
+      "@putenv XDEBUG_MODE=off",
+      "phpunit --no-coverage"
+    ],
+    "rector": "rector --dry-run",
+    "rector-fix": "rector",
+    "test": "@phpunit"
   },
   "scripts-descriptions": {
-    "test": "Run PHPUnit tests with coverage",
-    "cs": "Check code style (PER-CS/PSR-12 + PHP 8.4)",
+    "check": "Run all quality checks (code style, static analysis, Rector, tests)",
+    "coverage": "Run PHPUnit with coverage (clover and HTML in build/; needs xdebug or pcov)",
     "cs-fix": "Fix code style violations automatically",
-    "phpstan": "Run static analysis with PHPStan",
-    "infection": "Run mutation testing with Infection (XDEBUG_MODE=coverage, same as CI)",
     "fixtures:update": "Regenerate tests/fixtures/*/*.expected.json from the current parsers",
-    "check": "Run all quality checks (code style, static analysis, tests)"
+    "infection": "Run mutation testing with Infection (XDEBUG_MODE=coverage, same as CI)",
+    "phpcs": "Check code style (PER-CS + PHP 8.4 migration rules)",
+    "phpstan": "Run static analysis with PHPStan (level max)",
+    "phpunit": "Run PHPUnit tests without coverage",
+    "rector": "Show the changes Rector would make (must be none)",
+    "rector-fix": "Apply the Rector changes",
+    "test": "Run PHPUnit tests without coverage (alias of phpunit)"
   },
   "config": {
     "allow-plugins": {

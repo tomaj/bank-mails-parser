@@ -56,10 +56,11 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
                 $keys[$key] = true;
             }
 
-            return self::cardPayBlock($keys);
+            return $this->cardPayBlock($keys);
         });
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         $block = $this->firstNotificationBlock($this->withoutFreeText($this->scrubUtf8($this->requireUniformLineBreaks($content))));
@@ -114,7 +115,7 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
         $money = null;
         if (isset($data['amount']) && $data['amount'] !== '') {
             $currency = isset($data['currency']) && $data['currency'] !== '' ? $data['currency'] : 'EUR';
-            if (Currency::tryFromCode($currency) !== null) {
+            if (Currency::tryFromCode($currency) instanceof Currency) {
                 $money = $this->money($data['amount'], $currency, '.');
             }
         }
@@ -124,7 +125,7 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
 
         $transactionDate = null;
         if (isset($data['transactionDate']) && $data['transactionDate'] !== '') {
-            $transactionDate = self::parseTimestamp($data['transactionDate']);
+            $transactionDate = $this->parseTimestamp($data['transactionDate']);
         }
 
         return new MailContent(
@@ -143,11 +144,11 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
         );
     }
 
-    private static function parseTimestamp(string $value): DateTimeImmutable
+    private function parseTimestamp(string $value): DateTimeImmutable
     {
         if (preg_match('/^\d{14}$/', $value) === 1) {
             $parsed = BankDate::parse($value, '!dmYHis', BankDate::utc());
-            if ($parsed === null) {
+            if (!$parsed instanceof \DateTimeImmutable) {
                 throw InvalidEmailFormatException::malformedContent(self::class, 'TIMESTAMP is not a valid date');
             }
 
@@ -182,11 +183,11 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
                 continue;
             }
 
-            if ($pairs !== [] && self::mixesProse($bare)) {
+            if ($pairs !== [] && $this->mixesProse($bare)) {
                 return $pairs;
             }
 
-            $linePairs = self::cardPayPairs($bare);
+            $linePairs = $this->cardPayPairs($bare);
             if ($linePairs === null) {
                 if ($hasResult && $pairs !== []) {
                     return $pairs;
@@ -215,10 +216,10 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
     /**
      * @return list<array{0: string, 1: string}>|null
      */
-    private static function cardPayPairs(string $line): ?array
+    private function cardPayPairs(string $line): ?array
     {
         $parts = preg_split('/\s+/u', trim($line));
-        if ($parts === false || $parts === [] || $parts === ['']) {
+        if (in_array($parts, [false, [], ['']], true)) {
             return null;
         }
 
@@ -233,25 +234,19 @@ final readonly class TatraBankaSimpleMailParser implements ParserInterface
         return $pairs === [] ? null : $pairs;
     }
 
-    private static function mixesProse(string $line): bool
+    private function mixesProse(string $line): bool
     {
         $parts = preg_split('/\s+/u', trim($line));
         if ($parts === false) {
             return false;
         }
-        foreach ($parts as $part) {
-            if ($part !== '' && preg_match('/^[A-Z][A-Z0-9_]*=/', $part) !== 1) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($parts, fn(string $part): bool => $part !== '' && preg_match('/^[A-Z][A-Z0-9_]*=/', $part) !== 1);
     }
 
     /**
      * @param array<string, true> $keys
      */
-    private static function cardPayBlock(array $keys): bool
+    private function cardPayBlock(array $keys): bool
     {
         $hasResult = isset($keys['RES']) || isset($keys['TRES']);
         $hasAnchor = isset($keys['AMT']) || isset($keys['VS']) || isset($keys['HMAC']) || isset($keys['SIGN']);

@@ -39,6 +39,7 @@ final readonly class VubMailParser implements ParserInterface
         });
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         $content = $this->requireUniformLineBreaks($content);

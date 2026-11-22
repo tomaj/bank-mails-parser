@@ -216,7 +216,7 @@ Opravte typové chyby alebo doplňte správne anotácie PHPStan.
 Štýl skontroluje PHP-CS-Fixer:
 
 ```bash
-composer cs
+composer phpcs
 ```
 
 Automatická oprava:

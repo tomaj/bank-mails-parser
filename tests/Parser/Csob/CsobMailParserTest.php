@@ -9,249 +9,250 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
 use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
+use Tomaj\BankMailsParser\Tests\Fixtures;
 
 #[CoversClass(CsobMailParser::class)]
 class CsobMailParserTest extends TestCase
 {
     #[Test]
-    public function singleTransferPayment()
+    public function singleTransferPayment(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/dosla-platba');
+        $email = Fixtures::load('csob-cz/dosla-platba');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('1122334455/9999', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('1234.56', $mailContent->money?->toDecimalString());
-        $this->assertEquals('23456789', $mailContent->vs);
-        $this->assertEquals('3456', $mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('1122334455/9999', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('1234.56', $mailContent->money->toDecimalString());
+        self::assertSame('23456789', $mailContent->vs);
+        self::assertSame('3456', $mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     // zaúčtovaná changed to zaúčtována
     #[Test]
-    public function singleTransferPaymentFixedTypoZauctovana()
+    public function singleTransferPaymentFixedTypoZauctovana(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/prichadzajuca-uhrada');
+        $email = Fixtures::load('csob-cz/prichadzajuca-uhrada');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('1122334455/9999', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('1234.56', $mailContent->money?->toDecimalString());
-        $this->assertEquals('23456789', $mailContent->vs);
-        $this->assertEquals('3456', $mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('1122334455/9999', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('1234.56', $mailContent->money->toDecimalString());
+        self::assertSame('23456789', $mailContent->vs);
+        self::assertSame('3456', $mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function multiTransferPayment()
+    public function multiTransferPayment(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/viac-transakcii');
+        $email = Fixtures::load('csob-cz/viac-transakcii');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(2, $mailContents);
+        self::assertCount(2, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('1122334455/9999', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('1234.56', $mailContent->money?->toDecimalString());
-        $this->assertEquals('23456789', $mailContent->vs);
-        $this->assertEquals('3456', $mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('1122334455/9999', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('1234.56', $mailContent->money->toDecimalString());
+        self::assertSame('23456789', $mailContent->vs);
+        self::assertSame('3456', $mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
 
         $mailContent = $mailContents[1];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('9988776655/1111', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('987.65', $mailContent->money?->toDecimalString());
-        $this->assertEquals('78787878', $mailContent->vs);
-        $this->assertEquals('6789', $mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('9988776655/1111', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('987.65', $mailContent->money->toDecimalString());
+        self::assertSame('78787878', $mailContent->vs);
+        self::assertSame('6789', $mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2018-09-25 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function immediateTransferPayment()
+    public function immediateTransferPayment(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/okamzita-uhrada');
+        $email = Fixtures::load('csob-cz/okamzita-uhrada');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('1122334455/9999', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('414.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('23456789', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2022-08-18 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('1122334455/9999', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('414.00', $mailContent->money->toDecimalString());
+        self::assertSame('23456789', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2022-08-18 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function foreignTransferPaymentAlternativeSepa()
+    public function foreignTransferPaymentAlternativeSepa(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/zahranicna-platba-sepa');
+        $email = Fixtures::load('csob-cz/zahranicna-platba-sepa');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('NL56 ABNA 1234 5678 90', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('3581.70', $mailContent->money?->toDecimalString());
-        $this->assertEquals('23456789', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2022-08-18 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('NL56 ABNA 1234 5678 90', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('3581.70', $mailContent->money->toDecimalString());
+        self::assertSame('23456789', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2022-08-18 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function foreignTransferPaymentAlternativeZahranicni()
+    public function foreignTransferPaymentAlternativeZahranicni(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/zahranicna-platba');
+        $email = Fixtures::load('csob-cz/zahranicna-platba');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('SK99 1100 0000 7777 8888 9999', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('3300.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('6869282911', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2023-12-05 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('SK99 1100 0000 7777 8888 9999', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('3300.00', $mailContent->money->toDecimalString());
+        self::assertSame('6869282911', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2023-12-05 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function foreignTransferPaymentAlternativeZahranicniWithMultilinePurpose()
+    public function foreignTransferPaymentAlternativeZahranicniWithMultilinePurpose(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/zahranicna-platba-ucel-viac-riadkov');
+        $email = Fixtures::load('csob-cz/zahranicna-platba-ucel-viac-riadkov');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('SK99 1100 0000 7777 8888 9999', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('3300.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('6869282912', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2023-12-05 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('SK99 1100 0000 7777 8888 9999', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('3300.00', $mailContent->money->toDecimalString());
+        self::assertSame('6869282912', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2023-12-05 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function foreignTransferPaymentWithVariableSymbolSetToNull()
+    public function foreignTransferPaymentWithVariableSymbolSetToNull(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/prichadzajuca-uhrada-vs-v-sprave');
+        $email = Fixtures::load('csob-cz/prichadzajuca-uhrada-vs-v-sprave');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('2233445566/2600', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('1440.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('0449274899', $mailContent->vs);
-        $this->assertSame(new \DateTimeImmutable('2024-03-01 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('2233445566/2600', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('1440.00', $mailContent->money->toDecimalString());
+        self::assertSame('0449274899', $mailContent->vs);
+        self::assertSame(new \DateTimeImmutable('2024-03-01 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function transferPaymentWithPrefixedVariableSymbolInReceiverMessage()
+    public function transferPaymentWithPrefixedVariableSymbolInReceiverMessage(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/zahranicna-platba-vs');
+        $email = Fixtures::load('csob-cz/zahranicna-platba-vs');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('6012345678/2700', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('1980.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('3723199116', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2024-02-21 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('6012345678/2700', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('1980.00', $mailContent->money->toDecimalString());
+        self::assertSame('3723199116', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2024-02-21 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function transferPaymentWithPrefixedWithDotsVariableSymbolInReceiverMessage()
+    public function transferPaymentWithPrefixedWithDotsVariableSymbolInReceiverMessage(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/zahranicna-platba-vs-bodka');
+        $email = Fixtures::load('csob-cz/zahranicna-platba-vs-bodka');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('6012345678/2700', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('1980.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('3723199116', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2024-02-21 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('6012345678/2700', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('1980.00', $mailContent->money->toDecimalString());
+        self::assertSame('3723199116', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2024-02-21 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
-    public function testTransferPaymentWithNotPrefixedVariableSymbolInReceiverMessage()
+    public function testTransferPaymentWithNotPrefixedVariableSymbolInReceiverMessage(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/zahranicna-platba-2700');
+        $email = Fixtures::load('csob-cz/zahranicna-platba-2700');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('123456789', $mailContent->accountNumber);
-        $this->assertEquals('6012345678/2700', $mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('2700.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('3723199333', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2024-01-31 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('6012345678/2700', $mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('2700.00', $mailContent->money->toDecimalString());
+        self::assertSame('3723199333', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2024-01-31 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function singleCardpaySettlement()
+    public function singleCardpaySettlement(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/platba-kartou');
+        $email = Fixtures::load('csob-cz/platba-kartou');
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
     }
 
     #[Test]
-    public function errorEmail()
+    public function errorEmail(): void
     {
         $email = 'Specifický symbol: 4545454545
 
@@ -263,32 +264,32 @@ Vaše ČSOB
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(0, $mailContents);
+        self::assertCount(0, $mailContents);
     }
 
     #[Test]
-    public function cashTransferPayment()
+    public function cashTransferPayment(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/hotovostna-transakcia');
+        $email = Fixtures::load('csob-cz/hotovostna-transakcia');
 
         $csobMailParser = new CsobMailParser();
         $mailContents = $csobMailParser->parseMulti($email);
 
-        $this->assertCount(1, $mailContents);
+        self::assertCount(1, $mailContents);
 
         $mailContent = $mailContents[0];
-        $this->assertEquals('99991111', $mailContent->accountNumber);
-        $this->assertNull($mailContent->sourceAccountNumber);
-        $this->assertEquals('CZK', $mailContent->money?->currency->value);
-        $this->assertSame('3300.00', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1122334455', $mailContent->vs);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2023-12-18 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('99991111', $mailContent->accountNumber);
+        self::assertNull($mailContent->sourceAccountNumber);
+        self::assertSame('CZK', $mailContent->money?->currency->value);
+        self::assertSame('3300.00', $mailContent->money->toDecimalString());
+        self::assertSame('1122334455', $mailContent->vs);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2023-12-18 00:00:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function csobParserWithNoTransactionMarker()
+    public function csobParserWithNoTransactionMarker(): void
     {
         // Test parseMulti when there's no "Dne " to split on
         $email = 'Email without transaction date marker
@@ -297,11 +298,11 @@ Variabilní symbol: 123456789';
 
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
-        $this->assertEmpty($result);
+        self::assertSame([], $result);
     }
 
     #[Test]
-    public function csobParserWithInvalidDateFormat()
+    public function csobParserWithInvalidDateFormat(): void
     {
         $email = 'Dne invalid_date byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
 Částka: +100,00 CZK
@@ -310,11 +311,11 @@ Variabilní symbol: 123456789';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     #[Test]
-    public function csobParserWithMissingRequiredFields()
+    public function csobParserWithMissingRequiredFields(): void
     {
         // Test content that doesn't match the main regex pattern
         $email = 'Some other banking email content that does not match ČSOB format.';
@@ -323,54 +324,52 @@ Variabilní symbol: 123456789';
         $result = $parser->parseMulti($email);
 
         // Should return empty array when pattern doesn't match
-        $this->assertEmpty($result);
+        self::assertSame([], $result);
     }
 
     #[Test]
-    public function csobParserWithEmptyContent()
+    public function csobParserWithEmptyContent(): void
     {
         $parser = new CsobMailParser();
 
         $result = $parser->parseMulti('');
-        $this->assertEmpty($result);
+        self::assertSame([], $result);
     }
 
     #[Test]
-    public function csobParserMultiFiltersNullResults()
+    public function csobParserMultiFiltersNullResults(): void
     {
         // Test that parseMulti properly filters out null results
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/viac-transakcii-kratke');
+        $email = Fixtures::load('csob-cz/viac-transakcii-kratke');
 
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
         // Should only return the 2 valid transactions, filtering out the 1 null
-        $this->assertCount(2, $result);
-        // array_filter preserves keys, so reindex the array
-        $result = array_values($result);
-        $this->assertSame('100.00', $result[0]->money?->toDecimalString());
-        $this->assertEquals('111111', $result[0]->vs);
-        $this->assertSame('200.00', $result[1]->money?->toDecimalString());
-        $this->assertEquals('222222', $result[1]->vs);
+        self::assertCount(2, $result);
+        self::assertSame('100.00', $result[0]->money?->toDecimalString());
+        self::assertSame('111111', $result[0]->vs);
+        self::assertSame('200.00', $result[1]->money?->toDecimalString());
+        self::assertSame('222222', $result[1]->vs);
     }
 
     #[Test]
-    public function csobParserWithMultilineUnicodeContent()
+    public function csobParserWithMultilineUnicodeContent(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('csob-cz/dosla-platba-kratka');
+        $email = Fixtures::load('csob-cz/dosla-platba-kratka');
 
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
         $mailContent = $result[0];
-        $this->assertEquals('SK1122334455667788', $mailContent->sourceAccountNumber);
-        $this->assertEquals('Testovací zpráva s čárkami', $mailContent->receiverMessage);
-        $this->assertEquals('23456789', $mailContent->vs);
+        self::assertSame('SK1122334455667788', $mailContent->sourceAccountNumber);
+        self::assertSame('Testovací zpráva s čárkami', $mailContent->receiverMessage);
+        self::assertSame('23456789', $mailContent->vs);
     }
 
     #[Test]
-    public function csobParserWithVsIdenticalMutant()
+    public function csobParserWithVsIdenticalMutant(): void
     {
         // When VS is already set, v.s. pattern should not overwrite it
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
@@ -382,11 +381,11 @@ Zpráva příjemci: text v.s.9999999999 more text';
         $result = $parser->parseMulti($email);
 
         // Should keep the first VS found (1111111111), not overwrite with v.s. pattern
-        $this->assertEquals('1111111111', $result[0]->vs);
+        self::assertSame('1111111111', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserWithPregMatchMatches()
+    public function csobParserWithPregMatchMatches(): void
     {
         // Verifies regex actually needs to match, not just return empty result
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
@@ -399,11 +398,11 @@ Zůstatek';
         $result = $parser->parseMulti($email);
 
         // When patterns don't match, VS should be null (not garbage from failed match)
-        $this->assertNull($result[0]->vs);
+        self::assertNull($result[0]->vs);
     }
 
     #[Test]
-    public function csobParserAmountWithMultilineBeforeAndAfter()
+    public function csobParserAmountWithMultilineBeforeAndAfter(): void
     {
         $email = 'Text před
 
@@ -415,12 +414,12 @@ Text za částkou';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertSame('1234.56', $result[0]->money?->toDecimalString());
-        $this->assertEquals('CZK', $result[0]->money?->currency->value);
+        self::assertSame('1234.56', $result[0]->money?->toDecimalString());
+        self::assertSame('CZK', $result[0]->money->currency->value);
     }
 
     #[Test]
-    public function csobParserSourceAccountWithMultiline()
+    public function csobParserSourceAccountWithMultiline(): void
     {
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
 Částka: +100,00 CZK
@@ -431,11 +430,11 @@ Více textu';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertEquals('CZ1234567890123456789012', $result[0]->sourceAccountNumber);
+        self::assertSame('CZ1234567890123456789012', $result[0]->sourceAccountNumber);
     }
 
     #[Test]
-    public function csobParserReceiverMessageWithMultiline()
+    public function csobParserReceiverMessageWithMultiline(): void
     {
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
 Částka: +100,00 CZK
@@ -446,11 +445,11 @@ Text za zprávou';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertEquals('Zpráva s diakritikou ěščřžýáíé', $result[0]->receiverMessage);
+        self::assertSame('Zpráva s diakritikou ěščřžýáíé', $result[0]->receiverMessage);
     }
 
     #[Test]
-    public function csobParserVsFromIdentifikaceWithMultiline()
+    public function csobParserVsFromIdentifikaceWithMultiline(): void
     {
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
 Částka: +100,00 CZK
@@ -461,11 +460,11 @@ Text za';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertEquals('9876543210', $result[0]->vs);
+        self::assertSame('9876543210', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserVsFromReceiverMessageWithCaseInsensitive()
+    public function csobParserVsFromReceiverMessageWithCaseInsensitive(): void
     {
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
 Částka: +100,00 CZK
@@ -474,11 +473,11 @@ Zpráva příjemci: PAYMENT FOR INVOICE 1234567890 THANKS';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertEquals('1234567890', $result[0]->vs);
+        self::assertSame('1234567890', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserVsFromUcelPlatbyWithMultiline()
+    public function csobParserVsFromUcelPlatbyWithMultiline(): void
     {
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
 Částka: +100,00 CZK
@@ -489,11 +488,11 @@ Zůstatek na účtu';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertEquals('9988776655', $result[0]->vs);
+        self::assertSame('9988776655', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserWithNegativeAmount()
+    public function csobParserWithNegativeAmount(): void
     {
         // Test negative amount to verify correct array index in sign detection
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
@@ -503,13 +502,13 @@ Variabilní symbol: 23456789';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertSame('-1234.56', $result[0]->money?->toDecimalString());
-        $this->assertEquals('CZK', $result[0]->money?->currency->value);
+        self::assertCount(1, $result);
+        self::assertSame('-1234.56', $result[0]->money?->toDecimalString());
+        self::assertSame('CZK', $result[0]->money->currency->value);
     }
 
     #[Test]
-    public function csobParserWithReceiverMessageIndex()
+    public function csobParserWithReceiverMessageIndex(): void
     {
         // Test that verifies receiverMessage uses correct array index ($result[1])
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
@@ -520,12 +519,12 @@ Variabilní symbol: 123456';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('Expected message here', $result[0]->receiverMessage);
+        self::assertCount(1, $result);
+        self::assertSame('Expected message here', $result[0]->receiverMessage);
     }
 
     #[Test]
-    public function csobParserWithVsFromIdentifikace()
+    public function csobParserWithVsFromIdentifikace(): void
     {
         // Test VS extraction from "Identifikace:" when VS is null
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
@@ -536,12 +535,12 @@ Zůstatek';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('9876543210', $result[0]->vs);
+        self::assertCount(1, $result);
+        self::assertSame('9876543210', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserWithVsFromVsDotS()
+    public function csobParserWithVsFromVsDotS(): void
     {
         // Test VS extraction from "v.s." pattern when VS is still null
         $email = 'Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.
@@ -552,12 +551,12 @@ Zůstatek';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('1234567890', $result[0]->vs);
+        self::assertCount(1, $result);
+        self::assertSame('1234567890', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserWithVsFromReceiverMessage()
+    public function csobParserWithVsFromReceiverMessage(): void
     {
         // Test VS extraction from receiver message when VS is null
         // This tests line 70 pattern
@@ -569,12 +568,12 @@ Zůstatek';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('1234567890', $result[0]->vs);
+        self::assertCount(1, $result);
+        self::assertSame('1234567890', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserWithVsFromUcelPlatby()
+    public function csobParserWithVsFromUcelPlatby(): void
     {
         // Test VS extraction from "Účel platby:" when all other methods failed
         // This tests the fallback logic on lines 74-79
@@ -586,12 +585,12 @@ Zůstatek';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('9988776655', $result[0]->vs);
+        self::assertCount(1, $result);
+        self::assertSame('9988776655', $result[0]->vs);
     }
 
     #[Test]
-    public function csobParserWithVsFromUcelPlatbyMultiline()
+    public function csobParserWithVsFromUcelPlatbyMultiline(): void
     {
         // Test VS extraction from "Účel platby:" with multiline content
         // This tests the second pattern on line 76-77 with /s flag
@@ -603,8 +602,8 @@ Zůstatek po zaúčtování: +1 234 567,89 CZK';
         $parser = new CsobMailParser();
         $result = $parser->parseMulti($email);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('9988776655', $result[0]->vs);
+        self::assertCount(1, $result);
+        self::assertSame('9988776655', $result[0]->vs);
     }
 
     #[Test]
@@ -614,16 +613,16 @@ Zůstatek po zaúčtování: +1 234 567,89 CZK';
 
         try {
             $parser->parse('no transaction here');
-            $this->fail('parse() must reject content without a transaction');
+            self::fail('parse() must reject content without a transaction');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('Could not find transaction pattern', $exception->getMessage());
+            self::assertStringContainsString('Could not find transaction pattern', $exception->getMessage());
         }
 
         try {
             $parser->parseAll('no transaction here');
-            $this->fail('parseAll() must reject content without a transaction');
+            self::fail('parseAll() must reject content without a transaction');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('Could not find transaction pattern', $exception->getMessage());
+            self::assertStringContainsString('Could not find transaction pattern', $exception->getMessage());
         }
     }
 

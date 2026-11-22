@@ -23,9 +23,9 @@ final class ExceptionTest extends TestCase
         $previous = new RuntimeException('earlier');
         $exception = new ParseException('failed', 7, $previous);
 
-        $this->assertSame('failed', $exception->getMessage());
-        $this->assertSame(7, $exception->getCode());
-        $this->assertSame($previous, $exception->getPrevious());
+        self::assertSame('failed', $exception->getMessage());
+        self::assertSame(7, $exception->getCode());
+        self::assertSame($previous, $exception->getPrevious());
     }
 
     #[Test]
@@ -33,9 +33,8 @@ final class ExceptionTest extends TestCase
     {
         $exception = UnsupportedBankException::noParserFound();
 
-        $this->assertInstanceOf(ParseException::class, $exception);
-        $this->assertStringContainsString('No parser found', $exception->getMessage());
-        $this->assertSame(
+        self::assertStringContainsString('No parser found', $exception->getMessage());
+        self::assertSame(
             UnsupportedBankException::noParserFound()->getMessage(),
             UnsupportedBankException::withSender(null)->getMessage(),
         );
@@ -46,8 +45,8 @@ final class ExceptionTest extends TestCase
     {
         $exception = UnsupportedBankException::withSender('bank@example.test');
 
-        $this->assertSame('No parser found for the supplied sender.', $exception->getMessage());
-        $this->assertStringNotContainsString('bank@example.test', $exception->getMessage());
+        self::assertSame('No parser found for the supplied sender.', $exception->getMessage());
+        self::assertStringNotContainsString('bank@example.test', $exception->getMessage());
     }
 
     #[Test]
@@ -56,11 +55,10 @@ final class ExceptionTest extends TestCase
         $missing = InvalidEmailFormatException::missingRequiredField('Parser', 'RES');
         $malformed = InvalidEmailFormatException::malformedContent('Parser', 'broken');
 
-        $this->assertStringContainsString('RES', $missing->getMessage());
-        $this->assertStringContainsString('Parser', $missing->getMessage());
-        $this->assertSame(0, $missing->getCode());
-        $this->assertStringContainsString('broken', $malformed->getMessage());
-        $this->assertSame(0, $malformed->getCode());
-        $this->assertInstanceOf(ParseException::class, $malformed);
+        self::assertStringContainsString('RES', $missing->getMessage());
+        self::assertStringContainsString('Parser', $missing->getMessage());
+        self::assertSame(0, $missing->getCode());
+        self::assertStringContainsString('broken', $malformed->getMessage());
+        self::assertSame(0, $malformed->getCode());
     }
 }

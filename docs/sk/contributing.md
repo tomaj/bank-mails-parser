@@ -34,16 +34,20 @@ cd bank-mails-parser
 # Nainštalujte závislosti
 composer install
 
-# Spustite testy. phpunit.xml.dist vždy zapíše report pokrytia, takže
-# treba pcov alebo xdebug. Bez ovládača pokrytia PHPUnit skončí s kódom 1
-# a hlási „No tests executed!“.
+# Spustite testy (ovládač pokrytia netreba)
 composer test
 
+# Testy s reportom pokrytia v build/ (treba xdebug alebo pcov)
+composer coverage
+
 # Skontrolujte štýl kódu
-composer cs
+composer phpcs
 
 # Spustite statickú analýzu
 composer phpstan
+
+# Overte, že Rector nemá čo meniť (composer rector-fix zmeny použije)
+composer rector
 
 # Spustite všetky kontroly
 composer check
@@ -95,7 +99,7 @@ composer infection
 - Všetky testy musia prejsť (PHPUnit)
 - Pokrytie kódu má rásť, nie klesať
 - PHPStan na úrovni max s prísnymi pravidlami
-- Súlad so štýlom (PHP-CS-Fixer s PER-CS a @PHP84Migration)
+- Súlad so štýlom (PHP-CS-Fixer s PER-CS a @PHP8x4Migration)
 - Mutation Score Indicator (MSI) ≥ 89 %, covered MSI ≥ 90 %
 
 ## Požiadavky na testy
@@ -225,7 +229,7 @@ Anglickú stránku dajte do `docs/` a slovenskú do `docs/sk/`. Položky bočné
 Spustite kontroly kvality:
 
 ```bash
-composer check      # Spustí cs, phpstan a test
+composer check      # Spustí phpcs, phpstan, rector a test
 composer infection  # xdebug cez XDEBUG_MODE=coverage; pcov dáva falošne nižšie MSI
 ```
 

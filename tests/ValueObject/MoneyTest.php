@@ -19,9 +19,9 @@ final class MoneyTest extends TestCase
     {
         $money = new Money(1234, Currency::fromCode('EUR'));
 
-        $this->assertSame(1234, $money->amount);
-        $this->assertSame(Currency::fromCode('EUR'), $money->currency);
-        $this->assertSame('12.34', $money->toDecimalString());
+        self::assertSame(1234, $money->amount);
+        self::assertSame(Currency::fromCode('EUR'), $money->currency);
+        self::assertSame('12.34', $money->toDecimalString());
     }
 
     #[Test]
@@ -29,8 +29,8 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('12.34', Currency::fromCode('EUR'));
 
-        $this->assertSame(1234, $money->amount);
-        $this->assertSame('12.34', $money->toDecimalString());
+        self::assertSame(1234, $money->amount);
+        self::assertSame('12.34', $money->toDecimalString());
     }
 
     #[Test]
@@ -38,8 +38,8 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('1 234,56', 'EUR');
 
-        $this->assertSame(123456, $money->amount);
-        $this->assertSame('1234.56', $money->toDecimalString());
+        self::assertSame(123456, $money->amount);
+        self::assertSame('1234.56', $money->toDecimalString());
     }
 
     #[Test]
@@ -47,8 +47,8 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('1.234,56', Currency::fromCode('CZK'));
 
-        $this->assertSame(123456, $money->amount);
-        $this->assertSame(Currency::fromCode('CZK'), $money->currency);
+        self::assertSame(123456, $money->amount);
+        self::assertSame(Currency::fromCode('CZK'), $money->currency);
     }
 
     #[Test]
@@ -56,7 +56,7 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('1,234.56', Currency::fromCode('USD'));
 
-        $this->assertSame(123456, $money->amount);
+        self::assertSame(123456, $money->amount);
     }
 
     #[Test]
@@ -64,8 +64,8 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('12.34', '978');
 
-        $this->assertSame(1234, $money->amount);
-        $this->assertSame(Currency::fromCode('EUR'), $money->currency);
+        self::assertSame(1234, $money->amount);
+        self::assertSame(Currency::fromCode('EUR'), $money->currency);
     }
 
     #[Test]
@@ -73,11 +73,11 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('-12,34', Currency::fromCode('EUR'));
 
-        $this->assertSame(-1234, $money->amount);
-        $this->assertSame('-12.34', $money->toDecimalString());
-        $this->assertTrue($money->isNegative());
-        $this->assertFalse($money->isPositive());
-        $this->assertFalse($money->isZero());
+        self::assertSame(-1234, $money->amount);
+        self::assertSame('-12.34', $money->toDecimalString());
+        self::assertTrue($money->isNegative());
+        self::assertFalse($money->isPositive());
+        self::assertFalse($money->isZero());
     }
 
     #[Test]
@@ -109,7 +109,7 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('12.34', Currency::fromCode('EUR'));
 
-        $this->assertSame('12.34 EUR', $money->format());
+        self::assertSame('12.34 EUR', $money->format());
     }
 
     #[Test]
@@ -117,9 +117,9 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('12.34', Currency::fromCode('EUR'));
 
-        $this->assertTrue($money->isPositive());
-        $this->assertFalse($money->isNegative());
-        $this->assertFalse($money->isZero());
+        self::assertTrue($money->isPositive());
+        self::assertFalse($money->isNegative());
+        self::assertFalse($money->isZero());
     }
 
     #[Test]
@@ -128,9 +128,9 @@ final class MoneyTest extends TestCase
         $money = Money::fromDecimalString('-12.34', Currency::fromCode('EUR'));
         $absolute = $money->abs();
 
-        $this->assertSame(1234, $absolute->amount);
-        $this->assertSame('12.34', $absolute->toDecimalString());
-        $this->assertSame(Currency::fromCode('EUR'), $absolute->currency);
+        self::assertSame(1234, $absolute->amount);
+        self::assertSame('12.34', $absolute->toDecimalString());
+        self::assertSame(Currency::fromCode('EUR'), $absolute->currency);
     }
 
     #[Test]
@@ -138,7 +138,7 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('3.00', Currency::fromCode('EUR'));
 
-        $this->assertSame(300, $money->abs()->amount);
+        self::assertSame(300, $money->abs()->amount);
     }
 
     #[Test]
@@ -162,8 +162,8 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('12.3', Currency::fromCode('EUR'));
 
-        $this->assertSame(1230, $money->amount);
-        $this->assertSame('12.30', $money->toDecimalString());
+        self::assertSame(1230, $money->amount);
+        self::assertSame('12.30', $money->toDecimalString());
     }
 
     #[Test]
@@ -171,12 +171,12 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('0', Currency::fromCode('EUR'));
 
-        $this->assertSame(0, $money->amount);
-        $this->assertTrue($money->isZero());
-        $this->assertFalse($money->isPositive());
-        $this->assertFalse($money->isNegative());
-        $this->assertSame('0.00', $money->toDecimalString());
-        $this->assertSame('0.00 EUR', $money->format());
+        self::assertSame(0, $money->amount);
+        self::assertTrue($money->isZero());
+        self::assertFalse($money->isPositive());
+        self::assertFalse($money->isNegative());
+        self::assertSame('0.00', $money->toDecimalString());
+        self::assertSame('0.00 EUR', $money->format());
     }
 
     #[Test]
@@ -184,8 +184,8 @@ final class MoneyTest extends TestCase
     {
         $money = Money::fromDecimalString('+8', Currency::fromCode('CZK'));
 
-        $this->assertSame(800, $money->amount);
-        $this->assertSame('8.00', $money->toDecimalString());
+        self::assertSame(800, $money->amount);
+        self::assertSame('8.00', $money->toDecimalString());
     }
 
     #[Test]
@@ -194,29 +194,29 @@ final class MoneyTest extends TestCase
         foreach (['1.234', '1,234', '12.345', '0,005', '12,3456789', '99999999999999999', '999999999999999999999', '1,2,3', '.5'] as $amount) {
             try {
                 Money::fromDecimalString($amount, 'EUR');
-                $this->fail($amount . ' must be rejected');
+                self::fail($amount . ' must be rejected');
             } catch (InvalidArgumentException $exception) {
-                $this->assertNotSame('', $exception->getMessage());
+                self::assertNotSame('', $exception->getMessage());
             }
         }
 
         $grouped = Money::fromDecimalString('1.234', 'EUR', ',');
-        $this->assertSame(123400, $grouped->amount);
-        $this->assertSame('1234.00', $grouped->toDecimalString());
+        self::assertSame(123400, $grouped->amount);
+        self::assertSame('1234.00', $grouped->toDecimalString());
 
         $european = Money::fromDecimalString('1.234,56', 'EUR');
-        $this->assertSame(123456, $european->amount);
+        self::assertSame(123456, $european->amount);
 
         $us = Money::fromDecimalString('1,234.56', 'USD');
-        $this->assertSame(123456, $us->amount);
+        self::assertSame(123456, $us->amount);
 
         $jpy = Money::fromDecimalString('1234', 'JPY');
-        $this->assertSame(1234, $jpy->amount);
-        $this->assertSame('1234', $jpy->toDecimalString());
+        self::assertSame(1234, $jpy->amount);
+        self::assertSame('1234', $jpy->toDecimalString());
 
         $bhd = Money::fromDecimalString('1.234', 'BHD', '.');
-        $this->assertSame(1234, $bhd->amount);
-        $this->assertSame('1.234', $bhd->toDecimalString());
+        self::assertSame(1234, $bhd->amount);
+        self::assertSame('1.234', $bhd->toDecimalString());
 
         $this->expectException(InvalidArgumentException::class);
         Money::fromDecimalString('1', 'EUR', 'x');
@@ -253,9 +253,9 @@ final class MoneyTest extends TestCase
         foreach (['1,234.', '.234.567'] as $amount) {
             try {
                 Money::fromDecimalString($amount, 'EUR');
-                $this->fail($amount . ' must be rejected');
+                self::fail($amount . ' must be rejected');
             } catch (InvalidArgumentException $exception) {
-                $this->assertStringContainsString($amount, $exception->getMessage());
+                self::assertStringContainsString($amount, $exception->getMessage());
             }
         }
     }

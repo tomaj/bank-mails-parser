@@ -25,9 +25,7 @@ trait ParsesBankMail
             return $this->parse($content);
         } catch (ConfigurationException $exception) {
             throw $exception;
-        } catch (ParseException) {
-            return null;
-        } catch (\InvalidArgumentException|\ValueError|\DateMalformedStringException) {
+        } catch (ParseException|\InvalidArgumentException|\ValueError|\DateMalformedStringException) {
             return null;
         }
     }
@@ -138,7 +136,7 @@ trait ParsesBankMail
      */
     protected function moneyOrNull(string $amount, Currency|string $currency, ?string $decimalSeparator = null): ?Money
     {
-        if (is_string($currency) && Currency::tryFromCode($currency) === null) {
+        if (is_string($currency) && !Currency::tryFromCode($currency) instanceof Currency) {
             return null;
         }
 

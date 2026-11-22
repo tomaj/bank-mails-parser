@@ -18,26 +18,26 @@ final class CurrencyTest extends TestCase
     {
         $currency = Currency::fromCode('EUR');
 
-        $this->assertSame('EUR', $currency->value);
+        self::assertSame('EUR', $currency->value);
     }
 
     #[Test]
     public function createsFromNumericCode(): void
     {
-        $this->assertSame(Currency::fromCode('EUR'), Currency::fromCode('978'));
-        $this->assertSame(Currency::fromCode('CZK'), Currency::fromCode('203'));
-        $this->assertSame(Currency::fromCode('USD'), Currency::fromCode('840'));
-        $this->assertSame(Currency::fromCode('GBP'), Currency::fromCode('826'));
-        $this->assertSame(Currency::fromCode('CHF'), Currency::fromCode('756'));
-        $this->assertSame(Currency::fromCode('PLN'), Currency::fromCode('985'));
-        $this->assertSame(Currency::fromCode('HUF'), Currency::fromCode('348'));
+        self::assertSame(Currency::fromCode('EUR'), Currency::fromCode('978'));
+        self::assertSame(Currency::fromCode('CZK'), Currency::fromCode('203'));
+        self::assertSame(Currency::fromCode('USD'), Currency::fromCode('840'));
+        self::assertSame(Currency::fromCode('GBP'), Currency::fromCode('826'));
+        self::assertSame(Currency::fromCode('CHF'), Currency::fromCode('756'));
+        self::assertSame(Currency::fromCode('PLN'), Currency::fromCode('985'));
+        self::assertSame(Currency::fromCode('HUF'), Currency::fromCode('348'));
     }
 
     #[Test]
     public function createsFromAlphabeticCodeViaFromCode(): void
     {
-        $this->assertSame(Currency::fromCode('EUR'), Currency::fromCode('eur'));
-        $this->assertSame(Currency::fromCode('CZK'), Currency::fromCode(' CZK '));
+        self::assertSame(Currency::fromCode('EUR'), Currency::fromCode('eur'));
+        self::assertSame(Currency::fromCode('CZK'), Currency::fromCode(' CZK '));
     }
 
     #[Test]
@@ -51,45 +51,44 @@ final class CurrencyTest extends TestCase
     #[Test]
     public function returnsNullForInvalidCodeWithTryFromCode(): void
     {
-        $this->assertNull(Currency::tryFromCode('INVALID'));
-        $this->assertSame(Currency::fromCode('EUR'), Currency::tryFromCode('978'));
+        self::assertNull(Currency::tryFromCode('INVALID'));
+        self::assertSame(Currency::fromCode('EUR'), Currency::tryFromCode('978'));
     }
 
     #[Test]
     public function supportsCommonCentralEuropeanCurrencies(): void
     {
-        $this->assertSame('EUR', Currency::fromCode('EUR')->value);
-        $this->assertSame('CZK', Currency::fromCode('CZK')->value);
-        $this->assertSame('PLN', Currency::fromCode('PLN')->value);
-        $this->assertSame('HUF', Currency::fromCode('HUF')->value);
+        self::assertSame('EUR', Currency::fromCode('EUR')->value);
+        self::assertSame('CZK', Currency::fromCode('CZK')->value);
+        self::assertSame('PLN', Currency::fromCode('PLN')->value);
+        self::assertSame('HUF', Currency::fromCode('HUF')->value);
     }
 
     #[Test]
     public function acceptsActiveIsoCodesAndKnownMinorUnits(): void
     {
-        $this->assertSame('SEK', Currency::fromCode('SEK')->value);
-        $this->assertSame('XXX', Currency::fromCode('xxx')->value);
-        $this->assertSame(2, Currency::fromCode('SEK')->minorUnits());
-        $this->assertSame(2, Currency::fromCode('XXX')->minorUnits());
-        $this->assertSame(0, Currency::fromCode('JPY')->minorUnits());
-        $this->assertSame(0, Currency::fromCode('ISK')->minorUnits());
-        $this->assertSame(3, Currency::fromCode('BHD')->minorUnits());
-        $this->assertSame(3, Currency::fromCode('KWD')->minorUnits());
-        $this->assertSame(3, Currency::fromCode('OMR')->minorUnits());
-        $this->assertSame(3, Currency::fromCode('TND')->minorUnits());
-        $this->assertSame(4, Currency::fromCode('CLF')->minorUnits());
-        $this->assertSame('JPY', Currency::fromCode('392')->value);
-        $this->assertSame('SEK', Currency::fromCode('752')->value);
-        $this->assertSame('NOK', Currency::fromCode('578')->value);
-        $this->assertSame('DKK', Currency::fromCode('208')->value);
-        $this->assertSame('AUD', Currency::fromCode('036')->value);
-        $this->assertSame('AUD', Currency::fromCode('36')->value);
-        $this->assertSame(180, count(\Tomaj\BankMailsParser\ValueObject\Iso4217::SCALE));
-        $this->assertSame('BGN', Currency::fromCode('975')->value);
-        $this->assertSame('BGN', Currency::fromCode('BGN')->value);
-        $this->assertSame('HRK', Currency::fromCode('191')->value);
-        $this->assertSame(2, Currency::fromCode('HRK')->minorUnits());
-        $this->assertNull(Currency::tryFromCode('1'));
-        $this->assertNull(Currency::tryFromCode('ZZZ'));
+        self::assertSame('SEK', Currency::fromCode('SEK')->value);
+        self::assertSame('XXX', Currency::fromCode('xxx')->value);
+        self::assertSame(2, Currency::fromCode('SEK')->minorUnits());
+        self::assertSame(2, Currency::fromCode('XXX')->minorUnits());
+        self::assertSame(0, Currency::fromCode('JPY')->minorUnits());
+        self::assertSame(0, Currency::fromCode('ISK')->minorUnits());
+        self::assertSame(3, Currency::fromCode('BHD')->minorUnits());
+        self::assertSame(3, Currency::fromCode('KWD')->minorUnits());
+        self::assertSame(3, Currency::fromCode('OMR')->minorUnits());
+        self::assertSame(3, Currency::fromCode('TND')->minorUnits());
+        self::assertSame(4, Currency::fromCode('CLF')->minorUnits());
+        self::assertSame('JPY', Currency::fromCode('392')->value);
+        self::assertSame('SEK', Currency::fromCode('752')->value);
+        self::assertSame('NOK', Currency::fromCode('578')->value);
+        self::assertSame('DKK', Currency::fromCode('208')->value);
+        self::assertSame('AUD', Currency::fromCode('036')->value);
+        self::assertSame('AUD', Currency::fromCode('36')->value);
+        self::assertSame('BGN', Currency::fromCode('975')->value);
+        self::assertSame('BGN', Currency::fromCode('BGN')->value);
+        self::assertSame('HRK', Currency::fromCode('191')->value);
+        self::assertSame(2, Currency::fromCode('HRK')->minorUnits());
+        self::assertNull(Currency::tryFromCode('1'));
+        self::assertNull(Currency::tryFromCode('ZZZ'));
     }
 }

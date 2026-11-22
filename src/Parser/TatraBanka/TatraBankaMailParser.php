@@ -42,6 +42,7 @@ final readonly class TatraBankaMailParser implements ParserInterface
         });
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         $original = $this->scrubUtf8($this->requireUniformLineBreaks($content));
@@ -75,7 +76,7 @@ final readonly class TatraBankaMailParser implements ParserInterface
             '!j.n.Y',
             '!Y-m-d',
         ], BankDate::bratislava());
-        if ($transactionDate === null && preg_match('/[A-Za-z]/', $rawDate) === 1) {
+        if (!$transactionDate instanceof \DateTimeImmutable && preg_match('/[A-Za-z]/', $rawDate) === 1) {
             $transactionDate = BankDate::parseEnglish($rawDate, BankDate::bratislava());
         }
 

@@ -26,29 +26,29 @@ class MailContentTest extends TestCase
             tid: '',
         );
 
-        $this->assertNull($mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->cc);
-        $this->assertNull($mailContent->tid);
+        self::assertNull($mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->cc);
+        self::assertNull($mailContent->tid);
     }
 
     #[Test]
     public function nonEmptyStringHandling(): void
     {
         $mailContent = new MailContent(
-            ks: '1234',
-            ss: '5678',
             vs: '9876543210',
+            ss: '5678',
+            ks: '1234',
             cc: 'CC123',
             tid: 'TID456',
         );
 
-        $this->assertSame('1234', $mailContent->ks);
-        $this->assertSame('5678', $mailContent->ss);
-        $this->assertSame('9876543210', $mailContent->vs);
-        $this->assertSame('CC123', $mailContent->cc);
-        $this->assertSame('TID456', $mailContent->tid);
+        self::assertSame('1234', $mailContent->ks);
+        self::assertSame('5678', $mailContent->ss);
+        self::assertSame('9876543210', $mailContent->vs);
+        self::assertSame('CC123', $mailContent->cc);
+        self::assertSame('TID456', $mailContent->tid);
     }
 
     #[Test]
@@ -56,24 +56,24 @@ class MailContentTest extends TestCase
     {
         $mailContent = new MailContent();
 
-        $this->assertNull($mailContent->money);
-        $this->assertNull($mailContent->accountNumber);
-        $this->assertNull($mailContent->sourceAccountNumber);
-        $this->assertNull($mailContent->ownAccountNumber);
-        $this->assertNull($mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->transactionDate);
-        $this->assertNull($mailContent->receiverMessage);
-        $this->assertNull($mailContent->description);
-        $this->assertNull($mailContent->sign);
-        $this->assertNull($mailContent->cid);
-        $this->assertNull($mailContent->res);
-        $this->assertNull($mailContent->ac);
-        $this->assertNull($mailContent->cc);
-        $this->assertNull($mailContent->tid);
-        $this->assertNull($mailContent->txn);
-        $this->assertNull($mailContent->rc);
+        self::assertNull($mailContent->money);
+        self::assertNull($mailContent->accountNumber);
+        self::assertNull($mailContent->sourceAccountNumber);
+        self::assertNull($mailContent->ownAccountNumber);
+        self::assertNull($mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->transactionDate);
+        self::assertNull($mailContent->receiverMessage);
+        self::assertNull($mailContent->description);
+        self::assertNull($mailContent->sign);
+        self::assertNull($mailContent->cid);
+        self::assertNull($mailContent->res);
+        self::assertNull($mailContent->ac);
+        self::assertNull($mailContent->cc);
+        self::assertNull($mailContent->tid);
+        self::assertNull($mailContent->txn);
+        self::assertNull($mailContent->rc);
     }
 
     #[Test]
@@ -83,33 +83,33 @@ class MailContentTest extends TestCase
         $date = new DateTimeImmutable('@1234567890');
         $mailContent = new MailContent(
             money: $money,
+            transactionDate: $date,
             accountNumber: 'SK1234567890',
             sourceAccountNumber: 'SK9876543210',
-            transactionDate: $date,
             receiverMessage: 'Test message',
             description: 'Test description',
-            sign: 'SIGN123',
             cid: 'CID456',
+            sign: 'SIGN123',
             res: 'OK',
             ac: 'AC789',
             txn: 'TXN999',
             rc: 'RC111',
         );
 
-        $this->assertSame($money, $mailContent->money);
-        $this->assertSame('123.45', $mailContent->money->toDecimalString());
-        $this->assertSame(Currency::fromCode('EUR'), $mailContent->money->currency);
-        $this->assertSame('SK1234567890', $mailContent->accountNumber);
-        $this->assertSame('SK9876543210', $mailContent->sourceAccountNumber);
-        $this->assertSame(1234567890, $mailContent->transactionDate?->getTimestamp());
-        $this->assertSame('Test message', $mailContent->receiverMessage);
-        $this->assertSame('Test description', $mailContent->description);
-        $this->assertSame('SIGN123', $mailContent->sign);
-        $this->assertSame('CID456', $mailContent->cid);
-        $this->assertSame('OK', $mailContent->res);
-        $this->assertSame('AC789', $mailContent->ac);
-        $this->assertSame('TXN999', $mailContent->txn);
-        $this->assertSame('RC111', $mailContent->rc);
+        self::assertSame($money, $mailContent->money);
+        self::assertSame('123.45', $mailContent->money->toDecimalString());
+        self::assertSame(Currency::fromCode('EUR'), $mailContent->money->currency);
+        self::assertSame('SK1234567890', $mailContent->accountNumber);
+        self::assertSame('SK9876543210', $mailContent->sourceAccountNumber);
+        self::assertSame(1234567890, $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('Test message', $mailContent->receiverMessage);
+        self::assertSame('Test description', $mailContent->description);
+        self::assertSame('SIGN123', $mailContent->sign);
+        self::assertSame('CID456', $mailContent->cid);
+        self::assertSame('OK', $mailContent->res);
+        self::assertSame('AC789', $mailContent->ac);
+        self::assertSame('TXN999', $mailContent->txn);
+        self::assertSame('RC111', $mailContent->rc);
     }
 
     #[Test]
@@ -117,9 +117,9 @@ class MailContentTest extends TestCase
     {
         $mailContent = new MailContent(money: Money::fromDecimalString('100.00', Currency::fromCode('EUR')));
 
-        $this->assertSame('100.00', $mailContent->money?->toDecimalString());
+        self::assertSame('100.00', $mailContent->money?->toDecimalString());
 
-        $this->assertSame(10000, $mailContent->money?->amount);
+        self::assertSame(10000, $mailContent->money->amount);
     }
 
     #[Test]
@@ -146,24 +146,24 @@ class MailContentTest extends TestCase
             rc: 'RC1',
         );
 
-        $this->assertSame('999.99', $mailContent->money?->toDecimalString());
-        $this->assertSame('USD', $mailContent->money?->currency->value);
-        $this->assertSame(1609459200, $mailContent->transactionDate?->getTimestamp());
-        $this->assertSame('TEST123', $mailContent->accountNumber);
-        $this->assertSame('SOURCE456', $mailContent->sourceAccountNumber);
-        $this->assertSame('123', $mailContent->vs);
-        $this->assertSame('456', $mailContent->ss);
-        $this->assertSame('789', $mailContent->ks);
-        $this->assertSame('Test msg', $mailContent->receiverMessage);
-        $this->assertSame('Test desc', $mailContent->description);
-        $this->assertSame('CID1', $mailContent->cid);
-        $this->assertSame('SIGN1', $mailContent->sign);
-        $this->assertSame('RES1', $mailContent->res);
-        $this->assertSame('AC1', $mailContent->ac);
-        $this->assertSame('CC1', $mailContent->cc);
-        $this->assertSame('TID1', $mailContent->tid);
-        $this->assertSame('TXN1', $mailContent->txn);
-        $this->assertSame('RC1', $mailContent->rc);
+        self::assertSame('999.99', $mailContent->money?->toDecimalString());
+        self::assertSame('USD', $mailContent->money->currency->value);
+        self::assertSame(1609459200, $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('TEST123', $mailContent->accountNumber);
+        self::assertSame('SOURCE456', $mailContent->sourceAccountNumber);
+        self::assertSame('123', $mailContent->vs);
+        self::assertSame('456', $mailContent->ss);
+        self::assertSame('789', $mailContent->ks);
+        self::assertSame('Test msg', $mailContent->receiverMessage);
+        self::assertSame('Test desc', $mailContent->description);
+        self::assertSame('CID1', $mailContent->cid);
+        self::assertSame('SIGN1', $mailContent->sign);
+        self::assertSame('RES1', $mailContent->res);
+        self::assertSame('AC1', $mailContent->ac);
+        self::assertSame('CC1', $mailContent->cc);
+        self::assertSame('TID1', $mailContent->tid);
+        self::assertSame('TXN1', $mailContent->txn);
+        self::assertSame('RC1', $mailContent->rc);
     }
 
     #[Test]
@@ -183,25 +183,25 @@ class MailContentTest extends TestCase
             rc: '',
         );
 
-        $this->assertNull($mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->cid);
-        $this->assertNull($mailContent->sign);
-        $this->assertNull($mailContent->res);
-        $this->assertNull($mailContent->ac);
-        $this->assertNull($mailContent->cc);
-        $this->assertNull($mailContent->tid);
-        $this->assertNull($mailContent->txn);
-        $this->assertNull($mailContent->rc);
+        self::assertNull($mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->cid);
+        self::assertNull($mailContent->sign);
+        self::assertNull($mailContent->res);
+        self::assertNull($mailContent->ac);
+        self::assertNull($mailContent->cc);
+        self::assertNull($mailContent->tid);
+        self::assertNull($mailContent->txn);
+        self::assertNull($mailContent->rc);
     }
 
     #[Test]
     public function nullTransactionDate(): void
     {
-        $mailContent = new MailContent(transactionDate: null);
+        $mailContent = new MailContent();
 
-        $this->assertNull($mailContent->transactionDate);
+        self::assertNull($mailContent->transactionDate);
     }
 
     #[Test]
@@ -209,8 +209,8 @@ class MailContentTest extends TestCase
     {
         $mailContent = new MailContent(money: Money::fromDecimalString('-123.45', Currency::fromCode('CZK')));
 
-        $this->assertSame('-123.45', $mailContent->money?->toDecimalString());
-        $this->assertSame(-12345, $mailContent->money?->amount);
-        $this->assertTrue($mailContent->money?->isNegative());
+        self::assertSame('-123.45', $mailContent->money?->toDecimalString());
+        self::assertSame(-12345, $mailContent->money->amount);
+        self::assertTrue($mailContent->money->isNegative());
     }
 }

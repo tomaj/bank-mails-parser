@@ -33,7 +33,7 @@ final class BankDate
     {
         foreach ($formats as $format) {
             $parsed = self::parse($value, $format, $zone);
-            if ($parsed !== null) {
+            if ($parsed instanceof \DateTimeImmutable) {
                 return $parsed;
             }
         }

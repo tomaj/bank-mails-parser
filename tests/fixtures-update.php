@@ -8,10 +8,13 @@ if (!isset($argv[0]) || realpath($argv[0]) !== __FILE__) {
     return;
 }
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $root = dirname(__DIR__);
-$paths = glob($root . '/tests/fixtures/*/*.txt') ?: [];
+$paths = glob($root . '/tests/fixtures/*/*.txt');
+if ($paths === false) {
+    $paths = [];
+}
 sort($paths);
 if ($paths === []) {
     fwrite(STDERR, "No fixtures found\n");

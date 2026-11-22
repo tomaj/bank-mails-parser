@@ -45,6 +45,7 @@ final readonly class TatraBankaStatementMailParser implements ParserInterface
         return $this->parseAll($content);
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         return $this->parseAll($content)[0];
@@ -76,8 +77,6 @@ final readonly class TatraBankaStatementMailParser implements ParserInterface
 
         try {
             $decrypted = $this->decryptor->decrypt($this->group($results, 0));
-        } catch (ConfigurationException $exception) {
-            throw $exception;
         } catch (DecryptionException $exception) {
             throw InvalidEmailFormatException::malformedContent(self::class, 'Encrypted statement could not be read', $exception);
         }
@@ -133,10 +132,10 @@ final readonly class TatraBankaStatementMailParser implements ParserInterface
         return new MailContent(
             money: $money,
             transactionDate: $transactionDate,
-            vs: $cols[18] ?? null,
             // Column 19 is the statement header "Číslo účtu": the merchant account
             // credited for this card sale. It can differ on every row.
             accountNumber: isset($cols[19]) ? $this->normalizeAccount($cols[19]) : null,
+            vs: $cols[18] ?? null,
         );
     }
 }
