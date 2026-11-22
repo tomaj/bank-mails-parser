@@ -294,7 +294,7 @@ BREAKING CHANGE: parsers now return null instead of false
 
 - **Bug reports**: Open an issue with reproduction steps
 - **Feature requests**: Open an issue with use case description
-- **Questions**: Open a discussion or email tomasmajer@gmail.com
+- **Questions**: Open an issue or email tomasmajer@gmail.com
 
 ## License
 

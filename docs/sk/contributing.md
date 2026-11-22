@@ -299,7 +299,7 @@ BREAKING CHANGE: parsers now return null instead of false
 
 - **Hlásenie chyby**: otvorte issue s postupom, ako ju zopakovať
 - **Návrh funkcie**: otvorte issue s opisom použitia
-- **Otázky**: otvorte diskusiu alebo napíšte na tomasmajer@gmail.com
+- **Otázky**: otvorte issue alebo napíšte na tomasmajer@gmail.com
 
 ## Licencia
 
