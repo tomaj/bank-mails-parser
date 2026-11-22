@@ -12,7 +12,7 @@ composer require tomaj/bank-mails-parser
 
 ## Requirements
 
-- PHP 8.4 or 8.5
+- PHP 8.4 or newer (tested on 8.4, 8.5 and 8.6)
 - Composer
 
 ## Quick Start
