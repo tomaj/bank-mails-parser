@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased][unreleased]
+
+### Changed
+
+- PHP 8.6 is tested and supported. CI requires PHP 8.4, 8.5 and 8.6 and also runs PHP 8.7 (nightly) without failing the build. The minimum stays PHP 8.4.
+
+### Fixed
+
+- `TatraBankaMailDecryptor::decrypt()` checks that the decrypted result is an `OpenPGP_Message` instead of relying on its truthiness. Valid messages decrypt as before.
+
 ## [5.0.0] - 2026-10-12
 
 ### Breaking Changes
@@ -248,6 +258,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Account number parsing
 - Receiver message parsing
 
+[unreleased]: https://github.com/tomaj/bank-mails-parser/compare/5.0.0...HEAD
 [5.0.0]: https://github.com/tomaj/bank-mails-parser/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/tomaj/bank-mails-parser/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/tomaj/bank-mails-parser/compare/3.0.0...4.0.0
