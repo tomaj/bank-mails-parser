@@ -30,10 +30,10 @@ final class Review4FindingsTest extends TestCase
         $purpose = $this->probe('utok-fantom-ucel.txt');
         foreach ([$address, $purpose] as $mail) {
             $parsed = new CsobMailParser()->parseAll($mail);
-            $this->assertCount(1, $parsed);
-            $this->assertSame('3300.00', $parsed[0]->money?->toDecimalString());
+            self::assertCount(1, $parsed);
+            self::assertSame('3300.00', $parsed[0]->money?->toDecimalString());
             $kept = new BankMailsParser()->tryParse($mail, 'info@csob.cz');
-            $this->assertSame('3300.00', $kept?->money?->toDecimalString());
+            self::assertSame('3300.00', $kept?->money?->toDecimalString());
         }
     }
 
@@ -72,10 +72,10 @@ final class Review4FindingsTest extends TestCase
             . "Zůstatek na účtu: +1,00 CZK\n";
 
         $parsed = new CsobMailParser()->parseAll($mail);
-        $this->assertCount(1, $parsed, $label);
-        $this->assertSame('10.00', $parsed[0]->money?->toDecimalString(), $label);
+        self::assertCount(1, $parsed, $label);
+        self::assertSame('10.00', $parsed[0]->money?->toDecimalString(), $label);
         $kept = new BankMailsParser()->tryParse($mail, 'info@csob.cz');
-        $this->assertSame('10.00', $kept?->money?->toDecimalString(), $label);
+        self::assertSame('10.00', $kept?->money?->toDecimalString(), $label);
     }
 
     #[Test]
@@ -89,14 +89,14 @@ final class Review4FindingsTest extends TestCase
             . "Zůstatek: +1 CZK\n";
         $probe = new FreeTextProbe();
         $masked = $probe->masked($mail);
-        $this->assertSame(strlen($mail), strlen($masked));
-        $this->assertStringNotContainsString('Dne 1.1.2026', $masked);
+        self::assertSame(strlen($mail), strlen($masked));
+        self::assertStringNotContainsString('Dne 1.1.2026', $masked);
 
         $chunks = $probe->split($mail, '/^Dne/mu');
-        $this->assertCount(1, $chunks);
+        self::assertCount(1, $chunks);
         $parsed = new CsobMailParser()->parseAll($mail);
-        $this->assertCount(1, $parsed);
-        $this->assertSame('10.00', $parsed[0]->money?->toDecimalString());
+        self::assertCount(1, $parsed);
+        self::assertSame('10.00', $parsed[0]->money?->toDecimalString());
     }
 
     #[Test]
@@ -109,19 +109,19 @@ final class Review4FindingsTest extends TestCase
               Konstantní symbol: 0308
             MAIL;
         $parsed = new CsobMailParser()->parse($csob);
-        $this->assertSame('10.00', $parsed->money?->toDecimalString());
-        $this->assertSame('SK99', $parsed->sourceAccountNumber);
-        $this->assertSame('0308', $parsed->ks);
+        self::assertSame('10.00', $parsed->money?->toDecimalString());
+        self::assertSame('SK99', $parsed->sourceAccountNumber);
+        self::assertSame('0308', $parsed->ks);
 
-        $vub = \Tomaj\BankMailsParser\Tests\Fixtures::load('vub/platba-ss-sign');
+        $vub = Fixtures::load('vub/platba-ss-sign');
         $vubParsed = new VubMailParser()->parse($vub);
-        $this->assertSame('13.37', $vubParsed->money?->toDecimalString());
-        $this->assertSame('SK4502000000001123100000', $vubParsed->accountNumber);
-        $this->assertSame('SK5502000000001232860000', $vubParsed->ownAccountNumber);
-        $this->assertSame('1234567890', $vubParsed->vs);
-        $this->assertSame('0308', $vubParsed->ks);
-        $this->assertSame('910', $vubParsed->ss);
-        $this->assertSame('ABC', $vubParsed->sign);
+        self::assertSame('13.37', $vubParsed->money?->toDecimalString());
+        self::assertSame('SK4502000000001123100000', $vubParsed->accountNumber);
+        self::assertSame('SK5502000000001232860000', $vubParsed->ownAccountNumber);
+        self::assertSame('1234567890', $vubParsed->vs);
+        self::assertSame('0308', $vubParsed->ks);
+        self::assertSame('910', $vubParsed->ss);
+        self::assertSame('ABC', $vubParsed->sign);
     }
 
     #[Test]
@@ -129,19 +129,19 @@ final class Review4FindingsTest extends TestCase
     {
         $parser = new SkCsobMailParser();
         $fromMessage = $parser->parse($this->sk('referencia platiteľa: NOTPROVIDED', 'informácia pre príjemcu: VS212049000 predplatne', 'NOVAK'));
-        $this->assertSame('212049000', $fromMessage->vs);
-        $this->assertSame('1150.00', $fromMessage->money?->toDecimalString());
+        self::assertSame('212049000', $fromMessage->vs);
+        self::assertSame('1150.00', $fromMessage->money?->toDecimalString());
 
         $emptyReference = $parser->parse($this->sk('referencia platiteľa: /VS/SS/KS', 'informácia pre príjemcu: VS212049000 predplatne', 'NOVAK'));
-        $this->assertSame('212049000', $emptyReference->vs);
+        self::assertSame('212049000', $emptyReference->vs);
 
         $structured = $parser->parse($this->sk('referencia platiteľa: /VS111/SS22/KS0308', 'informácia pre príjemcu: VS999', 'ADVS2'));
-        $this->assertSame('111', $structured->vs);
-        $this->assertSame('22', $structured->ss);
-        $this->assertSame('0308', $structured->ks);
+        self::assertSame('111', $structured->vs);
+        self::assertSame('22', $structured->ss);
+        self::assertSame('0308', $structured->ks);
 
         $nameOnly = $parser->parse($this->sk('referencia platiteľa: NOTPROVIDED', 'informácia pre príjemcu: predplatne', 'ADVS2'));
-        $this->assertNull($nameOnly->vs);
+        self::assertNull($nameOnly->vs);
     }
 
     #[Test]
@@ -149,41 +149,41 @@ final class Review4FindingsTest extends TestCase
     {
         $mail = $this->probe('dve-transakcie-s-casom.txt');
         $rows = new CsobMailParser()->parseAll($mail);
-        $this->assertCount(2, $rows);
-        $this->assertSame('100.00', $rows[0]->money?->toDecimalString());
-        $this->assertSame('200.00', $rows[1]->money?->toDecimalString());
-        $this->assertSame('14:30', $rows[0]->transactionDate?->format('H:i'));
-        $this->assertSame('15:45', $rows[1]->transactionDate?->format('H:i'));
+        self::assertCount(2, $rows);
+        self::assertSame('100.00', $rows[0]->money?->toDecimalString());
+        self::assertSame('200.00', $rows[1]->money?->toDecimalString());
+        self::assertSame('14:30', $rows[0]->transactionDate?->format('H:i'));
+        self::assertSame('15:45', $rows[1]->transactionDate?->format('H:i'));
 
         $facade = new BankMailsParser();
-        $this->assertCount(2, $facade->parseAll($mail, 'info@csob.cz'));
+        self::assertCount(2, $facade->parseAll($mail, 'info@csob.cz'));
         try {
             $facade->parse($mail, 'info@csob.cz');
-            $this->fail('parse() must refuse a multi-transaction mail');
+            self::fail('parse() must refuse a multi-transaction mail');
         } catch (MultipleTransactionsException $exception) {
-            $this->assertStringContainsString('parseAll()', $exception->getMessage());
+            self::assertStringContainsString('parseAll()', $exception->getMessage());
         }
-        $this->assertNull($facade->tryParse($mail, 'info@csob.cz'));
+        self::assertNull($facade->tryParse($mail, 'info@csob.cz'));
     }
 
     #[Test]
     public function recognizedTransactionWithoutAnAmountKeepsTheRow(): void
     {
         $parsed = new CsobMailParser()->parse("Dne 25.9.2018 byla na účtu 123456789 zaúčtovaná transakce typu: Došlá platba.\n");
-        $this->assertNull($parsed->money);
-        $this->assertSame('123456789', $parsed->accountNumber);
+        self::assertNull($parsed->money);
+        self::assertSame('123456789', $parsed->accountNumber);
     }
 
     #[Test]
     public function indentedAndNbspAlignedLinesStillParse(): void
     {
         $tatra = new TatraBankaMailParser()->parse("  16.1.2015 12:51 bol zostatok Vasho uctu SK1 zvyseny o 12,31 EUR.\n");
-        $this->assertSame('12.31', $tatra->money?->toDecimalString());
+        self::assertSame('12.31', $tatra->money?->toDecimalString());
 
         $nbsp = str_replace('suma:', "suma:\u{00A0}", $this->sk('referencia platiteľa: /VS212049000/SS/KS0308', 'informácia pre príjemcu: x', 'NOVAK'));
         $sk = new SkCsobMailParser()->parse($nbsp);
-        $this->assertSame('1150.00', $sk->money?->toDecimalString());
-        $this->assertSame('212049000', $sk->vs);
+        self::assertSame('1150.00', $sk->money?->toDecimalString());
+        self::assertSame('212049000', $sk->vs);
     }
 
     #[Test]
@@ -191,9 +191,9 @@ final class Review4FindingsTest extends TestCase
     {
         $mail = "RES=OK VS=1111\n> old note AMT=999.00\nAMT=10.00 CURR=EUR\n";
         $parsed = new TatraBankaSimpleMailParser()->parse($mail);
-        $this->assertSame('10.00', $parsed->money?->toDecimalString());
-        $this->assertSame('1111', $parsed->vs);
-        $this->assertSame('OK', $parsed->res);
+        self::assertSame('10.00', $parsed->money?->toDecimalString());
+        self::assertSame('1111', $parsed->vs);
+        self::assertSame('OK', $parsed->res);
     }
 
     #[Test]
@@ -201,7 +201,7 @@ final class Review4FindingsTest extends TestCase
     {
         $pgp = "-----BEGIN PGP MESSAGE-----\nabc\n-----END PGP MESSAGE-----\n";
         $facade = new BankMailsParser();
-        $this->assertNull($facade->tryParse($pgp));
+        self::assertNull($facade->tryParse($pgp));
         $this->expectException(UnsupportedBankException::class);
         $facade->parse($pgp);
     }
@@ -209,16 +209,16 @@ final class Review4FindingsTest extends TestCase
     #[Test]
     public function vubStoresSignAndRejectsABlankAmount(): void
     {
-        $mail = \Tomaj\BankMailsParser\Tests\Fixtures::load('vub/platba-sign');
+        $mail = Fixtures::load('vub/platba-sign');
         $parsed = new VubMailParser()->parse($mail);
-        $this->assertSame('ABC123', $parsed->sign);
-        $this->assertSame('13.37', $parsed->money?->toDecimalString());
+        self::assertSame('ABC123', $parsed->sign);
+        self::assertSame('13.37', $parsed->money?->toDecimalString());
 
         $blank = new VubMailParser()->parse("Dátum: 11.12.2019\nNa účet: SK2\nZ účtu: SK1\nSuma:\nVS: 10\nStav: ok\n");
-        $this->assertNull($blank->money);
-        $this->assertSame('SK1', $blank->accountNumber);
-        $this->assertSame('SK2', $blank->ownAccountNumber);
-        $this->assertSame('10', $blank->vs);
+        self::assertNull($blank->money);
+        self::assertSame('SK1', $blank->accountNumber);
+        self::assertSame('SK2', $blank->ownAccountNumber);
+        self::assertSame('10', $blank->vs);
     }
 
     #[Test]
@@ -226,29 +226,29 @@ final class Review4FindingsTest extends TestCase
     {
         $currency = Currency::fromCode('EUR');
         $restored = unserialize(serialize($currency));
-        $this->assertInstanceOf(Currency::class, $restored);
-        $this->assertTrue($currency->equals($restored));
+        self::assertInstanceOf(Currency::class, $restored);
+        self::assertTrue($currency->equals($restored));
 
         $money = Money::fromDecimalString('12,34', 'EUR', ',');
         $copy = Money::fromDecimalString('12.34', $restored, '.');
-        $this->assertTrue($money->equals($copy));
-        $this->assertFalse($money->equals(Money::fromDecimalString('12.35', 'EUR')));
-        $this->assertFalse($money->equals(Money::fromDecimalString('12.34', 'CZK')));
-        $this->assertFalse(Currency::fromCode('EUR')->equals(Currency::fromCode('CZK')));
+        self::assertTrue($money->equals($copy));
+        self::assertFalse($money->equals(Money::fromDecimalString('12.35', 'EUR')));
+        self::assertFalse($money->equals(Money::fromDecimalString('12.34', 'CZK')));
+        self::assertFalse(Currency::fromCode('EUR')->equals(Currency::fromCode('CZK')));
     }
 
     #[Test]
     public function mailContentTrimsNbspToNull(): void
     {
         $mail = new MailContent(vs: "\u{00A0}\u{2009}");
-        $this->assertNull($mail->vs);
+        self::assertNull($mail->vs);
         $kept = new MailContent(vs: "\u{00A0}12\u{00A0}");
-        $this->assertSame('12', $kept->vs);
+        self::assertSame('12', $kept->vs);
     }
 
     private function probe(string $name): string
     {
-        $path = dirname(__DIR__) . '/tests/fixtures/csob-cz/' . $name;
+        $path = __DIR__ . '/../tests/fixtures/csob-cz/' . $name;
         $body = file_get_contents($path);
         if ($body === false) {
             throw new \RuntimeException('Missing review fixture ' . $path);
@@ -278,6 +278,7 @@ final class FreeTextProbe implements ParserInterface
         return false;
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         return new MailContent();

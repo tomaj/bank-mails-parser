@@ -15,29 +15,29 @@ use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 class TatraBankaMailDecryptorTest extends TestCase
 {
     #[Test]
-    public function throwsExceptionForMissingKeyFile()
+    public function throwsExceptionForMissingKeyFile(): void
     {
         $this->expectException(ConfigurationException::class);
-        $this->expectExceptionMessage('missing path to TatraBanka PGP private key in config');
+        $this->expectExceptionMessageIsOrContains('missing path to TatraBanka PGP private key in config');
 
         $decryptor = new TatraBankaMailDecryptor('', 'passphrase');
         $decryptor->decrypt('some content');
     }
 
     #[Test]
-    public function throwsExceptionForNonExistentKeyFile()
+    public function throwsExceptionForNonExistentKeyFile(): void
     {
         $this->expectException(ConfigurationException::class);
-        $this->expectExceptionMessage('missing path to TatraBanka PGP private key in config');
+        $this->expectExceptionMessageIsOrContains('missing path to TatraBanka PGP private key in config');
 
         $decryptor = new TatraBankaMailDecryptor('/non/existent/path.asc', 'passphrase');
         $decryptor->decrypt('some content');
     }
 
     #[Test]
-    public function decryptsValidPGPMessage()
+    public function decryptsValidPGPMessage(): void
     {
-        $encryptedContent = file_get_contents(__DIR__ . '/../../fixtures/tatrabanka-statement/zasifrovany-vypis.txt');
+        $encryptedContent = (string) file_get_contents(__DIR__ . '/../../fixtures/tatrabanka-statement/zasifrovany-vypis.txt');
 
         $decryptor = new TatraBankaMailDecryptor(
             __DIR__ . '/../../fixtures/tatrabanka-statement/private-key.asc',
@@ -46,22 +46,21 @@ class TatraBankaMailDecryptorTest extends TestCase
 
         $decrypted = $decryptor->decrypt($encryptedContent);
 
-        $this->assertNotNull($decrypted);
-        $this->assertStringContainsString('2621234415', $decrypted);
+        self::assertStringContainsString('2621234415', $decrypted);
     }
 
     #[Test]
     public function rejectsAKeyThatContainsNoSecretPacket(): void
     {
         $path = tempnam(sys_get_temp_dir(), 'bmp-key');
-        $this->assertIsString($path);
+        self::assertIsString($path);
         file_put_contents($path, "\x80\x01\x00");
 
         try {
             new TatraBankaMailDecryptor($path, 'heslo')->decrypt('message');
-            $this->fail('A key without a secret packet must fail');
+            self::fail('A key without a secret packet must fail');
         } catch (ConfigurationException $exception) {
-            $this->assertSame('Private key passphrase is incorrect or the key has no usable secret key', $exception->getMessage());
+            self::assertSame('Private key passphrase is incorrect or the key has no usable secret key', $exception->getMessage());
         } finally {
             unlink($path);
         }
@@ -71,14 +70,14 @@ class TatraBankaMailDecryptorTest extends TestCase
     public function turnsLibraryWarningsIntoDecryptionException(): void
     {
         $path = tempnam(sys_get_temp_dir(), 'bmp-key');
-        $this->assertIsString($path);
+        self::assertIsString($path);
         file_put_contents($path, 'not-a-key');
 
         try {
             new TatraBankaMailDecryptor($path, 'heslo')->decrypt('message');
-            $this->fail('Library warnings must become an exception');
+            self::fail('Library warnings must become an exception');
         } catch (ConfigurationException $exception) {
-            $this->assertInstanceOf(DecryptionException::class, $exception->getPrevious());
+            self::assertInstanceOf(DecryptionException::class, $exception->getPrevious());
         } finally {
             unlink($path);
         }
@@ -93,11 +92,11 @@ class TatraBankaMailDecryptorTest extends TestCase
 
         try {
             $decryptor->decrypt($armored);
-            $this->fail('A literal packet is not an encrypted message');
+            self::fail('A literal packet is not an encrypted message');
         } catch (DecryptionException $exception) {
-            $this->assertInstanceOf(\Exception::class, $exception->getPrevious());
-            $this->assertSame(0, $exception->getCode());
-            $this->assertStringContainsString('Not an asymmetrically encrypted message', $exception->getMessage());
+            self::assertInstanceOf(\Exception::class, $exception->getPrevious());
+            self::assertSame(0, $exception->getCode());
+            self::assertStringContainsString('Not an asymmetrically encrypted message', $exception->getMessage());
         }
     }
 }

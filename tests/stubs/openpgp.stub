@@ -1,0 +1,96 @@
+<?php
+
+// PHPDoc types for the parts of singpolyma/openpgp-php that TatraBankaMailDecryptor uses.
+// The library declares no types, so without this stub PHPStan sees every value as mixed.
+
+class OpenPGP
+{
+    /**
+     * @param string $text
+     * @param string $header
+     * @return string|false|null
+     */
+    public static function unarmor($text, $header = 'PGP PUBLIC KEY BLOCK') {}
+
+    /**
+     * @param string $data
+     * @param string $marker
+     * @param array<string, string> $headers
+     * @return string
+     */
+    public static function enarmor($data, $marker = 'MESSAGE', array $headers = []) {}
+}
+
+/**
+ * @implements IteratorAggregate<int, OpenPGP_Packet>
+ * @implements ArrayAccess<int, OpenPGP_Packet>
+ */
+class OpenPGP_Message implements IteratorAggregate, ArrayAccess
+{
+    /**
+     * @var array<int, OpenPGP_Packet>
+     */
+    public $packets = [];
+
+    /**
+     * @param mixed $input
+     * @return ($input is string ? OpenPGP_Message : OpenPGP_Message|null)
+     */
+    public static function parse($input) {}
+
+    /**
+     * @return string
+     */
+    public function to_bytes() {}
+
+    /**
+     * @return ArrayIterator<int, OpenPGP_Packet>
+     */
+    #[\Override]
+    public function getIterator() {}
+}
+
+class OpenPGP_Packet
+{
+    /**
+     * @var mixed
+     */
+    public $data;
+}
+
+class OpenPGP_PublicKeyPacket extends OpenPGP_Packet {}
+
+class OpenPGP_SecretKeyPacket extends OpenPGP_PublicKeyPacket {}
+
+class OpenPGP_Crypt_Symmetric
+{
+    /**
+     * @param string $pass
+     * @param OpenPGP_SecretKeyPacket $packet
+     * @return OpenPGP_SecretKeyPacket|null
+     */
+    public static function decryptSecretKey($pass, $packet) {}
+
+    /**
+     * @param mixed $passphrases_and_keys
+     * @param OpenPGP_Message $message
+     * @param int $symmetric_algorithm
+     * @return OpenPGP_Message
+     */
+    public static function encrypt($passphrases_and_keys, $message, $symmetric_algorithm = 9) {}
+}
+
+class OpenPGP_Crypt_RSA
+{
+    /**
+     * @param mixed $key
+     * @param mixed $message
+     */
+    public function __construct($key = null, $message = null) {}
+
+    /**
+     * @param mixed $packet
+     * @return OpenPGP_Message|null
+     */
+    public function decrypt($packet) {}
+}

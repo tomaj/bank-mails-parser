@@ -48,7 +48,7 @@ final class FixtureCatalog
 
         if ($bank === 'tatrabanka-statement' && str_contains($body, '|')) {
             $parser = new TatraBankaStatementMailParser();
-            $lines = preg_split('/\n/', $body) ?: [];
+            $lines = explode("\n", $body);
             $transactions = [];
             foreach (array_slice($lines, 1) as $line) {
                 if (trim($line) === '') {

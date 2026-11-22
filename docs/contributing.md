@@ -34,16 +34,20 @@ cd bank-mails-parser
 # Install dependencies
 composer install
 
-# Run tests. phpunit.xml.dist always writes a coverage report, so this
-# needs pcov or xdebug. Without a coverage driver PHPUnit exits 1 and
-# reports "No tests executed!".
+# Run tests (no coverage driver needed)
 composer test
 
+# Run tests with a coverage report in build/ (needs xdebug or pcov)
+composer coverage
+
 # Check code style
-composer cs
+composer phpcs
 
 # Run static analysis
 composer phpstan
+
+# Check that Rector has nothing to change (composer rector-fix applies it)
+composer rector
 
 # Run all checks
 composer check
@@ -94,7 +98,7 @@ composer infection
 - ✅ All tests must pass (PHPUnit)
 - ✅ Code coverage should increase, not decrease
 - ✅ PHPStan level max with strict rules
-- ✅ Code style compliance (PHP-CS-Fixer with PER-CS + @PHP84Migration)
+- ✅ Code style compliance (PHP-CS-Fixer with PER-CS + @PHP8x4Migration)
 - ✅ Mutation Score Indicator (MSI) ≥ 89%, Covered MSI ≥ 90%
 
 ## Testing Requirements
@@ -220,7 +224,7 @@ Update `README.md`:
 Run all quality checks:
 
 ```bash
-composer check      # Runs cs, phpstan, test
+composer check      # Runs phpcs, phpstan, rector, test
 composer infection  # xdebug via XDEBUG_MODE=coverage; pcov gives a false lower MSI
 ```
 

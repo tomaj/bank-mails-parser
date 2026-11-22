@@ -36,9 +36,9 @@ final class ParsesBankMailTest extends TestCase
     {
         $parser = new TraitProbeParser();
 
-        $this->assertNull($parser->tryParse('invalid-argument'));
-        $this->assertNull($parser->tryParse('value-error'));
-        $this->assertNull($parser->tryParse('date-malformed'));
+        self::assertNull($parser->tryParse('invalid-argument'));
+        self::assertNull($parser->tryParse('value-error'));
+        self::assertNull($parser->tryParse('date-malformed'));
     }
 
     #[Test]
@@ -46,9 +46,9 @@ final class ParsesBankMailTest extends TestCase
     {
         $parser = new TraitProbeParser();
 
-        $this->assertNull($parser->optional(''));
-        $this->assertNull($parser->optional(null));
-        $this->assertSame('12', $parser->optional('12'));
+        self::assertNull($parser->optional(''));
+        self::assertNull($parser->optional(null));
+        self::assertSame('12', $parser->optional('12'));
     }
 
     #[Test]
@@ -56,8 +56,8 @@ final class ParsesBankMailTest extends TestCase
     {
         $parser = new TraitProbeParser();
 
-        $this->assertSame('SK12', $parser->account(" \t SK12 \t"));
-        $this->assertSame('SK 12', $parser->account("SK\u{00A0}\u{00A0}12"));
+        self::assertSame('SK12', $parser->account(" \t SK12 \t"));
+        self::assertSame('SK 12', $parser->account("SK\u{00A0}\u{00A0}12"));
     }
 }
 
@@ -71,6 +71,7 @@ final class TraitProbeParser implements ParserInterface
         return true;
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         if ($content === 'type') {

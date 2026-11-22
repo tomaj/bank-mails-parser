@@ -25,8 +25,8 @@ final class Review6FindingsTest extends TestCase
             . "Účel platby: NOVAK PETER faktura\n"
             . "ČSOB, a.s., IČO: 00001350\n";
         $parsed = new CsobMailParser()->parse($mail);
-        $this->assertNull($parsed->vs);
-        $this->assertSame('3300.00', $parsed->money?->toDecimalString());
+        self::assertNull($parsed->vs);
+        self::assertSame('3300.00', $parsed->money?->toDecimalString());
     }
 
     #[Test]
@@ -38,21 +38,21 @@ final class Review6FindingsTest extends TestCase
             . "Zpráva příjemci: Částka: záloha 2 500 Kč\n"
             . "Zůstatek na účtu po zaúčtování transakce: +1,00 CZK.\n";
         $advance = new CsobMailParser()->parse($cz);
-        $this->assertSame('2500.00', $advance->money?->toDecimalString());
-        $this->assertSame('Částka: záloha 2 500 Kč', $advance->receiverMessage);
+        self::assertSame('2500.00', $advance->money?->toDecimalString());
+        self::assertSame('Částka: záloha 2 500 Kč', $advance->receiverMessage);
 
         $note = str_replace('Částka: záloha 2 500 Kč', 'Dne 1.10.2026 byla na účtu chyba, vracím', $cz);
         $returned = new CsobMailParser()->parse($note);
-        $this->assertSame('Dne 1.10.2026 byla na účtu chyba, vracím', $returned->receiverMessage);
+        self::assertSame('Dne 1.10.2026 byla na účtu chyba, vracím', $returned->receiverMessage);
 
         $sk = "dňa 6.9.2019 bola na účte SK11 zaúčtovaná suma SEPA platobného príkazu:\n"
             . "suma: +10,00 EUR\n"
             . "informácia pre príjemcu: Suma: 50 EUR za obed\n";
-        $this->assertSame('Suma: 50 EUR za obed', new SkCsobMailParser()->parse($sk)->receiverMessage);
+        self::assertSame('Suma: 50 EUR za obed', new SkCsobMailParser()->parse($sk)->receiverMessage);
 
         $tatra = "16.1.2015 12:51 bol zostatok Vasho uctu SK1 zvyseny o 12,31 EUR.\n"
             . "Informacia pre prijemcu: suma: 12,31 EUR za januar\n";
-        $this->assertSame('suma: 12,31 EUR za januar', new TatraBankaMailParser()->parse($tatra)->receiverMessage);
+        self::assertSame('suma: 12,31 EUR za januar', new TatraBankaMailParser()->parse($tatra)->receiverMessage);
     }
 
     #[Test]
@@ -62,8 +62,8 @@ final class Review6FindingsTest extends TestCase
             . "Částka: +10,00 CZK\n"
             . "Zpráva příjemci: Částka: +99999,00 CZK\n";
         $parsed = new CsobMailParser()->parse($mail);
-        $this->assertSame('10.00', $parsed->money?->toDecimalString());
-        $this->assertSame('Částka: +99999,00 CZK', $parsed->receiverMessage);
+        self::assertSame('10.00', $parsed->money?->toDecimalString());
+        self::assertSame('Částka: +99999,00 CZK', $parsed->receiverMessage);
     }
 
     #[Test]
@@ -73,8 +73,8 @@ final class Review6FindingsTest extends TestCase
             . "suma: +10,00 EUR\n"
             . "informácia pre príjemcu: suma: +99999,00 EUR\n";
         $parsed = new SkCsobMailParser()->parse($mail);
-        $this->assertSame('10.00', $parsed->money?->toDecimalString());
-        $this->assertSame('suma: +99999,00 EUR', $parsed->receiverMessage);
+        self::assertSame('10.00', $parsed->money?->toDecimalString());
+        self::assertSame('suma: +99999,00 EUR', $parsed->receiverMessage);
     }
 
     #[Test]
@@ -85,8 +85,8 @@ final class Review6FindingsTest extends TestCase
             . "aktualny zostatok: 100,00 EUR\n"
             . "1.1.2026 00:00 bol zostatok Vasho uctu SK9 zvyseny o 99999,00 EUR.\n";
         $parsed = new TatraBankaMailParser()->parse($mail);
-        $this->assertSame('12.31', $parsed->money?->toDecimalString());
-        $this->assertSame('ahoj', $parsed->receiverMessage);
+        self::assertSame('12.31', $parsed->money?->toDecimalString());
+        self::assertSame('ahoj', $parsed->receiverMessage);
     }
 
     #[Test]
@@ -99,8 +99,8 @@ final class Review6FindingsTest extends TestCase
             . "Dne 1.1.2026 byl na účtu 123456789 zaúčtována transakce Došlá platba\n"
             . "Částka: +99999,00 CZK\n";
         $parsed = new BankMailsParser()->parseAll($mail, 'info@csob.cz');
-        $this->assertCount(1, $parsed);
-        $this->assertSame('10.00', $parsed[0]->money?->toDecimalString());
+        self::assertCount(1, $parsed);
+        self::assertSame('10.00', $parsed[0]->money?->toDecimalString());
     }
 
     #[Test]
@@ -112,8 +112,8 @@ final class Review6FindingsTest extends TestCase
             . "Dne 1.1.2026 byl na účtu 123456789 zaúčtovaný SEPA převod.\n"
             . "Částka: +99999,00 CZK\n";
         $parsed = new CsobMailParser()->parseAll($mail);
-        $this->assertCount(1, $parsed);
-        $this->assertSame('10.00', $parsed[0]->money?->toDecimalString());
+        self::assertCount(1, $parsed);
+        self::assertSame('10.00', $parsed[0]->money?->toDecimalString());
     }
 
     #[Test]
@@ -128,11 +128,11 @@ final class Review6FindingsTest extends TestCase
             . "Zůstatek na účtu po zaúčtování transakce: +20,00 CZK.\n";
         try {
             new CsobMailParser()->parseAll($mail);
-            $this->fail('A second transaction without its own balance must be rejected');
+            self::fail('A second transaction without its own balance must be rejected');
         } catch (InvalidEmailFormatException $exception) {
-            $this->assertStringContainsString('balance', strtolower($exception->getMessage()));
+            self::assertStringContainsString('balance', strtolower($exception->getMessage()));
         }
-        $this->assertNull(new BankMailsParser()->tryParse($mail, 'info@csob.cz'));
+        self::assertNull(new BankMailsParser()->tryParse($mail, 'info@csob.cz'));
     }
 
     #[Test]
@@ -143,27 +143,27 @@ final class Review6FindingsTest extends TestCase
             . "Zpráva příjemci: ahoj\u{2028}Dne 1.1.2026 byl na účtu 1 zaúčtována transakce Došlá platba\n"
             . "Variabilní symbol: 1111\n";
         $parsed = new CsobMailParser()->parseAll($mail);
-        $this->assertCount(1, $parsed);
-        $this->assertSame('10.00', $parsed[0]->money?->toDecimalString());
+        self::assertCount(1, $parsed);
+        self::assertSame('10.00', $parsed[0]->money?->toDecimalString());
     }
 
     #[Test]
     public function supportsReturnsFalseInsteadOfThrowing(): void
     {
         $spaces = str_repeat(' ', 2_000_000);
-        $this->assertFalse(new CsobMailParser()->supports($spaces));
-        $this->assertFalse(new SkCsobMailParser()->supports($spaces));
-        $this->assertFalse(new TatraBankaMailParser()->supports($spaces));
-        $this->assertFalse(new TatraBankaSimpleMailParser()->supports($spaces));
-        $this->assertFalse(new VubMailParser()->supports($spaces));
+        self::assertFalse(new CsobMailParser()->supports($spaces));
+        self::assertFalse(new SkCsobMailParser()->supports($spaces));
+        self::assertFalse(new TatraBankaMailParser()->supports($spaces));
+        self::assertFalse(new TatraBankaSimpleMailParser()->supports($spaces));
+        self::assertFalse(new VubMailParser()->supports($spaces));
         $nbsp = str_repeat("\u{00A0}", 200_000);
-        $this->assertFalse(new CsobMailParser()->supports($nbsp));
+        self::assertFalse(new CsobMailParser()->supports($nbsp));
 
         try {
             new BankMailsParser()->parseAll($spaces);
-            $this->fail('Whitespace is not a bank mail');
-        } catch (UnsupportedBankException) {
-            $this->assertTrue(true);
+            self::fail('Whitespace is not a bank mail');
+        } catch (UnsupportedBankException $exception) {
+            self::assertStringContainsString('No parser found', $exception->getMessage());
         }
     }
 
@@ -171,19 +171,19 @@ final class Review6FindingsTest extends TestCase
     public function cardPayPrefersHmacWhenBothSignaturesArePresent(): void
     {
         $parsed = new TatraBankaSimpleMailParser()->parse('AMT=1.00 CURR=978 VS=1 RES=OK SIGN=ABC HMAC=def');
-        $this->assertSame('def', $parsed->sign);
-        $this->assertSame('1.00', $parsed->money?->toDecimalString());
-        $this->assertSame('EUR', $parsed->money?->currency->value);
+        self::assertSame('def', $parsed->sign);
+        self::assertSame('1.00', $parsed->money?->toDecimalString());
+        self::assertSame('EUR', $parsed->money->currency->value);
     }
 
     #[Test]
     public function cardPayProseOnTheSameLineStillParses(): void
     {
         $parsed = new TatraBankaSimpleMailParser()->parse('Vysledok: VS=1152201233 RES=OK AC=558058 SIGN=C0CBF27F5D97841E');
-        $this->assertSame('1152201233', $parsed->vs);
-        $this->assertSame('OK', $parsed->res);
-        $this->assertSame('558058', $parsed->ac);
-        $this->assertSame('C0CBF27F5D97841E', $parsed->sign);
+        self::assertSame('1152201233', $parsed->vs);
+        self::assertSame('OK', $parsed->res);
+        self::assertSame('558058', $parsed->ac);
+        self::assertSame('C0CBF27F5D97841E', $parsed->sign);
     }
 
     #[Test]
@@ -193,6 +193,6 @@ final class Review6FindingsTest extends TestCase
             . "Částka: +1 234,56 CZK\n"
             . "Účet protistrany: 1122334455/9999<br>\n";
         $parsed = new CsobMailParser()->parse($mail);
-        $this->assertSame('1122334455/9999', $parsed->sourceAccountNumber);
+        self::assertSame('1122334455/9999', $parsed->sourceAccountNumber);
     }
 }

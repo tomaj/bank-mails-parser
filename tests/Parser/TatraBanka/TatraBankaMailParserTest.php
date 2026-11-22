@@ -8,233 +8,234 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
+use Tomaj\BankMailsParser\Tests\Fixtures;
 
 #[CoversClass(TatraBankaMailParser::class)]
 class TatraBankaMailParserTest extends TestCase
 {
     #[Test]
-    public function simpleEmail()
+    public function simpleEmail(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/notifikacia');
+        $email = Fixtures::load('tatrabanka/notifikacia');
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('12.31', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertEquals('test-sprava', $mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2015-01-16 12:51:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812353347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('12.31', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertSame('test-sprava', $mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2015-01-16 12:51:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function simpleEmailWithoutSourceAccountNumberPrefix()
+    public function simpleEmailWithoutSourceAccountNumberPrefix(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/notifikacia-bez-predpony-uctu');
+        $email = Fixtures::load('tatrabanka/notifikacia-bez-predpony-uctu');
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('12.31', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertEquals('test-sprava', $mailContent->receiverMessage);
-        $this->assertEquals('1100/000000-261426464', $mailContent->description);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->ss);
-        $this->assertSame(new \DateTimeImmutable('2015-01-16 12:51:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812353347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('12.31', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertSame('test-sprava', $mailContent->receiverMessage);
+        self::assertSame('1100/000000-261426464', $mailContent->description);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->ss);
+        self::assertSame(new \DateTimeImmutable('2015-01-16 12:51:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function allInputsWithDecreaseEmail()
+    public function allInputsWithDecreaseEmail(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba-43');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba-43');
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('USD', $mailContent->money?->currency->value);
-        $this->assertSame('-43.29', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertEquals('9087654321', $mailContent->ss);
-        $this->assertEquals('5428175648', $mailContent->ks);
-        $this->assertEquals('test-sprava-druha', $mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-16 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812353347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('USD', $mailContent->money?->currency->value);
+        self::assertSame('-43.29', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertSame('9087654321', $mailContent->ss);
+        self::assertSame('5428175648', $mailContent->ks);
+        self::assertSame('test-sprava-druha', $mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-16 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function emailWithoutReceiverMessage()
+    public function emailWithoutReceiverMessage(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('USD', $mailContent->money?->currency->value);
-        $this->assertSame('-1243.29', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertEquals('9087654321', $mailContent->ss);
-        $this->assertEquals('5428175648', $mailContent->ks);
-        $this->assertNull($mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-16 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812353347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('USD', $mailContent->money?->currency->value);
+        self::assertSame('-1243.29', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertSame('9087654321', $mailContent->ss);
+        self::assertSame('5428175648', $mailContent->ks);
+        self::assertNull($mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-16 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function emailWithoutDescription()
+    public function emailWithoutDescription(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba-bez-ccint');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba-bez-ccint');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812353347235', $mailContent->accountNumber);
-        $this->assertNull($mailContent->sourceAccountNumber);
-        $this->assertEquals('USD', $mailContent->money?->currency->value);
-        $this->assertSame('-1243.29', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertEquals('9087654321', $mailContent->ss);
-        $this->assertEquals('5428175648', $mailContent->ks);
-        $this->assertEquals('test-sprava', $mailContent->receiverMessage);
-        $this->assertNull($mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-16 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812353347235', $mailContent->accountNumber);
+        self::assertNull($mailContent->sourceAccountNumber);
+        self::assertSame('USD', $mailContent->money?->currency->value);
+        self::assertSame('-1243.29', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertSame('9087654321', $mailContent->ss);
+        self::assertSame('5428175648', $mailContent->ks);
+        self::assertSame('test-sprava', $mailContent->receiverMessage);
+        self::assertNull($mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-16 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function emailWithoutVariableSymbol()
+    public function emailWithoutVariableSymbol(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba-mala');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba-mala');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812369347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('-2.20', $mailContent->money?->toDecimalString());
-        $this->assertNull($mailContent->vs);
-        $this->assertEquals('9087654322', $mailContent->ss);
-        $this->assertEquals('5428175649', $mailContent->ks);
-        $this->assertNull($mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812369347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('-2.20', $mailContent->money->toDecimalString());
+        self::assertNull($mailContent->vs);
+        self::assertSame('9087654322', $mailContent->ss);
+        self::assertSame('5428175649', $mailContent->ks);
+        self::assertNull($mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function emailWithVariableSymbolInReceiverMessage()
+    public function emailWithVariableSymbolInReceiverMessage(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba-mala-2');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba-mala-2');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812369347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('-2.20', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertEquals('VS1234056789', $mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812369347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('-2.20', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertSame('VS1234056789', $mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     // Referencia platitela: 1234056789
     #[Test]
-    public function emailWithVariableSymbolInUniqueMandateReferenceWithoutPrefix()
+    public function emailWithVariableSymbolInUniqueMandateReferenceWithoutPrefix(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba-mala-3');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba-mala-3');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812369347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('-2.20', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertNull($mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812369347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('-2.20', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertNull($mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     // Informacia pre prijemcu: 1234056789
-    public function testEmailWithVariableSymbolInReceiverMessageWithoutVSPrefix()
+    public function testEmailWithVariableSymbolInReceiverMessageWithoutVSPrefix(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/odchadzajuca-platba-mala-4');
+        $email = Fixtures::load('tatrabanka/odchadzajuca-platba-mala-4');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812369347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('-2.20', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertEquals('1234056789', $mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812369347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('-2.20', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertSame('1234056789', $mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     // Creditor Reference Information - SEPA XML format
     // Informacia pre prijemcu: (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
     #[Test]
-    public function emailWithVariableSymbolInReceiverMessageCreditorReferenceInformation()
+    public function emailWithVariableSymbolInReceiverMessageCreditorReferenceInformation(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/vs-v-sprave');
+        $email = Fixtures::load('tatrabanka/vs-v-sprave');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812369347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('-2.20', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertEquals('(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)', $mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812369347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('-2.20', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertSame('(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)', $mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     // Transaction date with spaces (16. 1. 2015 12:51)
     #[Test]
-    public function emailWithSecondaryTransactionDateFormat()
+    public function emailWithSecondaryTransactionDateFormat(): void
     {
-        $email = \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/vs-v-sprave-cdtr');
+        $email = Fixtures::load('tatrabanka/vs-v-sprave-cdtr');
 
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->parse($email);
 
-        $this->assertEquals('SK9812369347235', $mailContent->accountNumber);
-        $this->assertEquals('1100/000000-261426464', $mailContent->sourceAccountNumber);
-        $this->assertEquals('EUR', $mailContent->money?->currency->value);
-        $this->assertSame('-2.20', $mailContent->money?->toDecimalString());
-        $this->assertEquals('1234056789', $mailContent->vs);
-        $this->assertNull($mailContent->ss);
-        $this->assertNull($mailContent->ks);
-        $this->assertEquals('(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)', $mailContent->receiverMessage);
-        $this->assertEquals('CCINT 1100/000000-261426464', $mailContent->description);
-        $this->assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
+        self::assertSame('SK9812369347235', $mailContent->accountNumber);
+        self::assertSame('1100/000000-261426464', $mailContent->sourceAccountNumber);
+        self::assertSame('EUR', $mailContent->money?->currency->value);
+        self::assertSame('-2.20', $mailContent->money->toDecimalString());
+        self::assertSame('1234056789', $mailContent->vs);
+        self::assertNull($mailContent->ss);
+        self::assertNull($mailContent->ks);
+        self::assertSame('(CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)', $mailContent->receiverMessage);
+        self::assertSame('CCINT 1100/000000-261426464', $mailContent->description);
+        self::assertSame(new \DateTimeImmutable('2015-01-12 12:11:00', new \DateTimeZone('Europe/Bratislava'))->getTimestamp(), $mailContent->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function errorEmail()
+    public function errorEmail(): void
     {
         $email = '4321/KS5428175648
 Informacia pre prijemcu: test-sprava-druha
@@ -251,102 +252,102 @@ Odporucame Vam mazat si po precitani prichadzajuce bmail notifikacie. Historiu u
 ';
         $tatrabankaMailParser = new TatraBankaMailParser();
         $mailContent = $tatrabankaMailParser->tryParse($email);
-        $this->assertNull($mailContent);
+        self::assertNull($mailContent);
     }
 
     #[Test]
-    public function emailWithNegativeAmountFromZnizeny()
+    public function emailWithNegativeAmountFromZnizeny(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 znizeny o 100,00 EUR.';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertSame('-100.00', $result->money?->toDecimalString());
+        self::assertSame('-100.00', $result->money?->toDecimalString());
     }
 
     #[Test]
-    public function emailWithPositiveAmountFromZvyseny()
+    public function emailWithPositiveAmountFromZvyseny(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 50,00 EUR.';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertSame('50.00', $result->money?->toDecimalString());
+        self::assertSame('50.00', $result->money?->toDecimalString());
     }
 
     #[Test]
-    public function emailWithAlternativeDateFormat()
+    public function emailWithAlternativeDateFormat(): void
     {
         $email = '19.5.2026 9:40 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertNotFalse($result->transactionDate?->getTimestamp());
-        $this->assertSame('10.00', $result->money?->toDecimalString());
+        self::assertNotNull($result->transactionDate);
+        self::assertSame('10.00', $result->money?->toDecimalString());
     }
 
     #[Test]
-    public function emailWithSpacesInAmount()
+    public function emailWithSpacesInAmount(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 1 234,56 EUR.';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertSame('1234.56', $result->money?->toDecimalString());
+        self::assertSame('1234.56', $result->money?->toDecimalString());
     }
 
     #[Test]
-    public function emailWithDescriptionOnly()
+    public function emailWithDescriptionOnly(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
 Popis transakcie: TRANSFER FROM ACCOUNT';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertEquals('TRANSFER FROM ACCOUNT', $result->description);
-        $this->assertEquals('FROM ACCOUNT', $result->sourceAccountNumber);
+        self::assertSame('TRANSFER FROM ACCOUNT', $result->description);
+        self::assertSame('FROM ACCOUNT', $result->sourceAccountNumber);
     }
 
     #[Test]
-    public function emailWithSingleWordDescription()
+    public function emailWithSingleWordDescription(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
 Popis transakcie: PAYMENT';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertEquals('PAYMENT', $result->description);
-        $this->assertEquals('PAYMENT', $result->sourceAccountNumber);
+        self::assertSame('PAYMENT', $result->description);
+        self::assertSame('PAYMENT', $result->sourceAccountNumber);
     }
 
     #[Test]
-    public function emailWithEmptyVsSsKsInStructuredRef()
+    public function emailWithEmptyVsSsKsInStructuredRef(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
 Referencia platitela: /VS/SS/KS';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertNull($result->vs);
-        $this->assertNull($result->ss);
-        $this->assertNull($result->ks);
+        self::assertNull($result->vs);
+        self::assertNull($result->ss);
+        self::assertNull($result->ks);
     }
 
     #[Test]
-    public function emailWithMultipleTimeFormats()
+    public function emailWithMultipleTimeFormats(): void
     {
         $email1 = '12. 1. 2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.';
         $parser = new TatraBankaMailParser();
         $result1 = $parser->parse($email1);
-        $this->assertNotEquals(false, $result1->transactionDate?->getTimestamp());
+        self::assertNotEquals(false, $result1->transactionDate?->getTimestamp());
 
         $email2 = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.';
         $result2 = $parser->parse($email2);
-        $this->assertNotEquals(false, $result2->transactionDate?->getTimestamp());
+        self::assertNotEquals(false, $result2->transactionDate?->getTimestamp());
     }
 
     #[Test]
-    public function emailWithReferenciaPlatelaMultiline()
+    public function emailWithReferenciaPlatelaMultiline(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
 Some text before
@@ -355,13 +356,13 @@ Some text after';
         $parser = new TatraBankaMailParser();
         $result = $parser->parse($email);
 
-        $this->assertEquals('1234567890', $result->vs);
-        $this->assertEquals('9876543210', $result->ss);
-        $this->assertEquals('0308', $result->ks);
+        self::assertSame('1234567890', $result->vs);
+        self::assertSame('9876543210', $result->ss);
+        self::assertSame('0308', $result->ks);
     }
 
     #[Test]
-    public function emailWithVsInStructuredRefFormat()
+    public function emailWithVsInStructuredRefFormat(): void
     {
         // Tests VS extraction from /VS format with correct array indices
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
@@ -370,13 +371,13 @@ Referencia platitela: /VS1234567890/SS9876543210/KS0308';
         $result = $parser->parse($email);
 
         // Must extract correct indices: [1] for VS, [2] for SS, [3] for KS
-        $this->assertEquals('1234567890', $result->vs);
-        $this->assertEquals('9876543210', $result->ss);
-        $this->assertEquals('0308', $result->ks);
+        self::assertSame('1234567890', $result->vs);
+        self::assertSame('9876543210', $result->ss);
+        self::assertSame('0308', $result->ks);
     }
 
     #[Test]
-    public function emailWithVsAlreadySetFromStructuredRef()
+    public function emailWithVsAlreadySetFromStructuredRef(): void
     {
         // When VS is set from structured ref, vs([0-9]) pattern should not overwrite
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
@@ -386,11 +387,11 @@ Note: vs9999999999 in description';
         $result = $parser->parse($email);
 
         // Should keep VS from structured ref (1111111111), not overwrite with vs pattern
-        $this->assertEquals('1111111111', $result->vs);
+        self::assertSame('1111111111', $result->vs);
     }
 
     #[Test]
-    public function emailWithPregMatchFailure()
+    public function emailWithPregMatchFailure(): void
     {
         $email = '12.1.2015 12:11 bol zostatok Vasho uctu SK123 zvyseny o 10,00 EUR.
 Referencia platitela: no_vs_here_just_text';
@@ -398,6 +399,6 @@ Referencia platitela: no_vs_here_just_text';
         $result = $parser->parse($email);
 
         // When regex doesn't match, vs should remain null (not get garbage from failed match)
-        $this->assertNull($result->vs);
+        self::assertNull($result->vs);
     }
 }

@@ -10,9 +10,15 @@ use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
 use Tomaj\BankMailsParser\Exception\MultipleTransactionsException;
 use Tomaj\BankMailsParser\Exception\ParseException;
 use Tomaj\BankMailsParser\Exception\UnsupportedBankException;
+use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
+use Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser;
 use Tomaj\BankMailsParser\Parser\ParserInterface;
 use Tomaj\BankMailsParser\Parser\SenderHost;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
+use Tomaj\BankMailsParser\Parser\Vub\VubMailParser;
 
 /**
  * Facade that selects a parser from the email body.
@@ -94,14 +100,7 @@ final class BankMailsParser
         if ($domains === []) {
             return false;
         }
-
-        foreach ($domains as $domain) {
-            if (SenderHost::matches($sender, $domain)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($domains, fn($domain): bool => SenderHost::matches($sender, $domain));
     }
 
     public function parse(string $content, ?string $sender = null, ?string $subject = null): MailContent
@@ -138,13 +137,13 @@ final class BankMailsParser
 
     private function registerDefaultParsers(): void
     {
-        $this->registerParser(new Parser\TatraBanka\TatraBankaMailParser());
-        $this->registerParser(new Parser\TatraBanka\TatraBankaSimpleMailParser());
+        $this->registerParser(new TatraBankaMailParser());
+        $this->registerParser(new TatraBankaSimpleMailParser());
         if ($this->decryptor instanceof TatraBankaMailDecryptor) {
-            $this->registerParser(new Parser\TatraBanka\TatraBankaStatementMailParser($this->decryptor));
+            $this->registerParser(new TatraBankaStatementMailParser($this->decryptor));
         }
-        $this->registerParser(new Parser\Csob\CsobMailParser());
-        $this->registerParser(new Parser\Csob\SkCsobMailParser());
-        $this->registerParser(new Parser\Vub\VubMailParser());
+        $this->registerParser(new CsobMailParser());
+        $this->registerParser(new SkCsobMailParser());
+        $this->registerParser(new VubMailParser());
     }
 }

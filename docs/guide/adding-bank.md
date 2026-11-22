@@ -214,7 +214,7 @@ Fix any type errors or add proper PHPStan annotations.
 Check code style with PHP-CS-Fixer:
 
 ```bash
-composer cs
+composer phpcs
 ```
 
 Fix automatically:

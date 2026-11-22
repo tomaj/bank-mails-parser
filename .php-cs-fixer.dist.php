@@ -9,10 +9,10 @@ $finder = PhpCsFixer\Finder::create()
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 
-return (new PhpCsFixer\Config)
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PER-CS' => true,
-        '@PHP84Migration' => true,
+        '@PHP8x4Migration' => true,
         'declare_strict_types' => true,
         'array_syntax' => ['syntax' => 'short'],
         'ordered_imports' => ['sort_algorithm' => 'alpha'],
@@ -21,6 +21,7 @@ return (new PhpCsFixer\Config)
         'trailing_comma_in_multiline' => [
             'elements' => ['arrays', 'arguments', 'parameters'],
         ],
+        'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

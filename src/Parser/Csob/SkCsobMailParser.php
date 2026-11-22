@@ -82,6 +82,7 @@ final readonly class SkCsobMailParser implements ParserInterface
         return $parsed;
     }
 
+    #[\Override]
     public function parse(string $content): MailContent
     {
         $original = $this->normalizeHtmlLineBreaks($this->requireUniformLineBreaks($content));

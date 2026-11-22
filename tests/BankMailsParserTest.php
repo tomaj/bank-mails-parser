@@ -27,9 +27,9 @@ final class BankMailsParserTest extends TestCase
         $parser = new BankMailsParser();
         $mailContent = $parser->parse($this->tatraEmail(), 'nonstopbanking@tatrabanka.sk', 'Tatra banka');
 
-        $this->assertSame('12.31', $mailContent->money?->toDecimalString());
-        $this->assertSame(Currency::fromCode('EUR'), $mailContent->money?->currency);
-        $this->assertSame('SK9812353347235', $mailContent->accountNumber);
+        self::assertSame('12.31', $mailContent->money?->toDecimalString());
+        self::assertSame(Currency::fromCode('EUR'), $mailContent->money->currency);
+        self::assertSame('SK9812353347235', $mailContent->accountNumber);
     }
 
     #[Test]
@@ -38,10 +38,10 @@ final class BankMailsParserTest extends TestCase
         $parser = new BankMailsParser();
         $mailContent = $parser->parse('AMT=33.99 CURR=978 VS=5000001234 RES=OK TIMESTAMP=25112016223023');
 
-        $this->assertSame('33.99', $mailContent->money?->toDecimalString());
-        $this->assertSame(Currency::fromCode('EUR'), $mailContent->money?->currency);
-        $this->assertSame('5000001234', $mailContent->vs);
-        $this->assertSame('2016-11-25 22:30:23', $mailContent->transactionDate?->format('Y-m-d H:i:s'));
+        self::assertSame('33.99', $mailContent->money?->toDecimalString());
+        self::assertSame(Currency::fromCode('EUR'), $mailContent->money->currency);
+        self::assertSame('5000001234', $mailContent->vs);
+        self::assertSame('2016-11-25 22:30:23', $mailContent->transactionDate?->format('Y-m-d H:i:s'));
     }
 
     #[Test]
@@ -60,7 +60,7 @@ final class BankMailsParserTest extends TestCase
         $rows = $parser->parseAll($email);
         $mailContent = $rows[0];
 
-        $this->assertSame('13.37', $mailContent->money?->toDecimalString());
+        self::assertSame('13.37', $mailContent->money?->toDecimalString());
         $this->expectException(MultipleTransactionsException::class);
         $parser->parse($email);
     }
@@ -73,9 +73,9 @@ final class BankMailsParserTest extends TestCase
 
         $mailContent = $parser->parse($content, 'info@csob.cz');
 
-        $this->assertSame('1234.56', $mailContent->money?->toDecimalString());
-        $this->assertSame(Currency::fromCode('CZK'), $mailContent->money?->currency);
-        $this->assertSame('123456789', $mailContent->accountNumber);
+        self::assertSame('1234.56', $mailContent->money?->toDecimalString());
+        self::assertSame(Currency::fromCode('CZK'), $mailContent->money->currency);
+        self::assertSame('123456789', $mailContent->accountNumber);
     }
 
     #[Test]
@@ -86,8 +86,8 @@ final class BankMailsParserTest extends TestCase
 
         $mailContent = $parser->parse($content, 'info@csob.sk');
 
-        $this->assertSame('10.50', $mailContent->money?->toDecimalString());
-        $this->assertSame(Currency::fromCode('EUR'), $mailContent->money?->currency);
+        self::assertSame('10.50', $mailContent->money?->toDecimalString());
+        self::assertSame(Currency::fromCode('EUR'), $mailContent->money->currency);
     }
 
     #[Test]
@@ -98,9 +98,9 @@ final class BankMailsParserTest extends TestCase
 
         $mailContent = $parser->parse($content, 'notification@vub.sk');
 
-        $this->assertSame('13.37', $mailContent->money?->toDecimalString());
-        $this->assertSame(Currency::fromCode('EUR'), $mailContent->money?->currency);
-        $this->assertSame('9999999999', $mailContent->vs);
+        self::assertSame('13.37', $mailContent->money?->toDecimalString());
+        self::assertSame(Currency::fromCode('EUR'), $mailContent->money->currency);
+        self::assertSame('9999999999', $mailContent->vs);
     }
 
     #[Test]
@@ -109,7 +109,7 @@ final class BankMailsParserTest extends TestCase
         $parser = new BankMailsParser();
 
         $this->expectException(UnsupportedBankException::class);
-        $this->expectExceptionMessage('No parser found for the supplied sender.');
+        $this->expectExceptionMessageIsOrContains('No parser found for the supplied sender.');
 
         $parser->parse('This is not a bank email', 'unknown@example.test');
     }
@@ -129,8 +129,8 @@ final class BankMailsParserTest extends TestCase
     {
         $parser = new BankMailsParser();
 
-        $this->assertNull($parser->tryParse('This is not a bank email'));
-        $this->assertNull($parser->tryParse('not a payment', 'notification@vub.sk'));
+        self::assertNull($parser->tryParse('This is not a bank email'));
+        self::assertNull($parser->tryParse('not a payment', 'notification@vub.sk'));
     }
 
     #[Test]
@@ -138,7 +138,7 @@ final class BankMailsParserTest extends TestCase
     {
         $parser = new BankMailsParser([]);
 
-        $this->assertCount(0, $parser->getParsers());
+        self::assertCount(0, $parser->getParsers());
 
         $parser->registerParser(new class implements ParserInterface {
             use ParsesBankMail;
@@ -149,16 +149,17 @@ final class BankMailsParserTest extends TestCase
                 return str_contains($content, 'CUSTOM-BANK');
             }
 
+            #[\Override]
             public function parse(string $content): MailContent
             {
                 return new MailContent(money: Money::fromDecimalString('1.50', Currency::fromCode('EUR')), vs: '42');
             }
         });
 
-        $this->assertCount(1, $parser->getParsers());
+        self::assertCount(1, $parser->getParsers());
         $mailContent = $parser->parse('CUSTOM-BANK payment');
-        $this->assertSame('1.50', $mailContent->money?->toDecimalString());
-        $this->assertSame('42', $mailContent->vs);
+        self::assertSame('1.50', $mailContent->money?->toDecimalString());
+        self::assertSame('42', $mailContent->vs);
     }
 
     #[Test]
@@ -166,11 +167,11 @@ final class BankMailsParserTest extends TestCase
     {
         $parser = new BankMailsParser();
 
-        $this->assertCount(5, $parser->getParsers());
+        self::assertCount(5, $parser->getParsers());
     }
 
     private function tatraEmail(): string
     {
-        return \Tomaj\BankMailsParser\Tests\Fixtures::load('tatrabanka/notifikacia-kratka');
+        return Fixtures::load('tatrabanka/notifikacia-kratka');
     }
 }

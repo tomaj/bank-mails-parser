@@ -37,16 +37,16 @@ final readonly class TatraBankaMailDecryptor
             }
 
             $secret = null;
-            // @phpstan-ignore foreach.nonIterable (OpenPGP library has dynamic types)
+            // OpenPGP_SecretSubkeyPacket extends OpenPGP_SecretKeyPacket, so this accepts both
             foreach ($parsedKey as $packet) {
-                if (!($packet instanceof \OpenPGP_SecretKeyPacket || $packet instanceof \OpenPGP_SecretSubkeyPacket)) {
+                if (!$packet instanceof \OpenPGP_SecretKeyPacket) {
                     continue;
                 }
 
                 $secret = \OpenPGP_Crypt_Symmetric::decryptSecretKey($this->passphrase, $packet);
             }
 
-            if (!($secret instanceof \OpenPGP_SecretKeyPacket || $secret instanceof \OpenPGP_SecretSubkeyPacket)) {
+            if (!$secret instanceof \OpenPGP_SecretKeyPacket) {
                 throw new ConfigurationException('Private key passphrase is incorrect or the key has no usable secret key');
             }
 
@@ -73,9 +73,7 @@ final readonly class TatraBankaMailDecryptor
 
         try {
             return $callback();
-        } catch (ConfigurationException $exception) {
-            throw $exception;
-        } catch (DecryptionException $exception) {
+        } catch (ConfigurationException|DecryptionException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
             throw new DecryptionException($exception->getMessage(), 0, $exception);

@@ -1,12 +1,17 @@
 includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
     - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
     level: max
     paths:
         - src
-    ignoreErrors:
-        - path: src/Parser/TatraBanka/TatraBankaMailDecryptor.php
-          message: '#Instanceof between mixed and OpenPGP_SecretSubkeyPacket#'
-        - path: src/Parser/TatraBanka/TatraBankaMailDecryptor.php
-          message: '#^(Argument of an invalid type|Cannot access|Method .* should return)#'
+        - tests
+    checkMissingOverrideMethodAttribute: true
+    checkUninitializedProperties: true
+    reportUnmatchedIgnoredErrors: true
+    stubFiles:
+        - tests/stubs/openpgp.stub

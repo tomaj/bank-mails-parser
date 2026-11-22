@@ -17,16 +17,16 @@ final class BankDateTest extends TestCase
     public function parsesInBratislavaAndRejectsInvalidDates(): void
     {
         $zone = BankDate::bratislava();
-        $this->assertSame('Europe/Bratislava', $zone->getName());
-        $this->assertSame('UTC', BankDate::utc()->getName());
+        self::assertSame('Europe/Bratislava', $zone->getName());
+        self::assertSame('UTC', BankDate::utc()->getName());
 
         $parsed = BankDate::parse('6.9.2019', '!j.n.Y', $zone);
-        $this->assertInstanceOf(DateTimeImmutable::class, $parsed);
-        $this->assertSame('2019-09-06T00:00:00+02:00', $parsed->format('c'));
+        self::assertInstanceOf(DateTimeImmutable::class, $parsed);
+        self::assertSame('2019-09-06T00:00:00+02:00', $parsed->format('c'));
 
-        $this->assertNull(BankDate::parse('not-a-date', '!j.n.Y', $zone));
-        $this->assertNull(BankDate::parse('31.2.2015', '!j.n.Y', $zone));
-        $this->assertNull(BankDate::parse('6.9.2019', '!!!', $zone));
+        self::assertNull(BankDate::parse('not-a-date', '!j.n.Y', $zone));
+        self::assertNull(BankDate::parse('31.2.2015', '!j.n.Y', $zone));
+        self::assertNull(BankDate::parse('6.9.2019', '!!!', $zone));
     }
 
     #[Test]
@@ -35,9 +35,9 @@ final class BankDateTest extends TestCase
         $zone = BankDate::bratislava();
         $parsed = BankDate::parseFirst('6.9.2019', ['!Y-m-d', '!j.n.Y'], $zone);
 
-        $this->assertInstanceOf(DateTimeImmutable::class, $parsed);
-        $this->assertSame('2019-09-06', $parsed->format('Y-m-d'));
-        $this->assertNull(BankDate::parseFirst('nope', ['!Y-m-d', '!j.n.Y'], $zone));
+        self::assertInstanceOf(DateTimeImmutable::class, $parsed);
+        self::assertSame('2019-09-06', $parsed->format('Y-m-d'));
+        self::assertNull(BankDate::parseFirst('nope', ['!Y-m-d', '!j.n.Y'], $zone));
     }
 
     #[Test]
@@ -60,13 +60,13 @@ final class BankDateTest extends TestCase
         ];
         foreach ($months as $name => $month) {
             $parsed = BankDate::parseEnglish('16 ' . $name . ' 2015 12:51', $zone);
-            $this->assertInstanceOf(DateTimeImmutable::class, $parsed);
-            $this->assertSame(sprintf('2015-%02d-16 12:51:00', $month), $parsed->format('Y-m-d H:i:s'));
+            self::assertInstanceOf(DateTimeImmutable::class, $parsed);
+            self::assertSame(sprintf('2015-%02d-16 12:51:00', $month), $parsed->format('Y-m-d H:i:s'));
         }
 
         $midnight = BankDate::parse('31.12.2015 24:00:00', '!j.n.Y G:i:s', $zone);
-        $this->assertInstanceOf(DateTimeImmutable::class, $midnight);
-        $this->assertSame('2016-01-01 00:00:00', $midnight->format('Y-m-d H:i:s'));
-        $this->assertNull(BankDate::parse('31.12.9999 24:00', '!j.n.Y G:i', $zone));
+        self::assertInstanceOf(DateTimeImmutable::class, $midnight);
+        self::assertSame('2016-01-01 00:00:00', $midnight->format('Y-m-d H:i:s'));
+        self::assertNull(BankDate::parse('31.12.9999 24:00', '!j.n.Y G:i', $zone));
     }
 }
