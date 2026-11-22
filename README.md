@@ -313,7 +313,7 @@ This library is licensed under the [MIT License](LICENCE).
 - **Coverage Report**: [https://tomaj.github.io/bank-mails-parser/coverage/](https://tomaj.github.io/bank-mails-parser/coverage/)
 - **Issues**: [GitHub Issues](https://github.com/tomaj/bank-mails-parser/issues)
 - **Email**: tomasmajer@gmail.com
-- **Discussions**: [GitHub Discussions](https://github.com/tomaj/bank-mails-parser/discussions)
+- **Security**: [private vulnerability reporting](https://github.com/tomaj/bank-mails-parser/security/advisories/new), see [SECURITY.md](SECURITY.md)
 
 ## Changelog
 
