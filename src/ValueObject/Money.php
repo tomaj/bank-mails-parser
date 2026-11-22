@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\ValueObject;
 
-use InvalidArgumentException;
+use Tomaj\BankMailsParser\Exception\InvalidArgumentException;
 
 /**
  * Immutable amount stored in minor units plus an ISO currency.

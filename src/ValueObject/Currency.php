@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tomaj\BankMailsParser\ValueObject;
 
-use InvalidArgumentException;
+use Tomaj\BankMailsParser\Exception\InvalidArgumentException;
 
 /**
  * ISO 4217 currency.

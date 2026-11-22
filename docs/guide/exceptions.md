@@ -14,6 +14,8 @@ If more than one eligible parser accepts the email, the facade throws `Ambiguous
 ## Hierarchy
 
 ```text
+BankMailsParserException (interface, implemented by every class below)
+
 RuntimeException
 ├── ConfigurationException
 └── ParseException
@@ -22,6 +24,23 @@ RuntimeException
     ├── AmbiguousBankException
     ├── MultipleTransactionsException
     └── DecryptionException
+
+\InvalidArgumentException
+└── Exception\InvalidArgumentException
+```
+
+### BankMailsParserException
+
+Every exception the package throws implements `Tomaj\BankMailsParser\Exception\BankMailsParserException` (since 5.1.0). Catch it when anything from this package should take the same path, including configuration errors:
+
+```php
+use Tomaj\BankMailsParser\Exception\BankMailsParserException;
+
+try {
+    $rows = $parser->parseAll($emailBody, $sender);
+} catch (BankMailsParserException $exception) {
+    // A parsing, configuration or Money/Currency error from this package.
+}
 ```
 
 ### ParseException
@@ -79,7 +98,7 @@ if ($parser->tryParse($emailBody) === null) {
 }
 ```
 
-Invalid money or currency values thrown while building a `Money` object are `InvalidArgumentException`, not `ParseException`. Parsers that accept user-facing amount strings catch that and throw `InvalidEmailFormatException` instead, so `tryParse()` still returns `null`.
+Invalid money or currency values thrown while building a `Money` or `Currency` object are `Tomaj\BankMailsParser\Exception\InvalidArgumentException`, not `ParseException`. It extends PHP's `\InvalidArgumentException`, so a `catch (\InvalidArgumentException)` written for 5.0 still catches it. Parsers that accept user-facing amount strings catch that and throw `InvalidEmailFormatException` instead, so `tryParse()` still returns `null`.
 
 ## What is not an exception type
 

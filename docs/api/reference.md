@@ -244,6 +244,23 @@ CardPay `TIMESTAMP` values of 14 digits are `dmYHis` in UTC (`26112016121631` is
 
 VÚB amounts without a currency code are stored as EUR. The specific symbol is read from a line `ŠS:`, `SS:`, or `S:`. `VS:` and `KS:` are their own fields.
 
+## Exceptions
+
+Namespace `Tomaj\BankMailsParser\Exception`. Every class implements the marker interface `BankMailsParserException` (since 5.1.0).
+
+| Class | Extends | Thrown when |
+|-------|---------|-------------|
+| `ParseException` | `RuntimeException` | Base type for parsing errors |
+| `UnsupportedBankException` | `ParseException` | No registered parser supports the email |
+| `AmbiguousBankException` | `ParseException` | More than one parser accepts the email |
+| `MultipleTransactionsException` | `ParseException` | `parse()` found more than one transaction |
+| `InvalidEmailFormatException` | `ParseException` | A parser recognized the email and could not read it |
+| `DecryptionException` | `ParseException` | PGP decryption failed |
+| `ConfigurationException` | `RuntimeException` | Missing key file or wrong passphrase; `tryParse()` rethrows it |
+| `InvalidArgumentException` | `\InvalidArgumentException` | Invalid amount, separator or currency code for `Money` / `Currency` |
+
+See [Exceptions](/guide/exceptions).
+
 ## Next steps
 
 - [Getting Started](/guide/getting-started)

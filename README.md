@@ -279,6 +279,8 @@ try {
 }
 ```
 
+Every exception from the package implements `Tomaj\BankMailsParser\Exception\BankMailsParserException`, so one `catch` covers parsing, configuration (PGP key) and `Money`/`Currency` errors. See [Exceptions](https://tomaj.github.io/bank-mails-parser/guide/exceptions).
+
 ## Security Considerations
 
 - Store PGP private keys outside the web root

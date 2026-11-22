@@ -14,6 +14,8 @@ Ak e-mail prijme viac ako jeden vhodný parser, fasáda vyhodí `AmbiguousBankEx
 ## Hierarchia
 
 ```text
+BankMailsParserException (rozhranie, implementuje ho každá trieda nižšie)
+
 RuntimeException
 ├── ConfigurationException
 └── ParseException
@@ -22,6 +24,23 @@ RuntimeException
     ├── AmbiguousBankException
     ├── MultipleTransactionsException
     └── DecryptionException
+
+\InvalidArgumentException
+└── Exception\InvalidArgumentException
+```
+
+### BankMailsParserException
+
+Každá výnimka, ktorú balík vyhodí, implementuje `Tomaj\BankMailsParser\Exception\BankMailsParserException` (od 5.1.0). Zachyťte ju, keď má všetko z tohto balíka ísť tou istou cestou, vrátane chýb konfigurácie:
+
+```php
+use Tomaj\BankMailsParser\Exception\BankMailsParserException;
+
+try {
+    $rows = $parser->parseAll($emailBody, $sender);
+} catch (BankMailsParserException $exception) {
+    // Chyba spracovania, konfigurácie alebo Money/Currency z tohto balíka.
+}
 ```
 
 ### ParseException
@@ -79,7 +98,7 @@ if ($parser->tryParse($emailBody) === null) {
 }
 ```
 
-Neplatná suma alebo mena, ktorú vyhodí skladanie objektu `Money`, je `InvalidArgumentException`, nie `ParseException`. Parsery, ktoré prijímajú sumu v tvare pre používateľa, túto výnimku zachytia a vyhodia `InvalidEmailFormatException`, takže `tryParse()` aj tak vráti `null`.
+Neplatná suma alebo mena, ktorú vyhodí skladanie objektu `Money` alebo `Currency`, je `Tomaj\BankMailsParser\Exception\InvalidArgumentException`, nie `ParseException`. Dedí z PHP `\InvalidArgumentException`, takže `catch (\InvalidArgumentException)` napísaný pre 5.0 ju zachytí aj naďalej. Parsery, ktoré prijímajú sumu v tvare pre používateľa, túto výnimku zachytia a vyhodia `InvalidEmailFormatException`, takže `tryParse()` aj tak vráti `null`.
 
 ## Čo nie je typ výnimky
 

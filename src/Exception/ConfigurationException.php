@@ -9,4 +9,4 @@ use RuntimeException;
 /**
  * The parser is not configured. tryParse() does not swallow this.
  */
-final class ConfigurationException extends RuntimeException {}
+final class ConfigurationException extends RuntimeException implements BankMailsParserException {}

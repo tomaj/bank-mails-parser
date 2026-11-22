@@ -244,6 +244,23 @@ Hodnoty CardPay `TIMESTAMP` so 14 číslicami sú `dmYHis` v UTC (`2611201612163
 
 Sumy VÚB bez kódu meny sa uložia ako EUR. Špecifický symbol sa číta z riadku `ŠS:`, `SS:` alebo `S:`. `VS:` a `KS:` sú vlastné polia.
 
+## Výnimky
+
+Menný priestor `Tomaj\BankMailsParser\Exception`. Každá trieda implementuje značkovacie rozhranie `BankMailsParserException` (od 5.1.0).
+
+| Trieda | Dedí z | Kedy |
+|--------|--------|------|
+| `ParseException` | `RuntimeException` | Základný typ chýb spracovania |
+| `UnsupportedBankException` | `ParseException` | E-mail nepodporuje žiadny zaregistrovaný parser |
+| `AmbiguousBankException` | `ParseException` | E-mail prijme viac ako jeden parser |
+| `MultipleTransactionsException` | `ParseException` | `parse()` našiel viac ako jednu transakciu |
+| `InvalidEmailFormatException` | `ParseException` | Parser e-mail rozpoznal, ale nevedel ho prečítať |
+| `DecryptionException` | `ParseException` | Dešifrovanie PGP zlyhalo |
+| `ConfigurationException` | `RuntimeException` | Chýba súbor s kľúčom alebo je zlé heslo; `tryParse()` ju pustí ďalej |
+| `InvalidArgumentException` | `\InvalidArgumentException` | Neplatná suma, oddeľovač alebo kód meny pre `Money` / `Currency` |
+
+Pozri [Výnimky](/sk/guide/exceptions).
+
 ## Ďalšie kroky
 
 - [Začíname](/sk/guide/getting-started)
