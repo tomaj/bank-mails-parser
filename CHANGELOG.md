@@ -8,6 +8,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 - PHP 8.6 is tested and supported. CI requires PHP 8.4, 8.5 and 8.6 and also runs PHP 8.7 (nightly) without failing the build. The minimum stays PHP 8.4.
 - GitHub releases are titled with the bare version (`5.1.0`) and ship `bank-mails-parser-X.Y.Z.tar.gz`, `bank-mails-parser-X.Y.Z.zip` and `SHA256SUMS`, each archive with a build provenance attestation; a `X.Y.Z-*` tag publishes a pre-release ([#35](https://github.com/tomaj/bank-mails-parser/issues/35))
+- `composer.json` conflicts with `phpseclib/phpseclib` < 3.0.58 (pulled in by `singpolyma/openpgp-php`). Older 3.0.x releases have published security advisories, and on PHP 8.4 those before the dynamic-property fixes make `TatraBankaMailDecryptor` fail on a deprecation; Composer now installs a fixed release ([#36](https://github.com/tomaj/bank-mails-parser/issues/36))
 
 ### Fixed
 
