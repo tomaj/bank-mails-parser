@@ -1,0 +1,12 @@
+01-tatra-banka.eml from b-mail@tatrabanka.sk
+  VS 1234056789, 12.31 EUR: order paid
+02-cardpay.eml from cardpay@tatrabanka.sk
+  VS 5000001234, 33.99 EUR: order paid
+03-vub.eml from notifikacie@vub.sk
+  VS 9999999999, 13.37 EUR: order paid
+04-csob-sk.eml from info24@csob.sk
+  VS 212049000, 1150.00 EUR: amount differs, the order expects 1200.00 EUR
+05-newsletter.eml from news@shop.example
+  skipped: No parser found for the supplied sender.
+06-forged-sender.eml from b-mail@tatrabanka.sk.evil.example
+  skipped: No parser found for the supplied sender.

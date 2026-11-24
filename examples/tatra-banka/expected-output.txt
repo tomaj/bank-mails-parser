@@ -1,0 +1,31 @@
+incoming.txt supported: yes
+  money                12.31 EUR
+  transactionDate      2015-01-16 12:51:00 +01:00
+  accountNumber        SK9812353347235
+  sourceAccountNumber  1100/000000-261426464
+  vs                   1234056789
+  receiverMessage      test-sprava
+  description          CCINT 1100/000000-261426464
+  => incoming payment of 1231 minor units
+
+outgoing.txt supported: yes
+  money                -1243.29 USD
+  transactionDate      2015-01-16 12:11:00 +01:00
+  accountNumber        SK9812353347235
+  sourceAccountNumber  1100/000000-261426464
+  vs                   1234056789
+  ss                   9087654321
+  ks                   5428175648
+  description          CCINT 1100/000000-261426464
+  => outgoing payment of -124329 minor units
+
+structured-reference.txt supported: yes
+  money                -2.20 EUR
+  transactionDate      2015-01-12 12:11:00 +01:00
+  accountNumber        SK9812369347235
+  sourceAccountNumber  1100/000000-261426464
+  vs                   1234056789
+  receiverMessage      (CdtrRefInf)(Tp)(CdOrPrtry)(Cd)SCOR(/Cd)(/CdOrPrtry)(/Tp)(Ref)1234056789(/Ref)(/CdtrRefInf)
+  description          CCINT 1100/000000-261426464
+  => outgoing payment of -220 minor units
+

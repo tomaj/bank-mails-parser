@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bank Mails Parser">
+  <defs>
+    <linearGradient id="bmp-logo" x1="3" y1="13" x2="43" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6ee7b7"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="13" width="41" height="34" rx="7" fill="url(#bmp-logo)"/>
+  <path d="M9 21l13.5 10.5L36 21" fill="none" stroke="#052e2b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="48" y="15" width="14" height="6" rx="3" fill="#34d399"/>
+  <rect x="48" y="27" width="11" height="6" rx="3" fill="#fbbf24"/>
+  <rect x="48" y="39" width="13" height="6" rx="3" fill="#34d399"/>
+</svg>

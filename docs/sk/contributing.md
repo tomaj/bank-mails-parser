@@ -116,6 +116,7 @@ Každý parser potrebuje testy, ktoré pokryjú:
 
 ### Príklad testu
 
+<!-- snippet: skip -->
 ```php
 #[Test]
 public function parsesValidEmail(): void

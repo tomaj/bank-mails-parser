@@ -40,9 +40,14 @@ try {
 | 5 | `SkCsobMailParser` | `dňa d.m.yyyy … bola na účte … zaúčtovaná` (aj po `že`) | `csob.sk` |
 | 6 | `VubMailParser` | na riadok ukotvené `Dátum`, `Z účtu`, `Na účet`, `Suma`, `VS` a `Stav` alebo `SIGN` | `vub.sk` |
 
+<div class="diagram">
+  <img class="diagram-light" src="/diagrams/parse-flow-light.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
+  <img class="diagram-dark" src="/diagrams/parse-flow-dark.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
+</div>
+
 Správy pre príjemcu, účel platby, názvy protistrany a popisy sa pred rozpoznaním odstránia. Banku nevyberú a sumu nedodajú.
 
-Ak odovzdáte odosielateľa, uvažuje sa len o parseroch pre daného hostiteľa. Neznámy hostiteľ vyhodí `UnsupportedBankException`. Ak telo prijme viac ako jeden vhodný parser, `parse()` vyhodí `AmbiguousBankException`. Fasáda si nenechá prvú zhodu. Jediná zhoda, ktorá vyhodí `InvalidEmailFormatException`, sa pustí ďalej. Akákoľvek iná `ParseException` prehľadávanie zastaví.
+Ak odovzdáte odosielateľa, uvažuje sa len o parseroch pre daného hostiteľa. Neznámy hostiteľ vyhodí `UnsupportedBankException`. Ak telo prijme viac ako jeden vhodný parser, `parse()` vyhodí `AmbiguousBankException`. Fasáda si nenechá prvú zhodu. Keď telo prijme práve jeden parser, fasáda vráti výsledok jeho `parseAll()` a každá výnimka, ktorú vyhodí, sa k volajúcemu dostane bez zmeny.
 
 ## Vlastné parsery
 

@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><rect width="128" height="128" rx="28" fill="url(#g)"/><rect x="24" y="36" width="80" height="56" rx="10" fill="#fff"/><path d="M26 40 L64 68 L102 40" fill="none" stroke="#6366f1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="98" cy="88" r="20" fill="#0f172a"/><path d="M104 80a10 10 0 1 0 0 16M88 86h12M88 91h12" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bank Mails Parser">
+  <defs>
+    <linearGradient id="bmp-logo" x1="3" y1="13" x2="43" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="13" width="41" height="34" rx="7" fill="url(#bmp-logo)"/>
+  <path d="M9 21l13.5 10.5L36 21" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="48" y="15" width="14" height="6" rx="3" fill="#0f766e"/>
+  <rect x="48" y="27" width="11" height="6" rx="3" fill="#f59e0b"/>
+  <rect x="48" y="39" width="13" height="6" rx="3" fill="#0f766e"/>
+</svg>

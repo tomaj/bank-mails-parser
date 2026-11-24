@@ -8,3 +8,4 @@ docs/.vitepress/dist/
 docs/.vitepress/cache/
 .idea/
 .phpunit.result.cache
+/examples/*/vendor

@@ -1,10 +1,19 @@
+<p align="center">
+  <a href="https://tomaj.github.io/bank-mails-parser/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/public/logo-dark.svg">
+      <img src="docs/public/logo.svg" alt="Bank Mails Parser" width="96" height="96">
+    </picture>
+  </a>
+</p>
+
 # Bank Mails Parser
 
 Professional PHP library for parsing bank confirmation emails from Slovak and Czech banks. Extract transaction details, account numbers, amounts, and banking symbols automatically from email notifications.
 
 **📖 Documentation: https://tomaj.github.io/bank-mails-parser/**
 
-[Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started) · [API reference](https://tomaj.github.io/bank-mails-parser/api/reference) · [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) · [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/)
+[Getting started](https://tomaj.github.io/bank-mails-parser/guide/getting-started) · [Examples](https://tomaj.github.io/bank-mails-parser/examples/) · [API reference](https://tomaj.github.io/bank-mails-parser/api/reference) · [Upgrade guide 4.x → 5.0](https://github.com/tomaj/bank-mails-parser/blob/master/UPGRADE-5.0.md) · [4.x docs](https://tomaj.github.io/bank-mails-parser/4.x/) · [Slovenčina](https://tomaj.github.io/bank-mails-parser/sk/)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/tomaj/bank-mails-parser.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 [![CI](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/tomaj/bank-mails-parser/actions/workflows/ci.yml?query=branch%3Amaster)
@@ -12,7 +21,7 @@ Professional PHP library for parsing bank confirmation emails from Slovak and Cz
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%20max-brightgreen.svg)](https://phpstan.org/)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tomaj/bank-mails-parser/badge)](https://scorecard.dev/viewer/?uri=github.com/tomaj/bank-mails-parser)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15407/badge)](https://www.bestpractices.dev/projects/15407)
-[![Documentation](https://img.shields.io/badge/docs-5.x-4f46e5.svg)](https://tomaj.github.io/bank-mails-parser/)
+[![Documentation](https://img.shields.io/badge/docs-5.x-0f766e.svg)](https://tomaj.github.io/bank-mails-parser/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENCE)
 [![PHP Version Require](https://img.shields.io/packagist/dependency-v/tomaj/bank-mails-parser/php.svg)](https://packagist.org/packages/tomaj/bank-mails-parser)
 
@@ -113,6 +122,7 @@ $mailContent->description;               // string|null
 
 #### ComfortPay Payments
 
+<!-- snippet: mail tatrabanka-cardpay/hmac-comfortpay.txt -->
 ```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
 
@@ -133,6 +143,7 @@ $mailContent->rc;    // string|null (Return code)
 
 #### PGP Encrypted Statements
 
+<!-- snippet: skip -->
 ```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
@@ -151,6 +162,7 @@ foreach ($mailContents as $mailContent) {
 
 ### ČSOB Czech Republic
 
+<!-- snippet: mail csob-cz/viac-transakcii.txt -->
 ```php
 use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
 
@@ -167,6 +179,7 @@ foreach ($mailContents as $mailContent) {
 
 ### ČSOB Slovakia
 
+<!-- snippet: mail csob-sk/sepa-platba.txt -->
 ```php
 use Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser;
 
@@ -182,6 +195,7 @@ foreach ($mailContents as $mailContent) {
 
 ### VÚB
 
+<!-- snippet: mail vub/priklad-platby.txt -->
 ```php
 use Tomaj\BankMailsParser\Parser\Vub\VubMailParser;
 
@@ -198,6 +212,7 @@ echo $mailContent->transactionDate?->format('Y-m-d') . "\n";
 
 The `MailContent` object is an immutable value object (PHP 8.4+ `final readonly class`) with public readonly properties:
 
+<!-- snippet: skip -->
 ```php
 // Financial Information
 $mailContent->money: ?Money                     // amount (int minor units) + Currency
@@ -231,8 +246,9 @@ All properties return `null` if the data is not present in the email.
 
 ## Integration with IMAP
 
-Example integration with [tomaj/imap-email-downloader](https://github.com/tomaj/imap-email-downloader):
+Example integration with [tomaj/imap-mail-downloader](https://github.com/tomaj/imap-mail-downloader):
 
+<!-- snippet: skip -->
 ```php
 use Tomaj\ImapMailDownloader\Downloader;
 use Tomaj\ImapMailDownloader\MailCriteria;
@@ -249,7 +265,7 @@ $downloader->fetch($criteria, function(Email $email) {
 
     try {
         foreach ($parser->parseAll($email->getBody(), 'notifications@tatrabanka.sk') as $mailContent) {
-            processPayment($mailContent);
+            processTransaction($mailContent);
         }
     } catch (\Tomaj\BankMailsParser\Exception\ParseException) {
         // unrecognized mail, or payer text that looks like a second transaction
@@ -273,9 +289,9 @@ $parser = new BankMailsParser();
 try {
     processTransaction($parser->parse($emailBody, $sender, $subject));
 } catch (UnsupportedBankException $exception) {
-    log($exception->getMessage());
+    error_log($exception->getMessage());
 } catch (InvalidEmailFormatException $exception) {
-    log($exception->getMessage());
+    error_log($exception->getMessage());
 }
 ```
 

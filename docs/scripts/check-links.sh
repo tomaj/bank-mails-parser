@@ -7,6 +7,9 @@ cd "$(dirname "$0")/.."
 port="${DOCS_LINK_PORT:-4173}"
 base="/bank-mails-parser/"
 
+python3 scripts/check-snippets.py
+python3 scripts/check-svg.py
+
 npm run docs:build
 python3 scripts/check-svg.py .vitepress/dist
 
@@ -54,6 +57,7 @@ import sys
 from pathlib import Path
 
 prefix = "https://github.com/tomaj/bank-mails-parser/edit/master/docs/"
+repo = "https://github.com/tomaj/bank-mails-parser/"
 found: set[str] = set()
 missing: list[str] = []
 for page in Path(".vitepress/dist").rglob("*.html"):
@@ -74,11 +78,31 @@ if missing:
         print(item, file=sys.stderr)
     sys.exit(1)
 print(f"ok {len(found)} edit links match files on disk")
+
+# blob/master and tree/master links are checked against this checkout, not GitHub: a pull request
+# adds files (examples/...) that only exist on master after the merge.
+targets: set[str] = set()
+for page in Path(".vitepress/dist").rglob("*.html"):
+    text = page.read_text(encoding="utf-8", errors="replace")
+    for kind, path in re.findall(re.escape(repo) + r"(blob|tree)/master/([^\"'\s#?\\]*)", text):
+        targets.add(path.rstrip("/"))
+        if not (Path("..") / path).exists():
+            missing.append(f"{repo}{kind}/master/{path} ({page})")
+if missing:
+    print("Repository link target is missing:", file=sys.stderr)
+    for item in sorted(set(missing)):
+        print(item, file=sys.stderr)
+    sys.exit(1)
+print(f"ok {len(targets)} blob/tree links match files in the checkout")
 PY
 
 # The 5.0.0 compare link is the release target. GitHub returns 404 until that tag exists.
+# The deployed site (canonical and og:image URLs) only has this build after the merge.
 skip_args=(
   --skip 'https://github\.com/tomaj/bank-mails-parser/edit/'
+  --skip 'https://github\.com/tomaj/bank-mails-parser/blob/master/'
+  --skip 'https://github\.com/tomaj/bank-mails-parser/tree/master/'
+  --skip 'https://tomaj\.github\.io/bank-mails-parser/'
 )
 if ! git -C .. ls-remote --tags origin 'refs/tags/5.0.0' | grep -q .; then
   skip_args+=(--skip 'https://github.com/tomaj/bank-mails-parser/compare/4\.1\.0\.\.\.5\.0\.0')
@@ -104,7 +128,11 @@ while true; do
   if [[ "$status" -eq 0 ]]; then
     break
   fi
-  mapfile -t codes < <(grep -oE '\[[0-9]{3}\]' /tmp/docs-linkinator.txt | tr -d '[]' | sort -u)
+  # a while-read loop instead of mapfile, so the script also runs on macOS bash 3.2
+  codes=()
+  while IFS= read -r code; do
+    codes+=("$code")
+  done < <(grep -oE '\[[0-9]{3}\]' /tmp/docs-linkinator.txt | tr -d '[]' | sort -u)
   if [[ ${#codes[@]} -eq 0 ]]; then
     exit "$status"
   fi

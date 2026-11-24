@@ -9,7 +9,7 @@ Neúspešné spracovanie je výnimka. `ParserInterface` aj `BankMailsParser` maj
 
 `tryParse()` vráti `null` pri neplatnom vstupe (`ParseException`, `InvalidArgumentException`, `ValueError`, `DateMalformedStringException`). `TypeError` nezachytáva. `ConfigurationException` pustí ďalej. Chýbajúci dešifrátor na predvolenej fasáde touto chybou nie je: parser výpisov sa neregistruje, správa je `UnsupportedBankException` a `tryParse()` vráti `null`.
 
-Ak e-mail prijme viac ako jeden vhodný parser, fasáda vyhodí `AmbiguousBankException` ešte pred čítaním. Prvú zhodu si nenechá. Jediná zhoda, ktorá vyhodí `InvalidEmailFormatException`, sa pustí ďalej. Akákoľvek iná `ParseException` prehľadávanie zastaví, takže zlyhanie konfigurácie sa neschová za neskorší parser.
+Ak e-mail prijme viac ako jeden vhodný parser, fasáda vyhodí `AmbiguousBankException` ešte pred čítaním. Prvú zhodu si nenechá. Keď ho prijme práve jeden parser, výnimka z tohto parsera (`InvalidEmailFormatException`, `ConfigurationException`) sa k volajúcemu dostane bez zmeny; iný parser sa neskúša.
 
 ## Hierarchia
 
@@ -34,7 +34,10 @@ RuntimeException
 Každá výnimka, ktorú balík vyhodí, implementuje `Tomaj\BankMailsParser\Exception\BankMailsParserException` (od 5.1.0). Zachyťte ju, keď má všetko z tohto balíka ísť tou istou cestou, vrátane chýb konfigurácie:
 
 ```php
+use Tomaj\BankMailsParser\BankMailsParser;
 use Tomaj\BankMailsParser\Exception\BankMailsParserException;
+
+$parser = new BankMailsParser();
 
 try {
     $rows = $parser->parseAll($emailBody, $sender);
@@ -69,7 +72,7 @@ Vyhodí sa, keď parser e-mail spozná a potom ho nevie prečítať.
 - `InvalidEmailFormatException::missingRequiredField(string $parserClass, string $fieldName)`
 - `InvalidEmailFormatException::malformedContent(string $parserClass, string $reason)`
 
-Jednotlivé parsery ju hádžu z `parse()`. Fasáda pustí poslednú takú výnimku ďalej, keď parser e-mail podporoval, ale každý pokus zlyhal.
+Jednotlivé parsery ju hádžu z `parse()` a `parseAll()`. Fasáda ju pustí ďalej bez zmeny.
 
 `TatraBankaStatementMailParser` balí `DecryptionException` do `InvalidEmailFormatException` a pôvodnú výnimku necháva v `$previous`. Chýbajúci dešifrátor, chýbajúci alebo nečitateľný súbor kľúča a zlé heslo kľúča hádžu `ConfigurationException`. `tryParse()` ju pustí ďalej. `parseAll()` vráti každý riadok výpisu, alebo vyhodí jednu výnimku so zoznamom riadkov, ktoré nešlo prečítať.
 

@@ -1,0 +1,10 @@
+payment.txt
+  money                13.37 EUR
+  transactionDate      2019-12-11 00:00:00 +01:00
+  accountNumber        SK1111111111111111111111
+  ownAccountNumber     SK9999999999999999999999
+  vs                   9999999999
+  ss                   910
+  ks                   0308
+  sign                 5CB8A45E42ABC48539E672B9F8E1B3F8E62F97FABDBCF880D0913B5A0C8431CE
+  => 13.37 EUR from SK1111111111111111111111 to SK9999999999999999999999

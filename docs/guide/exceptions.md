@@ -9,7 +9,7 @@ Parsing failures are exceptions. There is one pair of methods on `ParserInterfac
 
 `tryParse()` returns `null` for invalid input (`ParseException`, `InvalidArgumentException`, `ValueError`, `DateMalformedStringException`). It does not catch `TypeError`. It rethrows `ConfigurationException`. A missing decryptor on the default facade is not that error: the statement parser is not registered, so the mail is `UnsupportedBankException` and `tryParse()` returns `null`.
 
-If more than one eligible parser accepts the email, the facade throws `AmbiguousBankException` before it parses. It does not keep the first match. A single match that throws `InvalidEmailFormatException` is rethrown. Any other `ParseException` stops the walk, so a configuration failure is not hidden behind a later parser.
+If more than one eligible parser accepts the email, the facade throws `AmbiguousBankException` before it parses. It does not keep the first match. When exactly one parser accepts it, an exception from that parser (`InvalidEmailFormatException`, `ConfigurationException`) reaches the caller unchanged; no other parser is tried.
 
 ## Hierarchy
 
@@ -34,7 +34,10 @@ RuntimeException
 Every exception the package throws implements `Tomaj\BankMailsParser\Exception\BankMailsParserException` (since 5.1.0). Catch it when anything from this package should take the same path, including configuration errors:
 
 ```php
+use Tomaj\BankMailsParser\BankMailsParser;
 use Tomaj\BankMailsParser\Exception\BankMailsParserException;
+
+$parser = new BankMailsParser();
 
 try {
     $rows = $parser->parseAll($emailBody, $sender);
@@ -69,7 +72,7 @@ Thrown when a parser recognizes the email and then cannot read it.
 - `InvalidEmailFormatException::missingRequiredField(string $parserClass, string $fieldName)`
 - `InvalidEmailFormatException::malformedContent(string $parserClass, string $reason)`
 
-Individual parsers throw this from `parse()`. The facade rethrows the last one when a parser supported the email but every attempt failed.
+Individual parsers throw this from `parse()` and `parseAll()`. The facade passes it on unchanged.
 
 `TatraBankaStatementMailParser` wraps `DecryptionException` in `InvalidEmailFormatException` and keeps the original as `$previous`. A missing decryptor, a missing or unreadable key file, and a wrong passphrase throw `ConfigurationException` instead. `tryParse()` rethrows it. `parseAll()` returns every statement row, or throws one exception that lists the rows it could not parse.
 

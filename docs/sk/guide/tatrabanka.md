@@ -32,7 +32,7 @@ $mailContent = $parser->parse($emailBody);
 - **Číslo účtu** (`accountNumber: ?string`) – cieľový účet (IBAN)
 - **Zdrojový účet** (`sourceAccountNumber: ?string`) – číslo zdrojového účtu
 - **Dátum transakcie** (`transactionDate: ?DateTimeImmutable`) – číta sa cez `j.n.Y G:i` alebo `j. n. Y G:i`
-- **Variabilný symbol** (`vs: ?string`) – `/VS…/SS…/KS…`, potom token `VS`, potom posledné číslo v `Informacia pre prijemcu`, keď chýba `Referencia platitela` (rovnako ako vo verzii 4.1.0), a napokon holá `Referencia platitela`. Prázdny riadok pred tou referenciou ju nestratí. Správu píše platiteľ. Pri párovaní platby skontrolujte aj sumu a ďalší identifikátor, ak ho máte. Správa nemôže zmeniť sumu, účet ani dátum.
+- **Variabilný symbol** (`vs: ?string`) – `/VS…/SS…/KS…`, potom token `VS`, potom posledné číslo s najviac 10 číslicami v `Informacia pre prijemcu` a napokon posledné také číslo v `Referencia platitela` (rovnaké poradie ako vo verzii 4.1.0). Ďalšie kroky sa použijú len vtedy, keď `Referencia platitela` nemá tvar `/VS…/SS…/KS…`. Prázdny riadok pred tou referenciou ju nestratí. Správu píše platiteľ. Pri párovaní platby skontrolujte aj sumu a ďalší identifikátor, ak ho máte. Správa nemôže zmeniť sumu, účet ani dátum.
 - **Špecifický symbol** (`ss: ?string`) – špecifický symbol (ŠS)
 - **Konštantný symbol** (`ks: ?string`) – konštantný symbol (KS)
 - **Správa pre príjemcu** (`receiverMessage: ?string`) – správa pre príjemcu
@@ -59,17 +59,29 @@ TATRA BANKA, a.s.
 ### Príklad spracovania
 
 ```php
-$parser = new TatraBankaMailParser();
-$mailContent = $parser->parse($emailBody);
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
-echo $mailContent->money?->toDecimalString(); // "12.31"
-echo $mailContent->money?->currency->value;   // "EUR"
-echo $mailContent->accountNumber;             // "SK9812353347235"
-echo $mailContent->sourceAccountNumber;       // "1100/000000-261426464"
-echo $mailContent->vs;                        // "1234056789"
-echo $mailContent->ss;                        // "9087654321"
-echo $mailContent->ks;                        // "5428175648"
-echo $mailContent->receiverMessage;           // "test-sprava"
+$parser = new TatraBankaMailParser();
+$mailContent = $parser->parse($emailBody); // e-mail vyššie
+
+echo $mailContent->money?->toDecimalString(), "\n";
+echo $mailContent->money?->currency->value, "\n";
+echo $mailContent->accountNumber, "\n";
+echo $mailContent->sourceAccountNumber, "\n";
+echo $mailContent->vs, "\n";
+echo $mailContent->receiverMessage, "\n";
+echo $mailContent->transactionDate?->format(DATE_ATOM), "\n";
+```
+
+<!-- snippet: output -->
+```text
+12.31
+EUR
+SK9812353347235
+1100/000000-261426464
+1234056789
+test-sprava
+2015-01-16T12:51:00+01:00
 ```
 
 ## Platby ComfortPay
@@ -78,6 +90,7 @@ echo $mailContent->receiverMessage;           // "test-sprava"
 
 Spracúva potvrdenia ComfortPay a CardPay vo formáte kľúč=hodnota.
 
+<!-- snippet: mail tatrabanka-cardpay/hmac-comfortpay.txt -->
 ```php
 <?php
 
@@ -116,6 +129,8 @@ TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1
 ### Príklad spracovania
 
 ```php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
+
 $emailBody = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 ' .
              'TRES=OK CID=824452 CC=************1111 TID=11224444 ' .
              'TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1';
@@ -123,12 +138,24 @@ $emailBody = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 ' .
 $parser = new TatraBankaSimpleMailParser();
 $mailContent = $parser->parse($emailBody);
 
-echo $mailContent->money?->toDecimalString(); // "44.88"
-echo $mailContent->money?->currency->value;   // "EUR"
-echo $mailContent->vs;                        // "4444255333"
-echo $mailContent->res;                       // "OK"
-echo $mailContent->cid;                       // "824452"
-echo $mailContent->cc;                        // "************1111"
+echo $mailContent->money?->toDecimalString(), "\n";
+echo $mailContent->money?->currency->value, "\n";
+echo $mailContent->vs, "\n";
+echo $mailContent->res, "\n";
+echo $mailContent->cid, "\n";
+echo $mailContent->cc, "\n";
+echo $mailContent->transactionDate?->format(DATE_ATOM), "\n";
+```
+
+<!-- snippet: output -->
+```text
+44.88
+EUR
+4444255333
+OK
+824452
+************1111
+2016-11-26T12:16:31+00:00
 ```
 
 ## Výpisy šifrované cez PGP
@@ -159,6 +186,7 @@ $parser = new TatraBankaStatementMailParser($decryptor);
 
 ### Spracovanie šifrovaných výpisov
 
+<!-- snippet: skip -->
 ```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
@@ -185,6 +213,7 @@ Dešifrátor robí OpenPGP dešifrovanie výpisov TatraBanky.
 
 #### Konštruktor
 
+<!-- snippet: skip -->
 ```php
 public function __construct(
     string $privateKeyPath,  // Cesta k súboru súkromného kľúča PGP (.asc)
@@ -194,6 +223,7 @@ public function __construct(
 
 #### Metóda
 
+<!-- snippet: skip -->
 ```php
 public function decrypt(string $contents): string
 ```
@@ -202,14 +232,17 @@ Dešifruje správu vo formáte PGP armor a vráti čistý text. Chýbajúca cest
 
 #### Spracovanie chýb
 
+<!-- snippet: mail tatrabanka-statement/zasifrovany-vypis.txt -->
 ```php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
+
 try {
     $decryptor = new TatraBankaMailDecryptor(
         '/path/to/private-key.asc',
         'passphrase'
     );
     
-    $decrypted = $decryptor->decrypt($encryptedEmailBody);
+    $decrypted = $decryptor->decrypt($emailBody);
     echo $decrypted;
 } catch (\Exception $e) {
     // Ošetrenie chýb:

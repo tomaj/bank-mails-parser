@@ -40,9 +40,14 @@ Always pass `$sender`. Without it, a sentence the payer typed can match a second
 | 5 | `SkCsobMailParser` | `dňa d.m.yyyy … bola na účte … zaúčtovaná` (also after `že`) | `csob.sk` |
 | 6 | `VubMailParser` | line-anchored `Dátum`, `Z účtu`, `Na účet`, `Suma`, `VS`, and `Stav` or `SIGN` | `vub.sk` |
 
+<div class="diagram">
+  <img class="diagram-light" src="/diagrams/parse-flow-light.svg" alt="Flow of BankMailsParser: filter parsers by sender domain, ask each supports(), throw UnsupportedBankException for none and AmbiguousBankException for more than one, otherwise return the parser's parseAll() result">
+  <img class="diagram-dark" src="/diagrams/parse-flow-dark.svg" alt="Flow of BankMailsParser: filter parsers by sender domain, ask each supports(), throw UnsupportedBankException for none and AmbiguousBankException for more than one, otherwise return the parser's parseAll() result">
+</div>
+
 Recipient messages, payment purpose, counterparty names, and descriptions are removed before detection. They cannot choose the bank or supply the amount.
 
-If you pass a sender, only parsers for that host are considered. An unknown host throws `UnsupportedBankException`. If more than one eligible parser accepts the body, `parse()` throws `AmbiguousBankException`. The facade does not keep the first match. A single match that throws `InvalidEmailFormatException` is rethrown. Any other `ParseException` stops the walk.
+If you pass a sender, only parsers for that host are considered. An unknown host throws `UnsupportedBankException`. If more than one eligible parser accepts the body, `parse()` throws `AmbiguousBankException`. The facade does not keep the first match. When exactly one parser accepts the body, the facade returns that parser's `parseAll()` result, and any exception it throws reaches the caller unchanged.
 
 ## Custom parsers
 

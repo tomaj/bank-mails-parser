@@ -1,0 +1,59 @@
+name: Examples
+
+# Runs every recipe in examples/ against the code of the push or pull request (a Composer path
+# repository, see examples/ci/use-local-package.sh) and diffs its output with expected-output.txt.
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+permissions:
+  contents: read
+
+# a new push to a pull request cancels its older run
+concurrency:
+  group: examples-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  recipes:
+    name: Example ${{ matrix.example }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        example: [tatra-banka, cardpay, vub, csob, mailbox, encrypted-statement, error-handling, custom-parser]
+
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@e8d43d139fbfbe401c32ef3a3a32e14075f20122 # main after 2.40.0 (PHP 8.6 stable)
+      with:
+        php-version: '8.4'
+        extensions: mbstring, iconv
+        coverage: none
+
+    - name: Run examples/${{ matrix.example }}/e2e.sh
+      env:
+        EXAMPLE: ${{ matrix.example }}
+      run: examples/ci/recipe.sh "$EXAMPLE"
+
+  every-example-in-matrix:
+    name: Every example is in the matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - name: Compare examples/ with the matrix
+      run: |
+        dirs="$(find examples -mindepth 1 -maxdepth 1 -type d ! -name ci -exec basename {} \; | sort)"
+        matrix="$(sed -n 's/^ *example: \[\(.*\)\]$/\1/p' .github/workflows/examples.yml | tr -d ' ' | tr ',' '\n' | sort)"
+        diff <(echo "$dirs") <(echo "$matrix")

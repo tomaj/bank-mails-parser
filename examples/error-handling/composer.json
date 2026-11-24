@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-error-handling",
+    "description": "Handle unsupported, malformed and multi-transaction mails",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

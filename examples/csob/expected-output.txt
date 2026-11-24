@@ -1,0 +1,36 @@
+csob-sk-sepa.txt: 1 transaction(s)
+  #1
+  money                1150.00 EUR
+  transactionDate      2019-09-06 00:00:00 +02:00
+  accountNumber        SK91 7500 0000 0030 2072 9058
+  ownAccountNumber     SK13 7500 0000 0040 1942 5381
+  vs                   212049000
+  ss                   964
+  ks                   0308
+  receiverMessage      Maroko 2019 rodicia
+
+csob-cz-instant.txt: 1 transaction(s)
+  #1
+  money                414.00 CZK
+  transactionDate      2022-08-18 00:00:00 +02:00
+  accountNumber        123456789
+  sourceAccountNumber  1122334455/9999
+  vs                   23456789
+  receiverMessage      VS23456789
+
+csob-cz-two-transactions.txt: 2 transaction(s)
+  #1
+  money                1234.56 CZK
+  transactionDate      2018-09-25 00:00:00 +02:00
+  accountNumber        123456789
+  sourceAccountNumber  1122334455/9999
+  vs                   23456789
+  ks                   3456
+  #2
+  money                987.65 CZK
+  transactionDate      2018-09-25 00:00:00 +02:00
+  accountNumber        123456789
+  sourceAccountNumber  9988776655/1111
+  vs                   78787878
+  ks                   6789
+

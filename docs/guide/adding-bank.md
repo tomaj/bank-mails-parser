@@ -85,6 +85,7 @@ final readonly class YourBankMailParser implements ParserInterface
 
 ## Step 2: Implement ParserInterface
 
+<!-- snippet: skip -->
 ```php
 public function supports(string $content, ?string $sender = null, ?string $subject = null): bool;
 public function parseAll(string $content): array;
@@ -97,6 +98,7 @@ public function bankDomains(): array;
 
 Override `parseAll()`. Do not drop a transaction that matched and then failed. Collect the failures and throw one `InvalidEmailFormatException` that lists them. Text that is not a transaction can be skipped.
 
+<!-- snippet: skip -->
 ```php
 public function parseAll(string $content): array
 {

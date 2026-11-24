@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-cardpay",
+    "description": "Read CardPay and ComfortPay result notifications from Tatra banka",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

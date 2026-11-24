@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-csob",
+    "description": "Parse ČSOB Slovakia and ČSOB Czech Republic mails, including several transactions in one mail",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

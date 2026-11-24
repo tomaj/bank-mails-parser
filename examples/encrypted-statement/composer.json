@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-encrypted-statement",
+    "description": "Decrypt and parse a PGP-encrypted Tatra banka card statement",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

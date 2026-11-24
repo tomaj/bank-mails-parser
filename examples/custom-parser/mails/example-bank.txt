@@ -1,0 +1,8 @@
+Dear client,
+
+Incoming payment 24.11.2026
+Amount: 49.90 EUR
+From account: SK3112000000198742637541
+Reference: 2026001234
+
+Example banka

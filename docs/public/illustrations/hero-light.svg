@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="540" viewBox="0 0 640 540" role="img">
+  <title>A bank notification email parsed into a MailContent object</title>
+  <defs>
+    <linearGradient id="hero-wash" x1="0" y1="0" x2="640" y2="540" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0fdf4"/>
+      <stop offset="1" stop-color="#ccfbf1"/>
+    </linearGradient>
+    <linearGradient id="hero-mark" x1="0" y1="0" x2="40" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="540" rx="36" fill="url(#hero-wash)"/>
+
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <!-- the email -->
+    <rect x="36" y="36" width="380" height="220" rx="18" fill="#ffffff" stroke="#d1d5db"/>
+    <circle cx="62" cy="62" r="5" fill="#f87171"/>
+    <circle cx="80" cy="62" r="5" fill="#fbbf24"/>
+    <circle cx="98" cy="62" r="5" fill="#34d399"/>
+    <text x="124" y="67" fill="#64748b" font-size="14">From: b-mail@tatrabanka.sk</text>
+    <path d="M36 84h380" stroke="#d1d5db"/>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#0f172a">
+      <text x="58" y="116">16.1.2015 12:51 bol zostatok Vasho</text>
+      <text x="58" y="140">uctu SK9812353347235 zvyseny o</text>
+      <rect x="54" y="150" width="88" height="24" rx="6" fill="#fef3c7"/>
+      <text x="58" y="167" fill="#b45309" font-weight="700">12,31 EUR</text>
+      <text x="143" y="167">.</text>
+      <text x="58" y="200">Referencia platitela:</text>
+      <rect x="54" y="210" width="182" height="24" rx="6" fill="#d1fae5"/>
+      <text x="58" y="227" fill="#047857" font-weight="700">/VS1234056789/SS/KS</text>
+    </g>
+
+    <!-- the parser -->
+    <path d="M300 256c0 40 10 52 30 60" fill="none" stroke="#0f766e" stroke-width="3" stroke-dasharray="6 7" stroke-linecap="round"/>
+    <rect x="300" y="290" width="236" height="52" rx="26" fill="#0f766e" stroke="#0f766e"/>
+    <g transform="translate(318 300) scale(0.5)">
+      <rect x="2" y="13" width="41" height="34" rx="7" fill="url(#hero-mark)"/>
+      <path d="M9 21l13.5 10.5L36 21" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="48" y="15" width="14" height="6" rx="3" fill="#a7f3d0"/>
+      <rect x="48" y="27" width="11" height="6" rx="3" fill="#fbbf24"/>
+      <rect x="48" y="39" width="13" height="6" rx="3" fill="#a7f3d0"/>
+    </g>
+    <text x="360" y="322" fill="#ffffff" font-size="16" font-weight="700">BankMailsParser</text>
+    <path d="M418 342v26" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+    <path d="m410 360 8 10 8-10" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- the result -->
+    <rect x="232" y="380" width="372" height="128" rx="18" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="254" y="408" fill="#64748b" font-size="13" font-weight="700" letter-spacing="1">MAILCONTENT</text>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+      <text x="254" y="436" fill="#64748b">money</text>
+      <text x="400" y="436" fill="#b45309" font-weight="700">12.31 EUR</text>
+      <text x="254" y="460" fill="#64748b">vs</text>
+      <text x="400" y="460" fill="#047857" font-weight="700">1234056789</text>
+      <text x="254" y="484" fill="#64748b">transactionDate</text>
+      <text x="400" y="484" fill="#0f172a">2015-01-16 12:51</text>
+    </g>
+
+    <!-- the banks -->
+    <g font-size="14" font-weight="600">
+      <rect x="36" y="300" width="150" height="38" rx="19" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="111" y="324" fill="#0f172a" text-anchor="middle">Tatra banka</text>
+      <rect x="36" y="350" width="150" height="38" rx="19" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="111" y="374" fill="#0f172a" text-anchor="middle">VÚB</text>
+      <rect x="36" y="400" width="150" height="38" rx="19" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="111" y="424" fill="#0f172a" text-anchor="middle">ČSOB Slovensko</text>
+      <rect x="36" y="450" width="150" height="38" rx="19" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="111" y="474" fill="#0f172a" text-anchor="middle">ČSOB Česko</text>
+    </g>
+  </g>
+</svg>
