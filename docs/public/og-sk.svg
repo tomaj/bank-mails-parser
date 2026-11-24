@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="og-wash" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0fdf4"/>
+      <stop offset="1" stop-color="#ccfbf1"/>
+    </linearGradient>
+    <linearGradient id="og-mark" x1="2" y1="13" x2="43" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#og-wash)"/>
+  <g transform="translate(80 92) scale(2)">
+    <rect x="2" y="13" width="41" height="34" rx="7" fill="url(#og-mark)"/>
+    <path d="M9 21l13.5 10.5L36 21" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="48" y="15" width="14" height="6" rx="3" fill="#0f766e"/>
+    <rect x="48" y="27" width="11" height="6" rx="3" fill="#f59e0b"/>
+    <rect x="48" y="39" width="13" height="6" rx="3" fill="#0f766e"/>
+  </g>
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="80" y="290" fill="#0f172a" font-size="76" font-weight="800">Bank Mails Parser</text>
+    <text x="80" y="356" fill="#334155" font-size="34">E-maily o platbách zo slovenských a českých</text>
+    <text x="80" y="400" fill="#334155" font-size="34">bánk, spracované na typové PHP objekty</text>
+    <g font-size="24" font-weight="700">
+      <rect x="80" y="456" width="170" height="52" rx="26" fill="#ffffff" stroke="#99f6e4"/>
+      <text x="165" y="490" fill="#0f766e" text-anchor="middle">Tatra banka</text>
+      <rect x="266" y="456" width="100" height="52" rx="26" fill="#ffffff" stroke="#99f6e4"/>
+      <text x="316" y="490" fill="#0f766e" text-anchor="middle">VÚB</text>
+      <rect x="382" y="456" width="160" height="52" rx="26" fill="#ffffff" stroke="#99f6e4"/>
+      <text x="462" y="490" fill="#0f766e" text-anchor="middle">ČSOB SK</text>
+      <rect x="558" y="456" width="160" height="52" rx="26" fill="#ffffff" stroke="#99f6e4"/>
+      <text x="638" y="490" fill="#0f766e" text-anchor="middle">ČSOB CZ</text>
+    </g>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="24">
+      <rect x="790" y="120" width="330" height="220" rx="22" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="818" y="164" fill="#64748b" font-size="18" font-weight="700" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="2">MAILCONTENT</text>
+      <text x="818" y="210" fill="#64748b">money</text>
+      <text x="940" y="210" fill="#b45309" font-weight="700">12.31 EUR</text>
+      <text x="818" y="254" fill="#64748b">vs</text>
+      <text x="940" y="254" fill="#047857" font-weight="700">1234056789</text>
+      <text x="818" y="298" fill="#64748b">date</text>
+      <text x="940" y="298" fill="#0f172a">2015-01-16</text>
+    </g>
+    <text x="80" y="574" fill="#0f766e" font-size="26" font-weight="600">tomaj.github.io/bank-mails-parser</text>
+  </g>
+</svg>

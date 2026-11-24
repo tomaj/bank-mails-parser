@@ -38,8 +38,8 @@ Adresy odosielateľov sú príklady; použite tie, z ktorých vaša banka naozaj
 3. **Musí sa zhodovať práve jeden.** Žiadna zhoda je `UnsupportedBankException`, viac ako jedna je `AmbiguousBankException`. Fasáda nikdy neberie „prvý, ktorý sedí“.
 
 <div class="diagram">
-  <img class="diagram-light" src="/diagrams/parse-flow-light.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
-  <img class="diagram-dark" src="/diagrams/parse-flow-dark.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
+  <img class="diagram-light" src="/diagrams/parse-flow-sk-light.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
+  <img class="diagram-dark" src="/diagrams/parse-flow-sk-dark.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
 </div>
 
 ## Párovanie platieb s objednávkami
