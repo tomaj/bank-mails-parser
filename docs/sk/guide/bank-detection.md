@@ -41,8 +41,8 @@ try {
 | 6 | `VubMailParser` | na riadok ukotvené `Dátum`, `Z účtu`, `Na účet`, `Suma`, `VS` a `Stav` alebo `SIGN` | `vub.sk` |
 
 <div class="diagram">
-  <img class="diagram-light" src="/diagrams/parse-flow-light.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
-  <img class="diagram-dark" src="/diagrams/parse-flow-dark.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
+  <img class="diagram-light" src="/diagrams/parse-flow-sk-light.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
+  <img class="diagram-dark" src="/diagrams/parse-flow-sk-dark.svg" alt="Postup BankMailsParser: parsery sa vyfiltrujú podľa domény odosielateľa, každého sa opýta supports(), pri žiadnej zhode vyhodí UnsupportedBankException, pri viacerých AmbiguousBankException, inak vráti výsledok parseAll() jediného parsera">
 </div>
 
 Správy pre príjemcu, účel platby, názvy protistrany a popisy sa pred rozpoznaním odstránia. Banku nevyberú a sumu nedodajú.

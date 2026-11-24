@@ -33,7 +33,7 @@
     <text x="440" y="314" font-weight="700" fill="#b91c1c">UnsupportedBankException</text>
 
     <path d="M290 350h30v40h96" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)"/>
-    <text x="328" y="383" fill="#475569" font-size="13">more than one</text>
+    <text x="328" y="408" fill="#475569" font-size="13">more than one</text>
     <rect x="420" y="364" width="340" height="52" rx="12" fill="#fef2f2" stroke="#f87171" stroke-width="1.5"/>
     <text x="440" y="396" font-weight="700" fill="#b91c1c">AmbiguousBankException</text>
 
