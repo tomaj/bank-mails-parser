@@ -12,7 +12,7 @@ Releases are published by `.github/workflows/release.yml` when a version tag is 
 
    In the same pull request:
 
-   - add the release to `docs/changelog.md` and `docs/sk/changelog.md` (the docs site keeps a short summary per version);
+   - `docs/changelog.md` includes `CHANGELOG.md`; in `docs/sk/changelog.md` (the Slovak translation) move the `## [Nevydané][unreleased]` entries into a `## [X.Y.Z] - YYYY-MM-DD` section, leave the empty `## [Nevydané][unreleased]` heading and add the `[X.Y.Z]` link, as in `CHANGELOG.md`;
    - for a major version, update the supported-versions table in `SECURITY.md` (the previous major gets security fixes only, for 6 months), and archive the previous major's docs in a subfolder (`docs/4.x/`, `docs/sk/4.x/`) with an entry in the version menu.
 
 2. Merge the pull request and wait for CI on `master`.

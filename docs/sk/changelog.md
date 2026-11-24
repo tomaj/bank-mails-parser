@@ -5,6 +5,25 @@ V tomto súbore sú podstatné zmeny projektu.
 Formát vychádza z [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 a projekt dodržiava [sémantické verziovanie](https://semver.org/spec/v2.0.0.html).
 
+## [Nevydané][unreleased]
+
+Zmeny na vetve `master`, ktoré ešte nie sú vo vydanej verzii. Pôvodný anglický text je v [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blob/master/CHANGELOG.md).
+
+### Pridané
+
+- `Tomaj\BankMailsParser\Exception\BankMailsParserException`: značkovacie rozhranie, ktoré implementuje každá výnimka balíka (`ParseException` a jej potomkovia, `ConfigurationException` a nová `Tomaj\BankMailsParser\Exception\InvalidArgumentException`), takže `catch (BankMailsParserException)` zachytí čokoľvek z balíka. `Money` a `Currency` vyhadzujú novú `InvalidArgumentException`, ktorá rozširuje PHP `\InvalidArgumentException`, takže existujúce bloky `catch` fungujú ďalej ([#37](https://github.com/tomaj/bank-mails-parser/issues/37))
+- Dokumentačný web na úrovni prezentácie: vlastné logo, sada favicon, ilustrácie, obrázok pre Open Graph a SEO značky, spustiteľné recepty v `examples/` (jeden pre každú banku, schránka spárovaná s objednávkami, šifrovaný výpis, spracovanie chýb, vlastný parser), ktoré nový workflow Examples spúšťa pri každom pull requeste, stránky FAQ, prechod na novú verziu, bezpečnosť, konfigurácia a testovanie v angličtine aj slovenčine a `tests/DocsSnippetsTest.php`, ktorý spúšťa každý PHP blok z README, UPGRADE-5.0.md a dokumentácie ([#47](https://github.com/tomaj/bank-mails-parser/issues/47))
+
+### Zmenené
+
+- PHP 8.6 je otestované a podporované. CI vyžaduje PHP 8.4, 8.5 a 8.6 a spúšťa aj PHP 8.7 (nightly) bez toho, aby zlyhanie zastavilo zostavenie. Minimálna verzia ostáva PHP 8.4.
+- Vydania na GitHube majú v názve len číslo verzie (`5.1.0`) a obsahujú `bank-mails-parser-X.Y.Z.tar.gz`, `bank-mails-parser-X.Y.Z.zip` a `SHA256SUMS`, každý archív s atestáciou pôvodu zostavenia (build provenance); značka `X.Y.Z-*` zverejní predbežné vydanie ([#35](https://github.com/tomaj/bank-mails-parser/issues/35))
+- `composer.json` je v konflikte s `phpseclib/phpseclib` < 3.0.58 (ťahá ho `singpolyma/openpgp-php`). Staršie vydania 3.0.x majú zverejnené bezpečnostné upozornenia a na PHP 8.4 tie spred opráv dynamických vlastností spôsobia, že `TatraBankaMailDecryptor` zlyhá na upozornení o zastaraní; Composer teraz nainštaluje opravené vydanie ([#36](https://github.com/tomaj/bank-mails-parser/issues/36))
+
+### Opravené
+
+- `TatraBankaMailDecryptor::decrypt()` overuje, že dešifrovaný výsledok je `OpenPGP_Message`, namiesto toho, aby sa spoliehal na jeho pravdivostnú hodnotu. Platné správy sa dešifrujú ako predtým.
+
 ## [5.0.0] - 2026-10-12
 
 Poznámky k 5.0.0 sú v [CHANGELOG.md](https://github.com/tomaj/bank-mails-parser/blob/master/CHANGELOG.md) v repozitári. Zhrnutie:
@@ -203,6 +222,7 @@ Poznámky k 5.0.0 sú v [CHANGELOG.md](https://github.com/tomaj/bank-mails-parse
 - Čítanie čísla účtu
 - Čítanie správy pre príjemcu
 
+[unreleased]: https://github.com/tomaj/bank-mails-parser/compare/5.0.0...HEAD
 [5.0.0]: https://github.com/tomaj/bank-mails-parser/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/tomaj/bank-mails-parser/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/tomaj/bank-mails-parser/compare/3.0.0...4.0.0

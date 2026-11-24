@@ -20,7 +20,7 @@
 
 ## Documentation
 
-- [ ] `CHANGELOG.md` updated for a user-visible change
+- [ ] `CHANGELOG.md` (and its Slovak translation `docs/sk/changelog.md`) updated for a user-visible change
 - [ ] Docs (`docs/`, English and Slovak) or `README.md` updated, if the public usage changed
 - [ ] No documentation update is needed
 
