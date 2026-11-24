@@ -1,0 +1,17 @@
+parser: Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser (tatrabanka.sk)
+parser: Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser (tatrabanka.sk)
+parser: Tomaj\BankMailsParser\Parser\Csob\CsobMailParser (csob.cz)
+parser: Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser (csob.sk)
+parser: Tomaj\BankMailsParser\Parser\Vub\VubMailParser (vub.sk)
+parser: App\ExampleBankMailParser (bank.example)
+
+example-bank.txt
+  money            49.90 EUR
+  transactionDate  2026-11-24
+  accountNumber    SK3112000000198742637541
+  vs               2026001234
+
+example-bank-broken.txt
+  Parser App\ExampleBankMailParser: required field "Amount" is missing or invalid
+
+from other.example: null

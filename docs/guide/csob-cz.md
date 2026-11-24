@@ -94,11 +94,12 @@ foreach ($mailContents as $mailContent) {
 
 ### Multiple Transactions
 
+<!-- snippet: mail csob-cz/viac-transakcii.txt -->
 ```php
-$emailWithMultipleTransactions = '...'; // Email with multiple "Dne" markers
+use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
 
 $parser = new CsobMailParser();
-$mailContents = $parser->parseAll($emailWithMultipleTransactions);
+$mailContents = $parser->parseAll($emailBody); // two "Dne … byla na účtu" transactions
 
 foreach ($mailContents as $mailContent) {
     printf(
@@ -109,6 +110,12 @@ foreach ($mailContents as $mailContent) {
         $mailContent->accountNumber
     );
 }
+```
+
+<!-- snippet: output -->
+```text
+Transaction: 1234.56 CZK, VS: 23456789, Account: 123456789
+Transaction: 987.65 CZK, VS: 78787878, Account: 123456789
 ```
 
 ## Variable Symbol Detection

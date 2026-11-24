@@ -3,17 +3,25 @@
   "version": "1.0.0",
   "description": "Documentation for tomaj/bank-mails-parser",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
-    "docs:links": "bash scripts/check-links.sh"
+    "docs:links": "bash scripts/check-links.sh",
+    "images": "node scripts/favicons.mjs && node scripts/og-image.mjs"
   },
-  "keywords": [],
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "linkinator": "8.1.0",
-    "vitepress": "^1.5.0"
+    "puppeteer-core": "25.16.0",
+    "vitepress": "1.6.4"
+  },
+  "overrides": {
+    "vite": "^6.4.5",
+    "glob": "^14.0.6",
+    "minimatch": "^11.0.9"
   }
 }

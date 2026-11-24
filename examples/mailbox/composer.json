@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-mailbox",
+    "description": "Detect the bank of every mail in a mailbox and match the payments to orders",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

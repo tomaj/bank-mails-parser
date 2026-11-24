@@ -8,23 +8,25 @@
 
 ### Menný priestor
 
-```php
+```text
 Tomaj\BankMailsParser\MailContent
 ```
 
 ### Konštruktor
 
+<!-- snippet: skip -->
 ```php
 public function __construct(
-    public ?Money $money = null,
-    public ?DateTimeImmutable $transactionDate = null,
-    public ?string $accountNumber = null,
-    public ?string $sourceAccountNumber = null,
+    ?Money $money = null,
+    ?DateTimeImmutable $transactionDate = null,
+    ?string $accountNumber = null,
+    ?string $sourceAccountNumber = null,
+    ?string $ownAccountNumber = null,
     ?string $vs = null,
     ?string $ss = null,
     ?string $ks = null,
-    public ?string $receiverMessage = null,
-    public ?string $description = null,
+    ?string $receiverMessage = null,
+    ?string $description = null,
     ?string $cid = null,
     ?string $sign = null,
     ?string $res = null,
@@ -104,10 +106,11 @@ $mailContent->transactionDate?->getTimestamp();
 
 ## Money
 
-```php
+```text
 Tomaj\BankMailsParser\ValueObject\Money
 ```
 
+<!-- snippet: skip -->
 ```php
 final readonly class Money
 {
@@ -121,6 +124,9 @@ final readonly class Money
 `amount` sú najmenšie jednotky. `12.34 EUR` je `1234`.
 
 ```php
+use Tomaj\BankMailsParser\ValueObject\Currency;
+use Tomaj\BankMailsParser\ValueObject\Money;
+
 $money = Money::fromDecimalString('12,34', Currency::fromCode('EUR'), ',');
 $money = Money::fromDecimalString('-1 234,56', 'EUR');
 $money = Money::fromDecimalString('1.234,56', '978'); // číselné ISO → EUR
@@ -137,13 +143,15 @@ Prijímané desatinné reťazce sú `12.34`, `12,34`, `-1 234,56`, `1.234,56` a 
 
 ## Currency
 
-```php
+```text
 Tomaj\BankMailsParser\ValueObject\Currency
 ```
 
 `Currency` je `final class`, nie enum. `fromCode()` prijme každý aktívny abecedný kód ISO 4217 aj jeho číselný kód (`978` a `036` sú `EUR` a `AUD`) a k tomu stiahnuté `BGN` (`975`) a `HRK` (`191`). Aktívna tabuľka je zoznam ISO one zverejnený 17. 9. 2026. Krátky číselný kód sa doplní na tri číslice (`36` je `036`, AUD). Kódy s najmenšími jednotkami `N.A.` (vrátane `XXX`) používajú 2. `equals()` porovnáva abecedný kód. Identita objektu neprežije `unserialize`.
 
 ```php
+use Tomaj\BankMailsParser\ValueObject\Currency;
+
 Currency::fromCode('eur');    // EUR
 Currency::fromCode('978');    // EUR
 Currency::fromCode('208');    // DKK
@@ -151,7 +159,6 @@ Currency::fromCode('SEK');    // SEK, 2 najmenšie jednotky
 Currency::fromCode('JPY')->minorUnits(); // 0
 Currency::fromCode('CLF')->minorUnits(); // 4
 Currency::tryFromCode('NO');  // null
-Currency::fromCode('NO');     // InvalidArgumentException
 Currency::fromCode('975'); // BGN, stiahnuté, ale prijaté pre starú poštu
 Currency::fromCode('HRK'); // HRK, stiahnuté, ale prijaté pre starú poštu
 ```
@@ -160,10 +167,11 @@ Currency::fromCode('HRK'); // HRK, stiahnuté, ale prijaté pre starú poštu
 
 ## BankMailsParser
 
-```php
+```text
 Tomaj\BankMailsParser\BankMailsParser
 ```
 
+<!-- snippet: skip -->
 ```php
 public function __construct(?array $parsers = null, ?TatraBankaMailDecryptor $decryptor = null)
 public function registerParser(ParserInterface $parser): void
@@ -184,6 +192,7 @@ Pozrite si [Rozpoznanie banky](/sk/guide/bank-detection).
 
 ## ParserInterface
 
+<!-- snippet: skip -->
 ```php
 namespace Tomaj\BankMailsParser\Parser;
 
@@ -202,6 +211,11 @@ interface ParserInterface
 `parseAll()` vráti každú transakciu. `ParsesBankMail` ho implementuje ako `[$this->parse()]` a implementuje aj `tryParse()`. `bankDomains()` uvádza hostiteľov, ktorí sa použijú, keď volajúci odovzdá odosielateľa. Prázdny zoznam parser v tom prípade preskočí. Použite `$this->money()`, aby sa neplatná suma stala `InvalidEmailFormatException` a neunikla ako `InvalidArgumentException`. `BankDate` a `Iso4217` sú `@internal`.
 
 ```php
+use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
+use Tomaj\BankMailsParser\MailContent;
+use Tomaj\BankMailsParser\Parser\ParserInterface;
+use Tomaj\BankMailsParser\Parser\ParsesBankMail;
+
 final readonly class CustomBankParser implements ParserInterface
 {
     use ParsesBankMail;

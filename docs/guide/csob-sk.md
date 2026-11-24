@@ -85,6 +85,8 @@ foreach ($mailContents as $mailContent) {
 Like ČSOB CZ, the parser splits emails by the "dňa" marker to handle multiple transactions:
 
 ```php
+use Tomaj\BankMailsParser\Parser\Csob\SkCsobMailParser;
+
 $emailWithMultipleTransactions = 'dňa 6.9.2019 bola na účte SK91 7500 0000 0030 2072 9058 zaúčtovaná suma SEPA platobného príkazu:
 suma: +100,00 EUR
 

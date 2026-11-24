@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-tatra-banka",
+    "description": "Parse Tatra banka b-mail notifications of incoming and outgoing payments",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

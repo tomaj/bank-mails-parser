@@ -94,11 +94,12 @@ foreach ($mailContents as $mailContent) {
 
 ### Viac transakcií
 
+<!-- snippet: mail csob-cz/viac-transakcii.txt -->
 ```php
-$emailWithMultipleTransactions = '...'; // e-mail s viacerými značkami „Dne“
+use Tomaj\BankMailsParser\Parser\Csob\CsobMailParser;
 
 $parser = new CsobMailParser();
-$mailContents = $parser->parseAll($emailWithMultipleTransactions);
+$mailContents = $parser->parseAll($emailBody); // dve transakcie „Dne … byla na účtu“
 
 foreach ($mailContents as $mailContent) {
     printf(
@@ -109,6 +110,12 @@ foreach ($mailContents as $mailContent) {
         $mailContent->accountNumber
     );
 }
+```
+
+<!-- snippet: output -->
+```text
+Transaction: 1234.56 CZK, VS: 23456789, Account: 123456789
+Transaction: 987.65 CZK, VS: 78787878, Account: 123456789
 ```
 
 ## Hľadanie variabilného symbolu

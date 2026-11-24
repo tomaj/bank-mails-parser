@@ -115,6 +115,7 @@ Every parser must have comprehensive tests covering:
 
 ### Test Example
 
+<!-- snippet: skip -->
 ```php
 #[Test]
 public function parsesValidEmail(): void

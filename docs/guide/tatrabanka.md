@@ -32,7 +32,7 @@ $mailContent = $parser->parse($emailBody);
 - **Account Number** (`accountNumber: ?string`) - Destination account (IBAN)
 - **Source Account** (`sourceAccountNumber: ?string`) - Source account number
 - **Transaction Date** (`transactionDate: ?DateTimeImmutable`) - Parsed with `j.n.Y G:i` or `j. n. Y G:i`
-- **Variable Symbol** (`vs: ?string`) - `/VS…/SS…/KS…`, then a `VS` token, then the last number in `Informacia pre prijemcu` when `Referencia platitela` is absent (the same as 4.1.0), then a bare `Referencia platitela`. A blank line before that reference does not drop it. The payer writes the message. When you pair a payment, also check the amount, and another identifier when you have one. The message cannot change the amount, account, or date.
+- **Variable Symbol** (`vs: ?string`) - `/VS…/SS…/KS…`, then a `VS` token, then the last number of up to 10 digits in `Informacia pre prijemcu`, then the last such number in `Referencia platitela` (the same order as 4.1.0). The later steps run only when `Referencia platitela` has no `/VS…/SS…/KS…`. A blank line before that reference does not drop it. The payer writes the message. When you pair a payment, also check the amount, and another identifier when you have one. The message cannot change the amount, account, or date.
 - **Specific Symbol** (`ss: ?string`) - Specific symbol (ŠS)
 - **Constant Symbol** (`ks: ?string`) - Constant symbol (KS)
 - **Receiver Message** (`receiverMessage: ?string`) - Message for recipient
@@ -59,17 +59,29 @@ TATRA BANKA, a.s.
 ### Parsing Example
 
 ```php
-$parser = new TatraBankaMailParser();
-$mailContent = $parser->parse($emailBody);
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailParser;
 
-echo $mailContent->money?->toDecimalString(); // "12.31"
-echo $mailContent->money?->currency->value;   // "EUR"
-echo $mailContent->accountNumber;             // "SK9812353347235"
-echo $mailContent->sourceAccountNumber;       // "1100/000000-261426464"
-echo $mailContent->vs;                        // "1234056789"
-echo $mailContent->ss;                        // "9087654321"
-echo $mailContent->ks;                        // "5428175648"
-echo $mailContent->receiverMessage;           // "test-sprava"
+$parser = new TatraBankaMailParser();
+$mailContent = $parser->parse($emailBody); // the mail above
+
+echo $mailContent->money?->toDecimalString(), "\n";
+echo $mailContent->money?->currency->value, "\n";
+echo $mailContent->accountNumber, "\n";
+echo $mailContent->sourceAccountNumber, "\n";
+echo $mailContent->vs, "\n";
+echo $mailContent->receiverMessage, "\n";
+echo $mailContent->transactionDate?->format(DATE_ATOM), "\n";
+```
+
+<!-- snippet: output -->
+```text
+12.31
+EUR
+SK9812353347235
+1100/000000-261426464
+1234056789
+test-sprava
+2015-01-16T12:51:00+01:00
 ```
 
 ## ComfortPay Payments
@@ -78,6 +90,7 @@ echo $mailContent->receiverMessage;           // "test-sprava"
 
 Parses ComfortPay and CardPay confirmation emails with key=value format.
 
+<!-- snippet: mail tatrabanka-cardpay/hmac-comfortpay.txt -->
 ```php
 <?php
 
@@ -116,6 +129,8 @@ TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1
 ### Parsing Example
 
 ```php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser;
+
 $emailBody = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 ' .
              'TRES=OK CID=824452 CC=************1111 TID=11224444 ' .
              'TIMESTAMP=26112016121631 HMAC=b76cb9ddeed7ed0bcf991f19bbbabfb1';
@@ -123,12 +138,24 @@ $emailBody = 'AMT=44.88 CURR=978 VS=4444255333 RES=OK AC=644311 ' .
 $parser = new TatraBankaSimpleMailParser();
 $mailContent = $parser->parse($emailBody);
 
-echo $mailContent->money?->toDecimalString(); // "44.88"
-echo $mailContent->money?->currency->value;   // "EUR"
-echo $mailContent->vs;                        // "4444255333"
-echo $mailContent->res;                       // "OK"
-echo $mailContent->cid;                       // "824452"
-echo $mailContent->cc;                        // "************1111"
+echo $mailContent->money?->toDecimalString(), "\n";
+echo $mailContent->money?->currency->value, "\n";
+echo $mailContent->vs, "\n";
+echo $mailContent->res, "\n";
+echo $mailContent->cid, "\n";
+echo $mailContent->cc, "\n";
+echo $mailContent->transactionDate?->format(DATE_ATOM), "\n";
+```
+
+<!-- snippet: output -->
+```text
+44.88
+EUR
+4444255333
+OK
+824452
+************1111
+2016-11-26T12:16:31+00:00
 ```
 
 ## PGP-Encrypted Statements
@@ -159,6 +186,7 @@ $parser = new TatraBankaStatementMailParser($decryptor);
 
 ### Parsing Encrypted Statements
 
+<!-- snippet: skip -->
 ```php
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaStatementMailParser;
@@ -185,6 +213,7 @@ The decryptor handles OpenPGP decryption of TatraBanka statement emails.
 
 #### Constructor
 
+<!-- snippet: skip -->
 ```php
 public function __construct(
     string $privateKeyPath,  // Path to PGP private key file (.asc)
@@ -194,6 +223,7 @@ public function __construct(
 
 #### Method
 
+<!-- snippet: skip -->
 ```php
 public function decrypt(string $contents): string
 ```
@@ -202,14 +232,17 @@ Decrypts a PGP-armored message and returns the plain text. A missing key path, a
 
 #### Error Handling
 
+<!-- snippet: mail tatrabanka-statement/zasifrovany-vypis.txt -->
 ```php
+use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
+
 try {
     $decryptor = new TatraBankaMailDecryptor(
         '/path/to/private-key.asc',
         'passphrase'
     );
     
-    $decrypted = $decryptor->decrypt($encryptedEmailBody);
+    $decrypted = $decryptor->decrypt($emailBody);
     echo $decrypted;
 } catch (\Exception $e) {
     // Handle errors:

@@ -8,23 +8,25 @@ Complete API documentation for Bank Mails Parser 5.x.
 
 ### Namespace
 
-```php
+```text
 Tomaj\BankMailsParser\MailContent
 ```
 
 ### Constructor
 
+<!-- snippet: skip -->
 ```php
 public function __construct(
-    public ?Money $money = null,
-    public ?DateTimeImmutable $transactionDate = null,
-    public ?string $accountNumber = null,
-    public ?string $sourceAccountNumber = null,
+    ?Money $money = null,
+    ?DateTimeImmutable $transactionDate = null,
+    ?string $accountNumber = null,
+    ?string $sourceAccountNumber = null,
+    ?string $ownAccountNumber = null,
     ?string $vs = null,
     ?string $ss = null,
     ?string $ks = null,
-    public ?string $receiverMessage = null,
-    public ?string $description = null,
+    ?string $receiverMessage = null,
+    ?string $description = null,
     ?string $cid = null,
     ?string $sign = null,
     ?string $res = null,
@@ -104,10 +106,11 @@ $mailContent->transactionDate?->getTimestamp();
 
 ## Money
 
-```php
+```text
 Tomaj\BankMailsParser\ValueObject\Money
 ```
 
+<!-- snippet: skip -->
 ```php
 final readonly class Money
 {
@@ -121,6 +124,9 @@ final readonly class Money
 `amount` is minor units. `12.34 EUR` is `1234`.
 
 ```php
+use Tomaj\BankMailsParser\ValueObject\Currency;
+use Tomaj\BankMailsParser\ValueObject\Money;
+
 $money = Money::fromDecimalString('12,34', Currency::fromCode('EUR'), ',');
 $money = Money::fromDecimalString('-1 234,56', 'EUR');
 $money = Money::fromDecimalString('1.234,56', '978'); // numeric ISO → EUR
@@ -137,13 +143,15 @@ Accepted decimal strings include `12.34`, `12,34`, `-1 234,56`, `1.234,56`, and 
 
 ## Currency
 
-```php
+```text
 Tomaj\BankMailsParser\ValueObject\Currency
 ```
 
 `Currency` is a `final class`, not an enum. `fromCode()` accepts every active ISO 4217 alphabetic code and its numeric code (`978` and `036` are `EUR` and `AUD`), plus withdrawn `BGN` (`975`) and `HRK` (`191`). The active table is ISO list one published 2026-09-17. A short numeric code is padded to three digits (`36` is `036`, AUD). Codes with minor units `N.A.` (including `XXX`) use 2. `equals()` compares the alphabetic code. Object identity does not survive `unserialize`.
 
 ```php
+use Tomaj\BankMailsParser\ValueObject\Currency;
+
 Currency::fromCode('eur');    // EUR
 Currency::fromCode('978');    // EUR
 Currency::fromCode('208');    // DKK
@@ -151,7 +159,6 @@ Currency::fromCode('SEK');    // SEK, minor units 2
 Currency::fromCode('JPY')->minorUnits(); // 0
 Currency::fromCode('CLF')->minorUnits(); // 4
 Currency::tryFromCode('NO');  // null
-Currency::fromCode('NO');     // InvalidArgumentException
 Currency::fromCode('975'); // BGN, withdrawn but accepted for old mail
 Currency::fromCode('HRK'); // HRK, withdrawn but accepted for old mail
 ```
@@ -160,10 +167,11 @@ Currency::fromCode('HRK'); // HRK, withdrawn but accepted for old mail
 
 ## BankMailsParser
 
-```php
+```text
 Tomaj\BankMailsParser\BankMailsParser
 ```
 
+<!-- snippet: skip -->
 ```php
 public function __construct(?array $parsers = null, ?TatraBankaMailDecryptor $decryptor = null)
 public function registerParser(ParserInterface $parser): void
@@ -184,6 +192,7 @@ See [Bank Detection](/guide/bank-detection).
 
 ## ParserInterface
 
+<!-- snippet: skip -->
 ```php
 namespace Tomaj\BankMailsParser\Parser;
 
@@ -202,6 +211,11 @@ interface ParserInterface
 `parseAll()` returns every transaction. `ParsesBankMail` implements it as `[$this->parse()]` and implements `tryParse()`. `bankDomains()` lists the hosts used when the caller passes a sender. An empty list skips the parser in that case. Use `$this->money()` so an invalid amount becomes `InvalidEmailFormatException` instead of leaking `InvalidArgumentException`. `BankDate` and `Iso4217` are `@internal`.
 
 ```php
+use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
+use Tomaj\BankMailsParser\MailContent;
+use Tomaj\BankMailsParser\Parser\ParserInterface;
+use Tomaj\BankMailsParser\Parser\ParsesBankMail;
+
 final readonly class CustomBankParser implements ParserInterface
 {
     use ParsesBankMail;

@@ -1,0 +1,8 @@
+4 card transactions
+  settled 2019-03-15   13.37 EUR  VS 4169344603  merchant account 2621234415
+  settled 2019-03-15   15.00 EUR  VS 9051230034  merchant account 2621234415
+  settled 2019-03-15   59.90 EUR  VS 9101235209  merchant account 2946123663
+  settled 2019-03-15   34.90 EUR  VS 9101955247  merchant account 2912329663
+
+wrong passphrase: Tomaj\BankMailsParser\Exception\ConfigurationException: Private key passphrase is incorrect or the key has no usable secret key
+without a decryptor: null

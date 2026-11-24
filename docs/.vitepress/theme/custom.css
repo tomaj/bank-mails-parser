@@ -1,62 +1,156 @@
 /**
- * Customize default theme styling by overriding CSS variables:
- * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
+ * Bank Mails Parser theme: emerald and teal for the bank side, amber for the amount.
+ * Variables: https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
  */
 
-/**
- * Colors - Banking theme with green/blue
- * -------------------------------------------------------------------------- */
-
 :root {
-  --vp-c-brand-1: #10b981;
-  --vp-c-brand-2: #34d399;
-  --vp-c-brand-3: #6ee7b7;
-  --vp-c-brand-soft: rgba(16, 185, 129, 0.14);
+  --vp-c-brand-1: #0f766e;
+  --vp-c-brand-2: #0d9488;
+  --vp-c-brand-3: #14b8a6;
+  --vp-c-brand-soft: rgba(13, 148, 136, 0.14);
+
+  --bmp-amber: #b45309;
+
+  --vp-button-brand-bg: #0f766e;
+  --vp-button-brand-hover-bg: #115e59;
+  --vp-button-brand-active-bg: #134e4a;
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #059669 10%, #0f766e 55%, #d97706 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, #34d39940 0%, #fbbf2440 100%);
+  --vp-home-hero-image-filter: blur(48px);
 }
 
 .dark {
   --vp-c-brand-1: #34d399;
   --vp-c-brand-2: #10b981;
   --vp-c-brand-3: #059669;
-  --vp-c-brand-soft: rgba(16, 185, 129, 0.16);
+  --vp-c-brand-soft: rgba(52, 211, 153, 0.16);
+
+  --bmp-amber: #fbbf24;
+
+  --vp-button-brand-text: #052e2b;
+  --vp-button-brand-hover-text: #052e2b;
+  --vp-button-brand-active-text: #052e2b;
+  --vp-button-brand-bg: #34d399;
+  --vp-button-brand-hover-bg: #6ee7b7;
+  --vp-button-brand-active-bg: #10b981;
+
+  --vp-home-hero-name-background: linear-gradient(120deg, #6ee7b7 10%, #34d399 55%, #fbbf24 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, #10b98130 0%, #f59e0b30 100%);
 }
 
-/**
- * Component: Button
- * -------------------------------------------------------------------------- */
-
-:root {
-  --vp-button-brand-border: transparent;
-  --vp-button-brand-text: var(--vp-c-white);
-  --vp-button-brand-bg: var(--vp-c-brand-1);
-  --vp-button-brand-hover-border: transparent;
-  --vp-button-brand-hover-text: var(--vp-c-white);
-  --vp-button-brand-hover-bg: var(--vp-c-brand-2);
-  --vp-button-brand-active-border: transparent;
-  --vp-button-brand-active-text: var(--vp-c-white);
-  --vp-button-brand-active-bg: var(--vp-c-brand-1);
+/* The hero illustration and the feature icons have a dark variant. */
+.dark .VPHero img.image-src {
+  content: url("/bank-mails-parser/illustrations/hero-dark.svg");
 }
 
-/**
- * Component: Home
- * -------------------------------------------------------------------------- */
-
-:root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-
-  --vp-home-hero-image-background-image: linear-gradient(135deg, #10b98150 0%, #3b82f650 100%);
-  --vp-home-hero-image-filter: blur(44px);
+.VPHero img.image-src {
+  max-width: 300px;
+  max-height: 260px;
+  border-radius: 20px;
 }
 
 @media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px);
+  .VPHero img.image-src {
+    max-width: 380px;
+    max-height: 330px;
+  }
+}
+
+/* Below 960px the default theme puts the image in a fixed square with a negative margin, which
+   overlaps the title for a wide illustration: let the container take the image's height instead. */
+@media (max-width: 959px) {
+  .VPHero .image {
+    margin: 0 0 32px;
+  }
+
+  .VPHero .image-container {
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .VPHero img.image-src {
+    position: relative;
+    top: auto;
+    left: auto;
+    display: block;
+    margin: 0 auto;
+    transform: none;
   }
 }
 
 @media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(68px);
+  .VPHero img.image-src {
+    max-width: 460px;
+    max-height: 400px;
   }
+}
+
+.dark .VPFeature img[src$="banks.svg"] { content: url("/bank-mails-parser/icons/banks-dark.svg"); }
+.dark .VPFeature img[src$="detection.svg"] { content: url("/bank-mails-parser/icons/detection-dark.svg"); }
+.dark .VPFeature img[src$="transactions.svg"] { content: url("/bank-mails-parser/icons/transactions-dark.svg"); }
+.dark .VPFeature img[src$="pgp.svg"] { content: url("/bank-mails-parser/icons/pgp-dark.svg"); }
+.dark .VPFeature img[src$="money.svg"] { content: url("/bank-mails-parser/icons/money-dark.svg"); }
+.dark .VPFeature img[src$="tested.svg"] { content: url("/bank-mails-parser/icons/tested-dark.svg"); }
+
+/* Diagrams: <img class="diagram-light"> and <img class="diagram-dark"> side by side, one shown per theme. */
+.diagram {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.diagram img {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.dark .diagram img.diagram-light,
+html:not(.dark) .diagram img.diagram-dark {
+  display: none;
+}
+
+/* Content below the home features. */
+.home-more {
+  padding: 48px 0 24px;
+}
+
+@media (min-width: 640px) {
+  .home-more {
+    padding: 64px 0 32px;
+  }
+}
+
+.home-more h2 {
+  margin: 40px 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.home-more h2:first-child {
+  margin-top: 0;
+}
+
+.home-more p,
+.home-more li {
+  color: var(--vp-c-text-2);
+  line-height: 1.7;
+}
+
+.home-more ul {
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.home-more a {
+  color: var(--vp-c-brand-1);
+  font-weight: 500;
+}
+
+/* Output of an example, shown after its code. */
+.example-output div[class*="language-"] {
+  border-left: 3px solid var(--bmp-amber);
 }

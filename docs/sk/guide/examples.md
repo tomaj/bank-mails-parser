@@ -1,6 +1,6 @@
-# Príklady
+# Ďalšie ukážky
 
-Praktické príklady spracovania rôznych bankových e-mailov. Všetky používajú skutočné parsery z knižnice.
+Krátke ukážky pre jednotlivé parsery. Každý PHP blok na tejto stránke sa spúšťa v testoch. Celé spustiteľné recepty s e-mailmi a výstupom sú v časti [Príklady](/sk/examples/).
 
 ## Základné spracovanie e-mailu
 
@@ -72,6 +72,7 @@ foreach ($mailContents as $mailContent) {
 
 ### Šifrovaný výpis TatraBanky
 
+<!-- snippet: skip -->
 ```php
 <?php
 
@@ -146,6 +147,7 @@ if ($mailContent === null) {
 
 ### Stiahnutie a spracovanie bankových e-mailov
 
+<!-- snippet: skip -->
 ```php
 <?php
 
@@ -163,7 +165,7 @@ if ($emails) {
 
         try {
             foreach ($parser->parseAll($emailBody, 'nonstopbanking@tatrabanka.sk') as $mailContent) {
-                saveTransaction($mailContent);
+                processTransaction($mailContent);
             }
         } catch (ParseException) {
             continue;

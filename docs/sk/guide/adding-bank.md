@@ -86,6 +86,7 @@ final readonly class YourBankMailParser implements ParserInterface
 
 ## Krok 2: ParserInterface
 
+<!-- snippet: skip -->
 ```php
 public function supports(string $content, ?string $sender = null, ?string $subject = null): bool;
 public function parseAll(string $content): array;
@@ -98,6 +99,7 @@ public function bankDomains(): array;
 
 Prepíšte `parseAll()`. Transakciu, ktorá sedela a potom zlyhala, nezahadzujte. Zlyhania zozbierajte a vyhoďte jednu `InvalidEmailFormatException`, ktorá ich vymenúva. Text, ktorý nie je transakcia, sa dá preskočiť.
 
+<!-- snippet: skip -->
 ```php
 public function parseAll(string $content): array
 {

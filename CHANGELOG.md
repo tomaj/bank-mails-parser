@@ -7,6 +7,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Added
 
 - `Tomaj\BankMailsParser\Exception\BankMailsParserException`: a marker interface implemented by every exception the package throws (`ParseException` and its subclasses, `ConfigurationException`, and the new `Tomaj\BankMailsParser\Exception\InvalidArgumentException`), so `catch (BankMailsParserException)` catches anything from the package. `Money` and `Currency` throw the new `InvalidArgumentException`, which extends PHP's `\InvalidArgumentException`, so existing catch blocks keep working ([#37](https://github.com/tomaj/bank-mails-parser/issues/37))
+- Documentation site at presentation level: own logo, favicon set, illustrations, Open Graph image and SEO tags, runnable recipes in `examples/` (one per bank, a mailbox matched to orders, an encrypted statement, error handling, a custom parser) that the new Examples workflow runs against every pull request, FAQ, upgrade, security, configuration and testing pages in English and Slovak, and `tests/DocsSnippetsTest.php`, which runs every PHP block of the README, UPGRADE-5.0.md and the docs ([#47](https://github.com/tomaj/bank-mails-parser/issues/47))
 
 ### Changed
 

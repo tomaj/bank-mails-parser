@@ -6,6 +6,7 @@ Parser e-mailov VÚB (Všeobecná úverová banka). Spracúva notifikácie v či
 
 ### VubMailParser
 
+<!-- snippet: mail vub/priklad-platby.txt -->
 ```php
 <?php
 
@@ -52,6 +53,8 @@ SIGN:    5CB8A45E42ABC48539E672B9F8E1B3F8E62F97FABDBCF880D0913B5A0C8431CE
 ## Príklad použitia
 
 ```php
+use Tomaj\BankMailsParser\Parser\Vub\VubMailParser;
+
 $emailBody = 'Dátum:   11.12.2019
 Na účet: SK9999999999999999999999
 Suma:    13,37
@@ -64,14 +67,26 @@ Stav:    zrealizovaný';
 $parser = new VubMailParser();
 $mailContent = $parser->parse($emailBody);
 
-echo $mailContent->money?->toDecimalString(); // "13.37"
-echo $mailContent->money?->currency->value;   // "EUR"
-echo $mailContent->accountNumber;             // "SK1111111111111111111111"
-echo $mailContent->ownAccountNumber;          // "SK9999999999999999999999"
-echo $mailContent->vs;                        // "9999999999"
-echo $mailContent->ss;                        // "910"
-echo $mailContent->ks;                        // "0308"
-echo $mailContent->transactionDate?->format('Y-m-d'); // "2019-12-11"
+echo $mailContent->money?->toDecimalString(), "\n";
+echo $mailContent->money?->currency->value, "\n";
+echo $mailContent->accountNumber, "\n";
+echo $mailContent->ownAccountNumber, "\n";
+echo $mailContent->vs, "\n";
+echo $mailContent->ss, "\n";
+echo $mailContent->ks, "\n";
+echo $mailContent->transactionDate?->format('Y-m-d'), "\n";
+```
+
+<!-- snippet: output -->
+```text
+13.37
+EUR
+SK1111111111111111111111
+SK9999999999999999999999
+9999999999
+910
+0308
+2019-12-11
 ```
 
 ## Výber polí
@@ -92,6 +107,7 @@ Sumu číta `Money::fromDecimalString()` s desatinnou čiarkou. `1 234,56`, neza
 
 ## Spracovanie chýb
 
+<!-- snippet: mail vub/priklad-platby.txt -->
 ```php
 use Tomaj\BankMailsParser\Exception\InvalidEmailFormatException;
 use Tomaj\BankMailsParser\Parser\Vub\VubMailParser;

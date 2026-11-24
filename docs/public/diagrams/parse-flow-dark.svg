@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" role="img">
+  <title>How BankMailsParser picks a parser</title>
+  <desc>The facade keeps the parsers whose bank domains match the sender, asks each one whether it supports the body, throws UnsupportedBankException for no match and AmbiguousBankException for more than one, and otherwise returns the transactions of the single matching parser.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <rect width="800" height="560" rx="20" fill="#1b1b1f"/>
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="15" fill="#e2e8f0">
+    <rect x="40" y="28" width="340" height="60" rx="12" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+    <text x="210" y="54" text-anchor="middle" font-weight="700">Mail: body, sender, subject</text>
+    <text x="210" y="76" text-anchor="middle" fill="#94a3b8" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">parseAll($body, $sender, $subject)</text>
+
+    <path d="M210 88v28" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="40" y="120" width="340" height="70" rx="12" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="60" y="146" font-weight="700">1. Filter by sender</text>
+    <text x="60" y="170" fill="#94a3b8" font-size="13">keep parsers whose bankDomains() match</text>
+    <text x="60" y="184" fill="#94a3b8" font-size="13">the sender's host (all of them without a sender)</text>
+
+    <path d="M210 190v28" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="40" y="222" width="340" height="60" rx="12" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="60" y="248" font-weight="700">2. Ask each one: supports($body)?</text>
+    <text x="60" y="270" fill="#94a3b8" font-size="13">a built-in parser never throws here, it says yes or no</text>
+
+    <path d="M210 282v28" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M210 314 290 350 210 386 130 350z" fill="#451a03" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="210" y="355" text-anchor="middle" font-weight="700" font-size="14">how many?</text>
+
+    <path d="M290 350h30v-40h96" fill="none" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="328" y="303" fill="#94a3b8" font-size="13">none</text>
+    <rect x="420" y="282" width="340" height="52" rx="12" fill="#450a0a" stroke="#f87171" stroke-width="1.5"/>
+    <text x="440" y="314" font-weight="700" fill="#fca5a5">UnsupportedBankException</text>
+
+    <path d="M290 350h30v40h96" fill="none" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="328" y="383" fill="#94a3b8" font-size="13">more than one</text>
+    <rect x="420" y="364" width="340" height="52" rx="12" fill="#450a0a" stroke="#f87171" stroke-width="1.5"/>
+    <text x="440" y="396" font-weight="700" fill="#fca5a5">AmbiguousBankException</text>
+
+    <path d="M210 386v40" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="222" y="412" fill="#94a3b8" font-size="13">exactly one</text>
+    <rect x="40" y="430" width="340" height="96" rx="12" fill="#052e2b" stroke="#10b981" stroke-width="1.5"/>
+    <text x="60" y="458" font-weight="700">3. parser->parseAll($body)</text>
+    <text x="60" y="482" fill="#6ee7b7" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">list&lt;MailContent&gt;</text>
+    <text x="60" y="506" fill="#94a3b8" font-size="13">or InvalidEmailFormatException</text>
+
+    <path d="M380 478h36" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="420" y="438" width="340" height="80" rx="12" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+    <text x="440" y="464" font-size="13"><tspan font-weight="700">parse()</tspan><tspan fill="#94a3b8">: the one MailContent, or</tspan></text>
+    <text x="440" y="482" font-size="13" fill="#94a3b8">MultipleTransactionsException</text>
+    <text x="440" y="504" font-size="13"><tspan font-weight="700">tryParse()</tspan><tspan fill="#94a3b8">: null instead of a ParseException</tspan></text>
+  </g>
+</svg>

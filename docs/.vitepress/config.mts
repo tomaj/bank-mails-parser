@@ -1,26 +1,53 @@
 import { defineConfig } from 'vitepress'
 import { navEn, navSk, sidebar4x, sidebar5x, sidebar5xSk, sidebarSk4x } from '../site-nav'
+import { seoHead, siteUrl } from './seo'
 
-const descriptionEn = 'Professional PHP library for parsing bank confirmation emails from Slovak and Czech banks'
-const descriptionSk = 'PHP knižnica na spracovanie potvrdzujúcich e-mailov slovenských a českých bánk'
+const base = '/bank-mails-parser/'
+const repositoryBlob = 'https://github.com/tomaj/bank-mails-parser/blob/master/'
+
+const descriptionEn = 'PHP library that reads payment notification emails from Slovak and Czech banks (Tatra banka, VÚB, ČSOB) into typed objects'
+const descriptionSk = 'PHP knižnica, ktorá číta e-mailové notifikácie o platbách slovenských a českých bánk (Tatra banka, VÚB, ČSOB) do typových objektov'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Bank Mails Parser',
   description: descriptionEn,
-  base: '/bank-mails-parser/',
+  base,
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/bank-mails-parser/favicon.svg' }],
-    ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'Bank Mails Parser - PHP Banking Email Parser' }],
-    ['meta', { property: 'og:description', content: descriptionEn }],
-    ['meta', { property: 'og:url', content: 'https://tomaj.github.io/bank-mails-parser/' }],
-    ['meta', { property: 'og:image', content: 'https://tomaj.github.io/bank-mails-parser/logo.svg' }],
-    ['meta', { name: 'twitter:card', content: 'summary' }],
-    ['meta', { name: 'twitter:title', content: 'Bank Mails Parser - PHP Banking Email Parser' }],
-    ['meta', { name: 'twitter:description', content: descriptionEn }],
+    ['link', { rel: 'icon', href: `${base}favicon.ico`, sizes: '48x48' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: `${base}favicon.svg` }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: `${base}favicon-32.png` }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: `${base}favicon-16.png` }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: `${base}apple-touch-icon.png` }],
+    ['link', { rel: 'manifest', href: `${base}site.webmanifest` }],
+    ['meta', { name: 'theme-color', content: '#0f766e' }],
   ],
+
+  transformHead({ pageData, siteConfig }) {
+    return seoHead(pageData, siteConfig.srcDir, pageData.relativePath.startsWith('sk/') ? descriptionSk : descriptionEn)
+  },
+
+  sitemap: {
+    hostname: siteUrl,
+  },
+
+  markdown: {
+    // changelog.md, upgrade.md and security.md include files from the repository root; their
+    // relative links to other root files (UPGRADE-5.0.md, SECURITY.md, ...) point at GitHub instead.
+    config(md) {
+      md.core.ruler.push('repository-root-links', (state) => {
+        for (const token of state.tokens) {
+          for (const child of token.children ?? []) {
+            const href = child.type === 'link_open' ? child.attrGet('href') : null
+            if (href !== null && /^[A-Z][A-Z0-9_.-]*\.md(#.*)?$/.test(href)) {
+              child.attrSet('href', repositoryBlob + href)
+            }
+          }
+        }
+      })
+    },
+  },
 
   lastUpdated: true,
 
@@ -35,12 +62,6 @@ export default defineConfig({
       lang: 'sk',
       description: descriptionSk,
       link: '/sk/',
-      head: [
-        ['meta', { property: 'og:title', content: 'Bank Mails Parser - spracovanie bankových e-mailov v PHP' }],
-        ['meta', { property: 'og:description', content: descriptionSk }],
-        ['meta', { name: 'twitter:title', content: 'Bank Mails Parser - spracovanie bankových e-mailov v PHP' }],
-        ['meta', { name: 'twitter:description', content: descriptionSk }],
-      ],
       themeConfig: {
         nav: navSk,
         sidebar: {
@@ -72,9 +93,52 @@ export default defineConfig({
           message: 'Vydané pod licenciou MIT.',
           copyright: 'Copyright © 2015-2026 Tomas Majer',
         },
-        search: {
-          provider: 'local',
-          options: {
+        notFound: {
+          code: '404',
+          title: 'STRÁNKA SA NENAŠLA',
+          quote: 'Ak nezmeníte smer a budete hľadať ďalej, môžete doraziť práve tam, kam mierite.',
+          linkLabel: 'prejsť na úvod',
+          linkText: 'Späť na úvod',
+        },
+      },
+    },
+  },
+
+  transformHtml(code, _id, ctx) {
+    if (ctx.page.startsWith('4.x/') || ctx.page.includes('/4.x/')) {
+      return code.replace(/>5\.x</g, '>4.x<')
+    }
+    return code
+  },
+
+  themeConfig: {
+    // https://vitepress.dev/reference/default-theme-config
+    logo: {
+      light: '/logo.svg',
+      dark: '/logo-dark.svg',
+    },
+
+    nav: navEn,
+
+    sidebar: {
+      '/4.x/': sidebar4x,
+      '/': sidebar5x,
+    },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/tomaj/bank-mails-parser' },
+    ],
+
+    editLink: {
+      pattern: 'https://github.com/tomaj/bank-mails-parser/edit/master/docs/:path',
+      text: 'Edit this page on GitHub',
+    },
+
+    search: {
+      provider: 'local',
+      options: {
+        locales: {
+          sk: {
             translations: {
               button: {
                 buttonText: 'Hľadať',
@@ -98,46 +162,7 @@ export default defineConfig({
             },
           },
         },
-        notFound: {
-          code: '404',
-          title: 'STRÁNKA SA NENAŠLA',
-          quote: 'Ak nezmeníte smer a budete hľadať ďalej, môžete doraziť práve tam, kam mierite.',
-          linkLabel: 'prejsť na úvod',
-          linkText: 'Späť na úvod',
-        },
       },
-    },
-  },
-
-  transformHtml(code, _id, ctx) {
-    if (ctx.page.startsWith('4.x/') || ctx.page.includes('/4.x/')) {
-      return code.replace(/>5\.x</g, '>4.x<')
-    }
-    return code
-  },
-
-  themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    logo: '/logo.svg',
-
-    nav: navEn,
-
-    sidebar: {
-      '/4.x/': sidebar4x,
-      '/': sidebar5x,
-    },
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/tomaj/bank-mails-parser' },
-    ],
-
-    editLink: {
-      pattern: 'https://github.com/tomaj/bank-mails-parser/edit/master/docs/:path',
-      text: 'Edit this page on GitHub',
-    },
-
-    search: {
-      provider: 'local',
     },
 
     footer: {

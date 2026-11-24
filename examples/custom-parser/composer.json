@@ -1,0 +1,17 @@
+{
+    "name": "example/bank-mails-parser-custom-parser",
+    "description": "Add a parser for a bank the library does not know and register it with BankMailsParser",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

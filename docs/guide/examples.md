@@ -1,6 +1,6 @@
-# Examples
+# More snippets
 
-This page contains practical examples of parsing various bank email formats. All examples use actual parser implementations from the library.
+Short snippets for the individual parsers. Every PHP block on this page runs in the test suite. For complete, runnable recipes with mails and output see [Examples](/examples/).
 
 ## Basic Email Parsing
 
@@ -72,6 +72,7 @@ foreach ($mailContents as $mailContent) {
 
 ### TatraBanka Encrypted Statement
 
+<!-- snippet: skip -->
 ```php
 <?php
 
@@ -146,6 +147,7 @@ if ($mailContent === null) {
 
 ### Fetching and Parsing Bank Emails
 
+<!-- snippet: skip -->
 ```php
 <?php
 
@@ -163,7 +165,7 @@ if ($emails) {
 
         try {
             foreach ($parser->parseAll($emailBody, 'nonstopbanking@tatrabanka.sk') as $mailContent) {
-                saveTransaction($mailContent);
+                processTransaction($mailContent);
             }
         } catch (ParseException) {
             continue;

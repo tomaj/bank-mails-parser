@@ -1,0 +1,12 @@
+{
+    "name": "example/bank-mails-parser-vub",
+    "description": "Parse VÚB payment notifications",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "tomaj/bank-mails-parser": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

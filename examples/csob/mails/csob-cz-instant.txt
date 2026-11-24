@@ -1,0 +1,20 @@
+Vážený kliente,
+
+toto je automaticky generovaný e-mail ze služby ČSOB CEB, neodpovídejte na něj.
+
+Dne 18.8.2022 byla na účtu 123456789 zaúčtována transakce typu: Příchozí úhrada okamžitá.
+
+Název smlouvy: CRM International a.s.
+Číslo smlouvy: 87654321
+Majitel smlouvy: Shmelina a.s.
+Účet: 123456789, CZK, CRM INTERNATION
+Částka: +414,00 CZK
+Účet protistrany: 1122334455/9999
+Název protistrany: Capi Hnizdo a.s.
+Variabilní symbol: 23456789
+Zpráva příjemci: VS23456789
+
+Zůstatek na účtu po zaúčtování transakce: +1 234 567,89 CZK.
+
+S přáním krásného dne
+Vaše ČSOB

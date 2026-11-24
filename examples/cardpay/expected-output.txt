@@ -1,0 +1,34 @@
+cardpay-ok.txt
+  money                33.99 EUR
+  transactionDate      2016-11-25 22:30:23 +00:00
+  vs                   5000001234
+  sign                 9dfd46cf2af977be8dd4251f4ef92307d95a8903f4738616d8456bd02e858340
+  res                  OK
+  ac                   740017
+  tid                  88888888
+  => paid, variable symbol 5000001234
+
+comfortpay-ok.txt
+  money                44.88 EUR
+  transactionDate      2016-11-26 12:16:31 +00:00
+  vs                   4444255333
+  cid                  824452
+  sign                 b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1
+  res                  OK
+  ac                   644311
+  cc                   ************1111
+  tid                  11224444
+  tres                 OK
+  => paid, variable symbol 4444255333
+
+comfortpay-fail.txt
+  money                140.92 EUR
+  transactionDate      2016-11-24 17:05:55 +00:00
+  vs                   5555534283
+  sign                 b76cb9ddeed7ed0bcf991f19bbbabfb1b76cb9ddeed7ed0bcf991f19bbbabfb1
+  res                  FAIL
+  cc                   ************1111
+  tid                  11224444
+  tres                 FAIL
+  => not paid, variable symbol 5555534283
+

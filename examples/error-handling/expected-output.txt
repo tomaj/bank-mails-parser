@@ -1,0 +1,24 @@
+not-a-bank.txt
+  parse():    UnsupportedBankException: No parser found that supports this email format. The email may be from an unsupported bank or have an unrecognized format.
+  tryParse(): null
+  parseAll(): UnsupportedBankException
+
+two-transactions.txt
+  parse():    MultipleTransactionsException: Email contains 2 transactions. Use parseAll().
+  tryParse(): null
+  parseAll(): 1234.56 CZK, 987.65 CZK
+
+broken-balance.txt
+  parse():    InvalidEmailFormatException: Parser Tomaj\BankMailsParser\Parser\Csob\CsobMailParser: Balance does not match the previous transaction
+  tryParse(): null
+  parseAll(): InvalidEmailFormatException
+
+card-result-two-amounts.txt
+  parse():    InvalidEmailFormatException: Parser Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaSimpleMailParser: Duplicate CardPay field amount
+  tryParse(): null
+  parseAll(): InvalidEmailFormatException
+
+Money '1 234,56' (separator auto): 1234.56 EUR
+Money '1.234' (separator auto): InvalidArgumentException: Ambiguous decimal amount "1.234".
+Money '1.234' (separator ,): 1234.00 EUR
+Money '12.345' (separator .): InvalidArgumentException: Amount "12.345" has more fraction digits than the currency allows.
