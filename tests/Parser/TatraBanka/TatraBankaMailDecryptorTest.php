@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Exception\ConfigurationException;
 use Tomaj\BankMailsParser\Exception\DecryptionException;
+use Tomaj\BankMailsParser\Exception\InvalidArgumentException;
 use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 
 #[CoversClass(TatraBankaMailDecryptor::class)]
@@ -126,13 +127,35 @@ class TatraBankaMailDecryptorTest extends TestCase
         }
     }
 
+    /**
+     * 5.0 serialized the two promoted properties; the serialized form stays the same, so decryptors serialized by 5.0
+     * (a queued job, a cache) still unserialize and vice versa.
+     */
     #[Test]
-    public function cannotBeSerialized(): void
+    public function serializesLike50(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessageIsOrContains("Serialization of 'SensitiveParameterValue' is not allowed");
+        $serialized50 = sprintf(
+            'O:63:"%1$s":2:{s:79:"%2$s%1$s%2$sprivateKeyPath";s:%3$d:"%4$s";s:75:"%2$s%1$s%2$spassphrase";s:5:"heslo";}',
+            TatraBankaMailDecryptor::class,
+            "\0",
+            strlen(self::KEY),
+            self::KEY,
+        );
+        $encrypted = (string) file_get_contents(__DIR__ . '/../../fixtures/tatrabanka-statement/zasifrovany-vypis.txt');
 
-        serialize(new TatraBankaMailDecryptor(self::KEY, self::PASSPHRASE));
+        self::assertSame($serialized50, serialize(new TatraBankaMailDecryptor(self::KEY, 'heslo')));
+        $unserialized = unserialize($serialized50);
+        self::assertInstanceOf(TatraBankaMailDecryptor::class, $unserialized);
+        self::assertStringContainsString('2621234415', $unserialized->decrypt($encrypted));
+        self::assertStringNotContainsString('heslo', print_r($unserialized, true));
+    }
+
+    #[Test]
+    public function rejectsAnInvalidSerializedForm(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        unserialize(sprintf('O:63:"%s":1:{s:10:"passphrase";s:5:"heslo";}', TatraBankaMailDecryptor::class));
     }
 
     #[Test]
@@ -186,29 +209,16 @@ class TatraBankaMailDecryptorTest extends TestCase
             self::fail('An unsupported cipher must fail');
         } catch (DecryptionException $exception) {
             self::assertSame('Unsupported cipher', $exception->getMessage());
-            self::assertSame('0', ini_get('zend.exception_ignore_args'), 'the setting is restored');
-            $traces = '';
+            self::assertStringContainsString('TatraBankaMailDecryptor->decryptSecretKey(Object(OpenPGP_SecretKeyPacket))', $exception->getTraceAsString());
+            // getTraceAsString() shortens strings to 15 characters, so look at the recorded arguments themselves
             for ($e = $exception; $e instanceof \Throwable; $e = $e->getPrevious()) {
-                $traces .= $e->getTraceAsString() . "\n";
+                foreach ($e->getTrace() as $frame) {
+                    self::assertNotContains(self::PASSPHRASE, $frame['args'] ?? [], $e->getTraceAsString());
+                }
             }
-            self::assertStringContainsString('OpenPGP_Crypt_Symmetric::decryptSecretKey()', $traces);
-            self::assertStringNotContainsString(self::PASSPHRASE, $traces);
         } finally {
             ini_set('zend.exception_ignore_args', (string) $ignoreArgs);
             unlink($path);
-        }
-    }
-
-    #[Test]
-    public function restoresExceptionIgnoreArgsAfterDecrypting(): void
-    {
-        $encrypted = (string) file_get_contents(__DIR__ . '/../../fixtures/tatrabanka-statement/zasifrovany-vypis.txt');
-        $ignoreArgs = ini_set('zend.exception_ignore_args', '0');
-        try {
-            new TatraBankaMailDecryptor(self::KEY, 'heslo')->decrypt($encrypted);
-            self::assertSame('0', ini_get('zend.exception_ignore_args'));
-        } finally {
-            ini_set('zend.exception_ignore_args', (string) $ignoreArgs);
         }
     }
 }

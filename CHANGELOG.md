@@ -21,7 +21,7 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 
 ### Security
 
-- The PGP passphrase of `TatraBankaMailDecryptor` stays out of dumps and stack traces: it is kept in a `\SensitiveParameterValue` (empty in `var_dump()`, `print_r()`, `var_export()`, Tracy and VarDumper), the constructor argument is marked `#[\SensitiveParameter]`, and exceptions thrown inside the OpenPGP library while the key is decrypted record no arguments. The constructor signature is unchanged. A decryptor can no longer be serialized (`serialize()` throws, as for any `\SensitiveParameterValue`) ([#51](https://github.com/tomaj/bank-mails-parser/issues/51))
+- The PGP passphrase of `TatraBankaMailDecryptor` stays out of dumps and stack traces: it is kept in a `\SensitiveParameterValue` (empty in `var_dump()`, `print_r()`, `var_export()`, Tracy and VarDumper), the constructor argument is marked `#[\SensitiveParameter]`, and an exception thrown inside the OpenPGP library while the key is decrypted (whose trace has the passphrase as an argument) is replaced by a `DecryptionException` with the same message and without the library's exception as `previous`. The constructor signature and the `serialize()` form are unchanged; a serialized decryptor still contains the passphrase in clear text ([#51](https://github.com/tomaj/bank-mails-parser/issues/51))
 
 ## [5.0.0] - 2026-10-12
 
