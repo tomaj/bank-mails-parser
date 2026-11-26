@@ -14,6 +14,10 @@ use Tomaj\BankMailsParser\Parser\TatraBanka\TatraBankaMailDecryptor;
 #[CoversClass(TatraBankaMailDecryptor::class)]
 class TatraBankaMailDecryptorTest extends TestCase
 {
+    private const string KEY = __DIR__ . '/../../fixtures/tatrabanka-statement/private-key.asc';
+
+    private const string PASSPHRASE = 'Sup3r-secret passphrase';
+
     #[Test]
     public function throwsExceptionForMissingKeyFile(): void
     {
@@ -97,6 +101,114 @@ class TatraBankaMailDecryptorTest extends TestCase
             self::assertInstanceOf(\Exception::class, $exception->getPrevious());
             self::assertSame(0, $exception->getCode());
             self::assertStringContainsString('Not an asymmetrically encrypted message', $exception->getMessage());
+        }
+    }
+
+    #[Test]
+    public function dumpsDoNotContainThePassphrase(): void
+    {
+        $decryptor = new TatraBankaMailDecryptor(self::KEY, self::PASSPHRASE);
+
+        ob_start();
+        var_dump($decryptor);
+        $varDump = (string) ob_get_clean();
+
+        $dumps = [
+            'print_r' => print_r($decryptor, true),
+            'var_export' => var_export($decryptor, true),
+            'var_dump' => $varDump,
+            'array cast' => print_r((array) $decryptor, true),
+            'json_encode' => (string) json_encode((array) $decryptor, JSON_PARTIAL_OUTPUT_ON_ERROR),
+        ];
+        foreach ($dumps as $name => $dump) {
+            self::assertStringContainsString('private-key.asc', $dump, $name);
+            self::assertStringNotContainsString(self::PASSPHRASE, $dump, $name);
+        }
+    }
+
+    #[Test]
+    public function cannotBeSerialized(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessageIsOrContains("Serialization of 'SensitiveParameterValue' is not allowed");
+
+        serialize(new TatraBankaMailDecryptor(self::KEY, self::PASSPHRASE));
+    }
+
+    #[Test]
+    public function decryptsWithTheWrappedPassphrase(): void
+    {
+        $encrypted = (string) file_get_contents(__DIR__ . '/../../fixtures/tatrabanka-statement/zasifrovany-vypis.txt');
+
+        self::assertStringContainsString('2621234415', new TatraBankaMailDecryptor(self::KEY, 'heslo')->decrypt($encrypted));
+        self::assertStringContainsString('2621234415', new TatraBankaMailDecryptor(privateKeyPath: self::KEY, passphrase: 'heslo')->decrypt($encrypted));
+    }
+
+    #[Test]
+    public function constructorFrameRedactsThePassphrase(): void
+    {
+        $path = 123;
+
+        // php.ini-production (and setup-php in CI) drops all arguments from traces; record them like a development setup
+        $ignoreArgs = ini_set('zend.exception_ignore_args', '0');
+        try {
+            new TatraBankaMailDecryptor($path, self::PASSPHRASE); // @phpstan-ignore argument.type (a TypeError puts the constructor frame on the trace)
+            self::fail('TypeError expected');
+        } catch (\TypeError $exception) {
+            $trace = $exception->getTraceAsString();
+            self::assertStringContainsString('TatraBankaMailDecryptor->__construct(123, Object(SensitiveParameterValue))', $trace);
+            self::assertStringNotContainsString(self::PASSPHRASE, $trace);
+        } finally {
+            ini_set('zend.exception_ignore_args', (string) $ignoreArgs);
+        }
+    }
+
+    /**
+     * The OpenPGP library throws "Unsupported cipher" from inside decryptSecretKey(), which takes the passphrase as a
+     * plain argument; no exception in the chain may record it.
+     */
+    #[Test]
+    public function libraryExceptionTraceDoesNotContainThePassphrase(): void
+    {
+        $key = \OpenPGP_Message::parse((string) file_get_contents(self::KEY));
+        foreach ($key as $packet) {
+            if ($packet instanceof \OpenPGP_SecretKeyPacket) {
+                $packet->symmetric_algorithm = 200;
+            }
+        }
+        $path = tempnam(sys_get_temp_dir(), 'bmp-key');
+        self::assertIsString($path);
+        file_put_contents($path, $key->to_bytes());
+
+        $ignoreArgs = ini_set('zend.exception_ignore_args', '0');
+        try {
+            new TatraBankaMailDecryptor($path, self::PASSPHRASE)->decrypt('message');
+            self::fail('An unsupported cipher must fail');
+        } catch (DecryptionException $exception) {
+            self::assertSame('Unsupported cipher', $exception->getMessage());
+            self::assertSame('0', ini_get('zend.exception_ignore_args'), 'the setting is restored');
+            $traces = '';
+            for ($e = $exception; $e instanceof \Throwable; $e = $e->getPrevious()) {
+                $traces .= $e->getTraceAsString() . "\n";
+            }
+            self::assertStringContainsString('OpenPGP_Crypt_Symmetric::decryptSecretKey()', $traces);
+            self::assertStringNotContainsString(self::PASSPHRASE, $traces);
+        } finally {
+            ini_set('zend.exception_ignore_args', (string) $ignoreArgs);
+            unlink($path);
+        }
+    }
+
+    #[Test]
+    public function restoresExceptionIgnoreArgsAfterDecrypting(): void
+    {
+        $encrypted = (string) file_get_contents(__DIR__ . '/../../fixtures/tatrabanka-statement/zasifrovany-vypis.txt');
+        $ignoreArgs = ini_set('zend.exception_ignore_args', '0');
+        try {
+            new TatraBankaMailDecryptor(self::KEY, 'heslo')->decrypt($encrypted);
+            self::assertSame('0', ini_get('zend.exception_ignore_args'));
+        } finally {
+            ini_set('zend.exception_ignore_args', (string) $ignoreArgs);
         }
     }
 }

@@ -26,6 +26,7 @@ A notification mail is input from the internet. Anybody can send you a mail that
 ## Keys and personal data
 
 - Keep the PGP private key for Tatra banka statements outside the web root and out of the repository, readable only by the process that parses mail; read its path and passphrase from your secret store.
+- The passphrase stays out of error reports. `TatraBankaMailDecryptor` keeps it in a `\SensitiveParameterValue`, so `var_dump()`, `print_r()`, `var_export()`, Tracy and Symfony's VarDumper show an empty object instead of it, and its constructor argument is marked `#[\SensitiveParameter]`, so exception traces show `Object(SensitiveParameterValue)`. Exceptions thrown inside the OpenPGP library while the key is decrypted record no arguments. Your own code that passes the passphrase around (a config array, a DI container definition) is not covered: set `zend.exception_ignore_args = On` in production (the default of `php.ini-production`), so traces contain no arguments at all. A decryptor cannot be serialized, which keeps the passphrase out of caches.
 - Bank mails contain account numbers, names and payment messages. Store and log them as personal data under GDPR, and do not put raw mail bodies into error messages that reach users or third-party error trackers. The exception messages of this library do not include the sender address or the mail body (an invalid amount is quoted).
 
 <!--@include: ../SECURITY.md{3,}-->

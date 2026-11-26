@@ -9,10 +9,18 @@ use Tomaj\BankMailsParser\Exception\DecryptionException;
 
 final readonly class TatraBankaMailDecryptor
 {
+    /**
+     * Wrapped so that var_dump(), print_r(), var_export() and debuggers (Tracy, Symfony VarDumper) do not show it.
+     */
+    private \SensitiveParameterValue $passphrase;
+
     public function __construct(
         private string $privateKeyPath,
-        private string $passphrase,
-    ) {}
+        #[\SensitiveParameter]
+        string $passphrase,
+    ) {
+        $this->passphrase = new \SensitiveParameterValue($passphrase);
+    }
 
     public function decrypt(string $contents): string
     {
@@ -43,7 +51,7 @@ final readonly class TatraBankaMailDecryptor
                     continue;
                 }
 
-                $secret = \OpenPGP_Crypt_Symmetric::decryptSecretKey($this->passphrase, $packet);
+                $secret = $this->decryptSecretKey($packet);
             }
 
             if (!$secret instanceof \OpenPGP_SecretKeyPacket) {
@@ -60,6 +68,23 @@ final readonly class TatraBankaMailDecryptor
 
             throw new DecryptionException('PGP message could not be decrypted');
         });
+    }
+
+    /**
+     * The OpenPGP library takes the passphrase as a plain argument, so an exception thrown inside it (an unsupported
+     * cipher, a PHP warning turned into an exception by guard()) would record the passphrase in its trace. Exceptions
+     * created during this call record no arguments.
+     */
+    private function decryptSecretKey(\OpenPGP_SecretKeyPacket $packet): ?\OpenPGP_SecretKeyPacket
+    {
+        $ignoreArgs = ini_set('zend.exception_ignore_args', '1');
+        try {
+            return \OpenPGP_Crypt_Symmetric::decryptSecretKey($this->passphrase->getValue(), $packet);
+        } finally {
+            if ($ignoreArgs !== false) {
+                ini_set('zend.exception_ignore_args', $ignoreArgs);
+            }
+        }
     }
 
     /**
