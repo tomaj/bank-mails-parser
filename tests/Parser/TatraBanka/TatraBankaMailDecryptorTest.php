@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tomaj\BankMailsParser\Tests\Parser\TatraBanka;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Tomaj\BankMailsParser\Exception\ConfigurationException;
@@ -150,12 +151,35 @@ class TatraBankaMailDecryptorTest extends TestCase
         self::assertStringNotContainsString('heslo', print_r($unserialized, true));
     }
 
-    #[Test]
-    public function rejectsAnInvalidSerializedForm(): void
+    /**
+     * @return array<string, array{array<string, mixed>}>
+     */
+    public static function invalidSerializedData(): array
     {
+        $path = "\0" . TatraBankaMailDecryptor::class . "\0privateKeyPath";
+        $passphrase = "\0" . TatraBankaMailDecryptor::class . "\0passphrase";
+
+        return [
+            'no properties' => [[]],
+            'public names' => [['privateKeyPath' => self::KEY, 'passphrase' => 'heslo']],
+            'no passphrase' => [[$path => self::KEY]],
+            'no key path' => [[$passphrase => 'heslo']],
+            'passphrase not a string' => [[$path => self::KEY, $passphrase => 123]],
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    #[Test]
+    #[DataProvider('invalidSerializedData')]
+    public function rejectsAnInvalidSerializedForm(array $data): void
+    {
+        $serialized = sprintf('O:63:"%s":%s', TatraBankaMailDecryptor::class, substr(serialize($data), 2));
+
         $this->expectException(InvalidArgumentException::class);
 
-        unserialize(sprintf('O:63:"%s":1:{s:10:"passphrase";s:5:"heslo";}', TatraBankaMailDecryptor::class));
+        unserialize($serialized);
     }
 
     #[Test]
