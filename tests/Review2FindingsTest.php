@@ -263,13 +263,9 @@ final class Review2FindingsTest extends TestCase
     #[Test]
     public function aMalformedStatementRowIsNotDropped(): void
     {
-        $plain = (string) file_get_contents(__DIR__ . '/fixtures/tatrabanka-statement/desifrovany-vypis.txt');
-        $rows = explode("\n", $plain);
-        $rows[2] = str_replace('|15.00|EUR|', '|15.005|EUR|', $rows[2]);
-        $key = \OpenPGP_Message::parse((string) file_get_contents(__DIR__ . '/fixtures/tatrabanka-statement/private-key.asc'));
-        $data = new \OpenPGP_LiteralDataPacket(implode("\n", $rows), ['format' => 'b', 'filename' => 'x.txt']);
-        $enc = \OpenPGP_Crypt_Symmetric::encrypt($key, new \OpenPGP_Message([$data]));
-        $armored = \OpenPGP::enarmor($enc->to_bytes(), 'PGP MESSAGE');
+        // desifrovany-vypis.txt with '|15.00|EUR|' in row 2 changed to '|15.005|EUR|', encrypted once to private-key.asc
+        // (.asc, so FixtureSnapshotTest does not pick it up). Encrypting at test time was flaky on PHP 8.5+ (#56).
+        $armored = (string) file_get_contents(__DIR__ . '/fixtures/tatrabanka-statement/zasifrovany-vypis-chybny-riadok.asc');
         $parser = new TatraBankaStatementMailParser(new TatraBankaMailDecryptor(
             __DIR__ . '/fixtures/tatrabanka-statement/private-key.asc',
             'heslo',
