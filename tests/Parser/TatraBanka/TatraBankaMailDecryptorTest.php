@@ -178,6 +178,7 @@ class TatraBankaMailDecryptorTest extends TestCase
         $serialized = sprintf('O:63:"%s":%s', TatraBankaMailDecryptor::class, substr(serialize($data), 2));
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid serialized ' . TatraBankaMailDecryptor::class);
 
         unserialize($serialized);
     }
