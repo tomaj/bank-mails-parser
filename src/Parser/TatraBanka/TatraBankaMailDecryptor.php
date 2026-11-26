@@ -6,13 +6,53 @@ namespace Tomaj\BankMailsParser\Parser\TatraBanka;
 
 use Tomaj\BankMailsParser\Exception\ConfigurationException;
 use Tomaj\BankMailsParser\Exception\DecryptionException;
+use Tomaj\BankMailsParser\Exception\InvalidArgumentException;
 
 final readonly class TatraBankaMailDecryptor
 {
+    /**
+     * Wrapped so that var_dump(), print_r(), var_export() and debuggers (Tracy, Symfony VarDumper) do not show it.
+     *
+     * @var \SensitiveParameterValue<string>
+     */
+    private \SensitiveParameterValue $passphrase;
+
     public function __construct(
         private string $privateKeyPath,
-        private string $passphrase,
-    ) {}
+        #[\SensitiveParameter]
+        string $passphrase,
+    ) {
+        $this->passphrase = new \SensitiveParameterValue($passphrase);
+    }
+
+    /**
+     * Same serialized form as 5.0 (a \SensitiveParameterValue cannot be serialized), so serialized decryptors keep
+     * working in both directions. The passphrase is in the serialized string in clear text, as it was before.
+     *
+     * @return array<string, string>
+     */
+    public function __serialize(): array
+    {
+        return [
+            "\0" . self::class . "\0privateKeyPath" => $this->privateKeyPath,
+            "\0" . self::class . "\0passphrase" => $this->passphrase->getValue(),
+        ];
+    }
+
+    /**
+     * @param array<array-key, mixed> $data
+     */
+    public function __unserialize(#[\SensitiveParameter] array $data): void
+    {
+        $privateKeyPath = $data["\0" . self::class . "\0privateKeyPath"] ?? null;
+        $passphrase = $data["\0" . self::class . "\0passphrase"] ?? null;
+        if (!is_string($privateKeyPath) || !is_string($passphrase)) {
+            throw new InvalidArgumentException('Invalid serialized ' . self::class);
+        }
+
+        $this->privateKeyPath = $privateKeyPath;
+        $this->passphrase = new \SensitiveParameterValue($passphrase);
+    }
 
     public function decrypt(string $contents): string
     {
@@ -43,7 +83,7 @@ final readonly class TatraBankaMailDecryptor
                     continue;
                 }
 
-                $secret = \OpenPGP_Crypt_Symmetric::decryptSecretKey($this->passphrase, $packet);
+                $secret = $this->decryptSecretKey($packet);
             }
 
             if (!$secret instanceof \OpenPGP_SecretKeyPacket) {
@@ -60,6 +100,21 @@ final readonly class TatraBankaMailDecryptor
 
             throw new DecryptionException('PGP message could not be decrypted');
         });
+    }
+
+    /**
+     * The OpenPGP library takes the passphrase as a plain argument, so an exception thrown inside it (an unsupported
+     * cipher, a PHP warning turned into an exception by guard()) records the passphrase in its trace. Only its message
+     * is kept: the new exception is created in this frame, whose arguments do not include the passphrase.
+     */
+    private function decryptSecretKey(\OpenPGP_SecretKeyPacket $packet): ?\OpenPGP_SecretKeyPacket
+    {
+        try {
+            return \OpenPGP_Crypt_Symmetric::decryptSecretKey($this->passphrase->getValue(), $packet);
+        } catch (\Throwable $exception) {
+            // without previous: the library exception's trace is the one that holds the passphrase
+            throw new DecryptionException($exception->getMessage());
+        }
     }
 
     /**
